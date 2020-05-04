@@ -25,6 +25,11 @@ router.get("/test", (req, res) => {
     res.json("test");
 });
 
+router.get("/yeet", (req, res) => {
+
+    res.json("well yeet");
+});
+
 router.get("*", function (req, res) {
     console.log("yes")
   res.sendFile(path.join(__dirname, "../client/public/index.html"));
