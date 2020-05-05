@@ -1,0 +1,7 @@
+nav, .nav-wrapper {
+    background-color: rgba(202, 202, 202, 0) !important;
+}
+
+nav, .brand-logo {
+    left: 1rem;
+}
