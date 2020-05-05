@@ -5,3 +5,8 @@ nav, .nav-wrapper {
 nav, .brand-logo {
     left: 1rem;
 }
+
+.Dropdown-placeholder, .is-selected {
+    height: 46px;
+    width:50px
+}

@@ -7,9 +7,13 @@ import 'react-dropdown/style.css';
 function Nav() {
 
   const options = [
-    'one', 'two', 'three'
+    '1', '2', '3'
   ];
-  const defaultOption = options[0];
+  // const defaultOption = options[0];
+
+  const _onSelect = () => {
+    console.log("selected")
+  }
   
   return (
 <>
@@ -23,8 +27,8 @@ function Nav() {
           <div class="nav-wrapper">
             <a href="#" class="brand-logo">Logo</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <Dropdown options={options} onChange={this._onSelect} value={defaultOption} placeholder="Select an option" />;
-              <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+            <Dropdown options={options} onChange={_onSelect} value={"|||"} placeholder="Select an option" />
+              {/* <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li> */}
             </ul>
           </div>
         </nav>

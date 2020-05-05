@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.boxForEverything {
+  position: absolute;
+  top: 64px;
+  width:100%;
+}
