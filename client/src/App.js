@@ -39,15 +39,15 @@ class App extends React.Component {
       .then(response => {
         let loc = response.data.plus_code.compound_code;
         console.log(response.data.plus_code.compound_code);
-        this.setState({location: loc})
+        this.setState({location: loc.slice(8)})
       })
     }
 
     geolocationFunction();
   }
 
-  callAPI = (location) => {
-
+  callAPI = () => {
+    
   }
 
   render() {
