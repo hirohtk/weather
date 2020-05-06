@@ -3,11 +3,11 @@ import "./currentWeather.css"
 
 function CurrentWeather() {
 
+
     return (
         <>
-
             <div className="outerCurrentWeatherBox">
-                <h4 className="whiteText">Current Weather</h4>
+                <h5 className="whiteText">Current Weather</h5>
                 <div className="currentWeatherBox">
                     <p className="whiteText">55</p>
                 </div>

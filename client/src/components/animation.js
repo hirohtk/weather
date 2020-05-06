@@ -5,7 +5,6 @@ import $ from 'jquery'
 class Animation extends React.Component {
 
     componentDidMount = () => {
-        console.log(`SHEEEIT`);
         this.test();
     }
 
