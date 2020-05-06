@@ -7,37 +7,43 @@ import './App.css';
 import Axios from 'axios';
 
 class App extends React.Component {
+
+  state = {
+    location: []
+  }
   
   componentDidMount() {
     this.getCurrentLocation();
   }
 
   getCurrentLocation = () => {
-    
+    var latitude;
+    var longitude;
+
     let geolocationFunction = () => {
-      let coords = {}
+      
       let geoSuccess = (position) => {
         console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
         console.log("Geoposition gives " + position.coords.longitude + " for longitude");
-        coords.latitude = position.coords.latitude;
-        coords.longitude = position.coords.longitude;
-        return;
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        googleAPI(latitude, longitude);
       }
       navigator.geolocation.getCurrentPosition(geoSuccess);
-      return coords;
     }
 
-    let googleAPI = (coordsObj) => {
-      console.log(coordsObj);
-      console.log(process.env.API_KEY);
-      // Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordsObj.latitude},${coordsObj.longitude}&sensor=false&key=${s}`)
-      // .then(response => {
-      //   console.log(response);
-      // })
+    let googleAPI = (latitude, longitude) => {
+      let apiKey= process.env.REACT_APP_API_KEY;
+      console.log(latitude, longitude)
+      Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
+      .then(response => {
+        let loc = response.data.plus_code.compound_code;
+        console.log(response.data.plus_code.compound_code);
+        this.setState({location: loc})
+      })
     }
 
-    googleAPI(geolocationFunction());
-    // http://maps.googleapis.com/maps/api/geocode/json?latlng=+37.42+,+37.42+&sensor=false
+    geolocationFunction();
   }
 
   callAPI = (location) => {
@@ -52,7 +58,8 @@ class App extends React.Component {
           <div className="row">
             <Animation></Animation>
             <div className="boxForEverything">
-              <CurrentWeather></CurrentWeather>
+              <CurrentWeather 
+              location={this.state.location}></CurrentWeather>
             </div>
           </div>
         </div>
