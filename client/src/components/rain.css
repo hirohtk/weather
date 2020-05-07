@@ -158,6 +158,10 @@ html {
   .rain-toggle {
     top: 300px;
   }
+
+  .cloud-toggle {
+    top: 370px;
+  }
   
   body.rain-toggle .drop {
     display: none;
@@ -168,6 +172,10 @@ html {
   }
   
   body.single-toggle .drop {
+    display: none;
+  }
+
+  body.cloud-toggle .drop {
     display: none;
   }
   
