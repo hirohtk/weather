@@ -7,7 +7,6 @@ import _ from 'underscore'
 class Animation extends React.Component {
 
     componentDidMount = () => {
-        console.log(`SHEEEIT`);
         this.test();
     }
 

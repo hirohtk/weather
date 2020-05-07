@@ -1,0 +1,22 @@
+nav, .nav-wrapper {
+    background-color: rgba(202, 202, 202, 0) !important;
+}
+
+nav, .brand-logo {
+    left: 1rem;
+}
+
+.Dropdown-placeholder, .is-selected {
+    height: 46px;
+    width:1rem;
+    left: 6px !important;
+}
+
+.Dropdown-menu {
+    width: 300% !important;
+    right: 0px !important;
+}
+
+.Dropdown-control {
+    padding: 8px 24px 8px 10px !important;
+}
