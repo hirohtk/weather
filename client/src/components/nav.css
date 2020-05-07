@@ -8,5 +8,15 @@ nav, .brand-logo {
 
 .Dropdown-placeholder, .is-selected {
     height: 46px;
-    width:50px
+    width:1rem;
+    left: 6px !important;
+}
+
+.Dropdown-menu {
+    width: 300% !important;
+    right: 0px !important;
+}
+
+.Dropdown-control {
+    padding: 8px 24px 8px 10px !important;
 }
