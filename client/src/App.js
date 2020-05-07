@@ -9,7 +9,8 @@ import Axios from 'axios';
 class App extends React.Component {
 
   state = {
-    location: []
+    location: [],
+    weather: []
   }
   
   componentDidMount() {
@@ -47,7 +48,17 @@ class App extends React.Component {
   }
 
   callAPI = (locationInAnArray) => {
+    let apiKey = process.env.REACT_APP_WEATHER_API_KEY;
     console.log(`callAPI function yields ${locationInAnArray}`);
+    Axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${locationInAnArray[0]},${locationInAnArray[1]},${locationInAnArray[2]}&appid=${apiKey}`)
+    .then(response => {
+      console.log(response);
+      let temp = response.data.main.temp;
+      let tempInF = (1.8 * (temp - 273) + 32).toFixed();
+      let condition = response.data.weather[0].main;
+      this.setState({weather: [tempInF, condition]});
+
+    });
   }
 
   render() {
@@ -59,7 +70,8 @@ class App extends React.Component {
             <Animation></Animation>
             <div className="boxForEverything">
               <CurrentWeather 
-              location={this.state.location}></CurrentWeather>
+              location={this.state.location}
+              weather={this.state.weather}></CurrentWeather>
             </div>
           </div>
         </div>
