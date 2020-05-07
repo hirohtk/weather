@@ -33,21 +33,21 @@ class App extends React.Component {
     }
 
     let googleAPI = (latitude, longitude) => {
-      let apiKey= process.env.REACT_APP_API_KEY;
+      let apiKey= process.env.REACT_APP_GOOGLE_API_KEY;
       console.log(latitude, longitude)
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
       .then(response => {
+        console.log(response);
         let loc = response.data.plus_code.compound_code;
-        console.log(response.data.plus_code.compound_code);
-        this.setState({location: loc.slice(8)})
+        console.log(response.data.plus_code.compound_code.slice(8).split(","));
+        this.setState({location: loc.slice(8).split(",")}, () => this.callAPI(this.state.location));
       })
     }
-
     geolocationFunction();
   }
 
-  callAPI = () => {
-    
+  callAPI = (locationInAnArray) => {
+    console.log(`callAPI function yields ${locationInAnArray}`);
   }
 
   render() {
