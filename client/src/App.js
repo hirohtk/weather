@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
+import ExtendedForecast from "./components/extendedForecast"
 import './App.css';
 import Axios from 'axios';
 
@@ -69,9 +70,14 @@ class App extends React.Component {
           <div className="row">
             <Animation></Animation>
             <div className="boxForEverything">
+              <div className="row">
               <CurrentWeather 
               location={this.state.location}
               weather={this.state.weather}></CurrentWeather>
+              </div>
+              <div className="row">
+              <ExtendedForecast></ExtendedForecast>
+              </div>
             </div>
           </div>
         </div>
