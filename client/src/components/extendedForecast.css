@@ -1,0 +1,29 @@
+.forecastBox {
+    position: relative;
+    height: 20rem;
+    width: 70rem;
+    border: 1px solid rgb(195, 195, 195);
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+.outerForecastBox {
+    position: absolute;
+    height: 25rem;
+    width: 100%;
+}
+
+.whiteText {
+    color:white;
+}
+
+.forecastButton {
+    border: 1px solid rgb(195, 195, 195);
+    border-radius: 2px;
+    width: 50%;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+     
+}

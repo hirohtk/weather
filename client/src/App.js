@@ -11,7 +11,8 @@ class App extends React.Component {
 
   state = {
     location: [],
-    weather: []
+    weather: [],
+    forecast: [],
   }
   
   componentDidMount() {
@@ -46,6 +47,7 @@ class App extends React.Component {
       })
     }
     geolocationFunction();
+    return;
   }
 
   callAPI = (locationInAnArray) => {
@@ -58,8 +60,20 @@ class App extends React.Component {
       let tempInF = (1.8 * (temp - 273) + 32).toFixed();
       let condition = response.data.weather[0].main;
       this.setState({weather: [tempInF, condition]});
-
     });
+    return;
+  }
+
+  changeForecast = (event) => {
+    console.log("changing forecast")
+    console.log(event.target.dataset.name);
+    if (event.target.dataset.name === "hourly") {
+      this.setState({forecast: ["HOURLY DATA"]});
+    }
+    else if (event.target.dataset.name === "fiveDay") {
+      this.setState({forecast: ["5 DAY DATA"]});
+    }
+    return;
   }
 
   render() {
@@ -76,7 +90,10 @@ class App extends React.Component {
               weather={this.state.weather}></CurrentWeather>
               </div>
               <div className="row">
-              <ExtendedForecast></ExtendedForecast>
+              <ExtendedForecast
+              changeForecast={this.changeForecast}
+              forecastResults={this.state.forecast}>
+              </ExtendedForecast>
               </div>
             </div>
           </div>
