@@ -27,3 +27,18 @@
     margin-top: 1rem;
      
 }
+
+.hover {
+    background-color:lightgray;
+    animation: buttonColor 0.5s;
+    color:black;
+}
+
+@keyframes buttonColor {
+    0% {
+        background-color: rgba(0,0,0,0.87);
+    }
+    100% {
+        background-color: lightgray;
+    }
+}

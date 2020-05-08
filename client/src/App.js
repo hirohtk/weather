@@ -13,6 +13,7 @@ class App extends React.Component {
     location: [],
     weather: [],
     forecast: [],
+    forecastButtonHovered: undefined
   }
   
   componentDidMount() {
@@ -65,13 +66,25 @@ class App extends React.Component {
   }
 
   changeForecast = (event) => {
-    console.log("changing forecast")
-    console.log(event.target.dataset.name);
     if (event.target.dataset.name === "hourly") {
       this.setState({forecast: ["HOURLY DATA"]});
     }
     else if (event.target.dataset.name === "fiveDay") {
       this.setState({forecast: ["5 DAY DATA"]});
+    }
+    return;
+  }
+
+  handleHover = (event) => {
+    console.log("handling hover...")
+    if (this.state.forecastButtonHovered != undefined) {
+      this.setState({forecastButtonHovered: undefined});
+    }
+    else if (event.target.dataset.name === "hourly") {
+      this.setState({forecastButtonHovered: "hourly"});
+    }
+    else if (event.target.dataset.name === "fiveDay") {
+      this.setState({forecastButtonHovered: "fiveDay"});
     }
     return;
   }
@@ -92,7 +105,9 @@ class App extends React.Component {
               <div className="row">
               <ExtendedForecast
               changeForecast={this.changeForecast}
-              forecastResults={this.state.forecast}>
+              forecastResults={this.state.forecast}
+              hovered={this.state.forecastButtonHovered}
+              handleHover={this.handleHover}>
               </ExtendedForecast>
               </div>
             </div>

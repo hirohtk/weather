@@ -11,12 +11,16 @@ function ExtendedForecast(props) {
                     <div className="row">
                         <div id="forecastOptions" className="whiteText">
                             <div className="col l6">
-                                <div className="forecastButton" data-name="hourly" onClick={props.changeForecast}>
+                                <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={props.changeForecast}
+                                onMouseEnter={props.handleHover}
+                                onMouseLeave={props.handleHover}>
                                     Hourly
                                 </div>
                             </div>
                             <div className="col l6">
-                                <div className="forecastButton" data-name="fiveDay"onClick={props.changeForecast}>
+                                <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay"onClick={props.changeForecast}
+                                onMouseEnter={props.handleHover}
+                                onMouseLeave={props.handleHover}>
                                     5 Day
                                 </div>
                             </div>
