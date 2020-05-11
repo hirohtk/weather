@@ -31,7 +31,7 @@ class Animation extends React.Component {
         var makeItRain = function () {
             //clear out everything
             console.log("it's supposed to be raining")
-            $('.rain').empty();
+            // $('.rain').empty();
 
             var increment = 0;
             var drops = "";
@@ -54,18 +54,29 @@ class Animation extends React.Component {
             $('.rain.back-row').append(backDrops);
         }
 
+        switch (localStorage.getItem("weatherCondition")) {
+            case ("Clouds"):
+                console.log("this is the current localstorage weather conditono");
+                console.log(localStorage.getItem("weatherConditon"));
+                makeItRain();
+                break;
+            default:
+                console.log("this is the current localstorage weather conditono");
+                console.log(localStorage.getItem("weatherConditon"));
+        }
 
-        $('.splat-toggle.toggle').on('click', function () {
-            $('body').toggleClass('splat-toggle');
-            $('.splat-toggle.toggle').toggleClass('active');
-            //makeItRain();
-        });
 
-        $('.single-toggle.toggle').on('click', function () {
-            $('body').toggleClass('single-toggle');
-            $('.single-toggle.toggle').toggleClass('active');
-            //makeItRain();
-        });
+        // $('.splat-toggle.toggle').on('click', function () {
+        //     $('body').toggleClass('splat-toggle');
+        //     $('.splat-toggle.toggle').toggleClass('active');
+        //     //makeItRain();
+        // });
+
+        // $('.single-toggle.toggle').on('click', function () {
+        //     $('body').toggleClass('single-toggle');
+        //     $('.single-toggle.toggle').toggleClass('active');
+        //     //makeItRain();
+        // });
 
         $('.snow-toggle.toggle').on('click', function () {
             $('body').toggleClass('snow-toggle');
@@ -73,12 +84,12 @@ class Animation extends React.Component {
             init();
         });
 
-        $('.rain-toggle.toggle').on('click', function () {
-            console.log("button clicked")
-            $('body').toggleClass('rain-toggle');
-            $('.rain-toggle.toggle').toggleClass('active');
-            makeItRain();
-        });
+        // $('.rain-toggle.toggle').on('click', function () {
+        //     console.log("button clicked")
+        //     $('body').toggleClass('rain-toggle');
+        //     $('.rain-toggle.toggle').toggleClass('active');
+        //     makeItRain();
+        // });
 
         //----------------------------------------------------
         //SNOWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

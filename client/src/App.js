@@ -60,6 +60,8 @@ class App extends React.Component {
       let temp = response.data.main.temp;
       let tempInF = (1.8 * (temp - 273) + 32).toFixed();
       let condition = response.data.weather[0].main;
+      console.log("setting localstorage")
+      localStorage.setItem("weatherConditon", condition);
       this.setState({weather: [tempInF, condition]});
     });
     return;
@@ -95,7 +97,8 @@ class App extends React.Component {
         <Nav></Nav>
         <div className="container">
           <div className="row">
-            <Animation></Animation>
+            <Animation
+            weather={this.state.weather}></Animation>
             <div className="boxForEverything">
               <div className="row">
               <CurrentWeather 
