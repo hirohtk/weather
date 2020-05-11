@@ -1,8 +1,6 @@
 import React from 'react';
 import "./rain.css"
 //import "./cloud.scss"
-import $ from 'jquery'
-import _ from 'underscore'
 
 function Animation(props) {
     return (
