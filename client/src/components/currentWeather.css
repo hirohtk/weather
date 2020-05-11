@@ -1,17 +1,16 @@
 .currentWeatherBox {
-    position: absolute;
+    position: relative;
     height: 20rem;
-    width: 10rem;
+    width: 70rem;
     border: 1px solid rgb(195, 195, 195);
     border-radius: 2px;
-    
+    margin: 0 auto;
 }
 
 .outerCurrentWeatherBox {
-    position: absolute;
+    position: relative;
     height: 25rem;
-    width: 10rem;
-    
+    width: 100%;
 }
 
 .whiteText {
