@@ -1,6 +1,7 @@
 import React from 'react';
 import "./rain.css"
 //import "./cloud.scss"
+import "./sun.css"
 import $ from 'jquery'
 import _ from 'underscore'
 
@@ -53,33 +54,6 @@ class Animation extends React.Component {
             $('.rain.front-row').append(drops);
             $('.rain.back-row').append(backDrops);
         }
-
-
-        $('.splat-toggle.toggle').on('click', function () {
-            $('body').toggleClass('splat-toggle');
-            $('.splat-toggle.toggle').toggleClass('active');
-            //makeItRain();
-        });
-
-        $('.single-toggle.toggle').on('click', function () {
-            $('body').toggleClass('single-toggle');
-            $('.single-toggle.toggle').toggleClass('active');
-            //makeItRain();
-        });
-
-        $('.snow-toggle.toggle').on('click', function () {
-            $('body').toggleClass('snow-toggle');
-            $('.snow-toggle.toggle').toggleClass('active');
-            init();
-        });
-
-        $('.rain-toggle.toggle').on('click', function () {
-            console.log("button clicked")
-            $('body').toggleClass('rain-toggle');
-            $('.rain-toggle.toggle').toggleClass('active');
-            makeItRain();
-        });
-
         //----------------------------------------------------
         //SNOWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
         var canvas = document.querySelector('.fireworks'),
@@ -145,6 +119,8 @@ class Animation extends React.Component {
                 flakeB;
 
             // clear canvas
+            //$('.snow').empty();
+
             ctx.save();
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, windowW, windowH);
@@ -187,6 +163,92 @@ class Animation extends React.Component {
             return Math.sqrt(dx * dx + dy * dy);
         }
 
+        //SUN-------------------------------------------
+        class Sun {
+            constructor() {
+                this.$sun = $('.sun');
+                this.$beams = this.$sun.find('.beams');
+                this.size = this.$sun.width();
+
+                this.beamAmount = 10;
+                this.indRotation = 360 / this.beamAmount;
+                this.path = [
+                    { x: -15, y: 0 },
+                    { x: 75, y: -90 },
+                    { x: 165, y: 0 },
+                    { x: 75, y: 90 },
+                    { x: -15, y: 0 }
+                ];
+
+                this.location = { x: this.path[0].x, y: this.path[0].y };
+                this.tn1 = TweenMax.to(this.location, this.beamAmount, { bezier: { curviness: 1.5, values: this.path }, ease: Linear.easeNone });
+
+                this.tn2 = TweenMax.to(this.$beams, 60, { rotation: 360, repeat: -1, ease: Linear.easeNone });
+                this.tn2.play();
+
+                let i,
+                    element;
+
+                for (i = 0; i < this.beamAmount; i++) {
+                    this.tn1.time(i);
+                    element = '<span class="beam" id="beam-' + i + '"></span>';
+                    this.$beams.append(element);
+                    console.log(this.indRotation);
+
+                    TweenMax.set($("#beam-" + i), { x: this.location.x - 5, y: this.location.y + 45, rotation: ((this.indRotation * i) - 90) })
+                }
+            }
+        }
+
+        $(() => {
+            let sun = new Sun();
+        });
+
+
+
+
+
+
+        $('.splat-toggle.toggle').on('click', function () {
+            $('body').toggleClass('splat-toggle');
+            $('.splat-toggle.toggle').toggleClass('active');
+            //makeItRain();
+        });
+
+        $('.single-toggle.toggle').on('click', function () {
+            $('body').toggleClass('single-toggle');
+            $('.single-toggle.toggle').toggleClass('active');
+            //makeItRain();
+        });
+
+        $('.snow-toggle.toggle').on('click', function () {
+            $('body').toggleClass('snow-toggle');
+            $('.snow-toggle.toggle').toggleClass('active');
+            init();
+        });
+
+        $('.snow-toggle.toggle').on('click', function () {
+            $('body').toggleClass('snow-toggle');
+            $('.snow-toggle.toggle').toggleClass('active');
+            $('.snow').empty();
+        });
+
+        $('.rain-toggle.toggle').on('click', function () {
+            console.log("button clicked")
+            $('body').toggleClass('rain-toggle');
+            $('.rain-toggle.toggle').toggleClass('active');
+            makeItRain();
+        });
+
+        $('.sun-toggle.toggle').on('click', function () {
+            console.log("button clicked")
+            $('body').toggleClass('rain-toggle');
+            $('.sun-toggle.toggle').toggleClass('active');
+            Sun();
+        });
+
+
+
         //init();
 
         //makeItRain();
@@ -203,16 +265,25 @@ class Animation extends React.Component {
 
                 <div className="rain front-row"></div>
                 <div className="rain back-row"></div>
-                {/* <div class="snow-on"></div> */}
+                <div className="snow-on"></div>
                 <div className="rain-on"></div>
+                <div className="sun-on"></div>
                 <div className="toggles">
                     <div className="splat-toggle toggle active">SPLAT</div>
                     <div className="back-row-toggle toggle active">BACK<br></br>ROW</div>
                     <div className="single-toggle toggle">SINGLE</div>
                     <div className="snow-toggle toggle">SNOW</div>
                     <div className="rain-toggle toggle active">RAIN</div>
-
+                    <div className="sun-toggle toggle">SUN</div>
                 </div>
+                <div class="sun">
+                        <div class="beams"></div>
+                        <div class="face">
+                            <span class="eye eye-left"></span>
+                            <span class="eye eye-right"></span>
+                            <span class="mouth"></span>
+                        </div>
+                    </div>
             </div>
 
 
