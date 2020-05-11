@@ -47,22 +47,21 @@ class App extends React.Component {
         console.log(response);
         let loc = response.data.plus_code.compound_code;
         console.log(response.data.plus_code.compound_code.slice(8).split(","));
-        this.setState({location: loc.slice(8).split(",")}, () => this.callAPI(this.state.location));
+        this.setState({location: loc.slice(8).split(",")}, () => this.callAPI(latitude, longitude));
       })
     }
     geolocationFunction();
     return;
   }
 
-  callAPI = (locationInAnArray) => {
-    let apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-    console.log(`callAPI function yields ${locationInAnArray}`);
-    Axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${locationInAnArray[0]},${locationInAnArray[1]},${locationInAnArray[2]}&appid=${apiKey}`)
+  callAPI = (lat, lng) => {
+    let apiKey = process.env.REACT_APP_NEW_WEATHER_API_KEY;
+    console.log(`calling new weather API`);
+    Axios.get(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lng}`)
     .then(response => {
       console.log(response);
-      let temp = response.data.main.temp;
-      let tempInF = (1.8 * (temp - 273) + 32).toFixed();
-      let condition = response.data.weather[0].main;
+      let tempInF = response.data.current.temp_f;
+      let condition = response.data.current.condition.text;
       this.setState({weather: [tempInF, condition]}, () => animationFunction(condition));
     });
     return;
