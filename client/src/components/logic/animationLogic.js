@@ -47,7 +47,7 @@ export function animationFunction(weatherStatus) {
     }
 
     switch (weatherStatus) {
-        case ("Clouds"):
+        case ("Partly cloudy"):
             makeItRain();
             break;
         default:
