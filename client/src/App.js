@@ -14,8 +14,8 @@ class App extends React.Component {
 
   state = {
     location: [],
-    weather: [],
-    forecast: [],
+    currentWeather: [],
+    fiveDayForecast: [],
     forecastButtonHovered: undefined
   }
   
@@ -57,12 +57,24 @@ class App extends React.Component {
   callAPI = (lat, lng) => {
     let apiKey = process.env.REACT_APP_NEW_WEATHER_API_KEY;
     console.log(`calling new weather API`);
-    Axios.get(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lng}`)
+    Axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lng}&days=5`)
     .then(response => {
       console.log(response);
       let tempInF = response.data.current.temp_f;
       let condition = response.data.current.condition.text;
-      this.setState({weather: [tempInF, condition]}, () => animationFunction(condition));
+
+      let fiveDayForecastArray = [];
+      for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
+        let obj = {};
+        obj.date = response.data.forecast.forecastday[i].date;
+        obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
+        obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
+        obj.condition = response.data.forecast.forecastday[i].day.condition.text;
+        fiveDayForecastArray.push(obj);
+      }
+      console.log(fiveDayForecastArray);
+      this.setState({fiveDayForecast: fiveDayForecastArray});
+      this.setState({currentWeather: [tempInF, condition]}, () => animationFunction(condition));
     });
     return;
   }
@@ -103,12 +115,12 @@ class App extends React.Component {
               <div className="row">
               <CurrentWeather 
               location={this.state.location}
-              weather={this.state.weather}></CurrentWeather>
+              weather={this.state.currentWeather}></CurrentWeather>
               </div>
               <div className="row">
               <ExtendedForecast
               changeForecast={this.changeForecast}
-              forecastResults={this.state.forecast}
+              forecastResults={this.state.fiveDayForecast}
               hovered={this.state.forecastButtonHovered}
               handleHover={this.handleHover}>
               </ExtendedForecast>

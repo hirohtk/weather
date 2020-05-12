@@ -28,7 +28,11 @@ function ExtendedForecast(props) {
                     </div>
                     <div className="row">
                         <div id="forecastResults" className="whiteText">
-                            <span>{props.forecastResults}</span>
+                            {
+                                props.forecastResults.map((each) => (
+                                    <div>{each}</div>
+                                ))
+                            }
                         </div>
                     </div>
                 </div>
