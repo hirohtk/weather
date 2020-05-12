@@ -12,15 +12,15 @@ function ExtendedForecast(props) {
                         <div id="forecastOptions" className="whiteText">
                             <div className="col l6">
                                 <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={props.changeForecast}
-                                onMouseEnter={props.handleHover}
-                                onMouseLeave={props.handleHover}>
+                                    onMouseEnter={props.handleHover}
+                                    onMouseLeave={props.handleHover}>
                                     Hourly
                                 </div>
                             </div>
                             <div className="col l6">
-                                <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay"onClick={props.changeForecast}
-                                onMouseEnter={props.handleHover}
-                                onMouseLeave={props.handleHover}>
+                                <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={props.changeForecast}
+                                    onMouseEnter={props.handleHover}
+                                    onMouseLeave={props.handleHover}>
                                     5 Day
                                 </div>
                             </div>
@@ -28,11 +28,11 @@ function ExtendedForecast(props) {
                     </div>
                     <div className="row">
                         <div id="forecastResults" className="whiteText">
-                            {/* {
+                            {
                                 props.forecastResults.map((each) => (
-                                    <div>{each}</div>
+                                    <p>{each.date}, {each.avgTempF}, {each.rainProbability}, {each.condition}</p>
                                 ))
-                            } */}
+                            }
                         </div>
                     </div>
                 </div>
