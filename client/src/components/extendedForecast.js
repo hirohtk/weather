@@ -21,7 +21,7 @@ function ExtendedForecast(props) {
                                 <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={props.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
-                                    5 Day
+                                    4 Day
                                 </div>
                             </div>
                         </div>
@@ -30,14 +30,25 @@ function ExtendedForecast(props) {
                         <div id="forecastResults" className="whiteText">
                             {
                                 props.forecastResults.map((each) => (
-                                    <div className="col l2">
+                                    <div className="col l3 forecastDay">
+                                        <h5>{each.date}</h5>
+                                        <p>Average Temperature: {each.tempF}F</p>
+                                        <p>Rain Probability: {each.rainProbability}%</p>
+                                        <p>{each.condition}</p>
+                                    </div>
+                                ))
+                            }
+                            {/* CODE FOR 4 DAY FORECAST */}
+                            {/* {
+                                props.forecastResults.map((each) => (
+                                    <div className="col l3 forecastDay">
                                         <h5>{each.date}</h5>
                                         <p>Average Temperature: {each.avgTempF}F</p>
                                         <p>Rain Probability: {each.rainProbability}%</p>
                                         <p>{each.condition}</p>
                                     </div>
                                 ))
-                            }
+                            } */}
                         </div>
                     </div>
                 </div>
