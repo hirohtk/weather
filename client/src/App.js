@@ -76,21 +76,19 @@ class App extends React.Component {
         console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
         let hourlyForecastArray = [];
-        // console.log(`test ${response.data.forecast.forecastday[0].hour[0].time}`)
-        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length + 1; j += 6) {
-          console.log(response.data.forecast.forecastday[0].hour[j]);
-          console.log(response.data.forecast.forecastday[0].hour[j].time);
-          console.log(response.data.forecast.forecastday[0].hour[j].temp_f);
-          console.log(response.data.forecast.forecastday[0].hour[j].chance_of_rain);
-          console.log(response.data.forecast.forecastday[0].hour[j].condition.text);
-          let obj = {};
-          obj.date = response.data.forecast.forecastday[0].hour[j].time;
-          obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
-          obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
-          obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
-          hourlyForecastArray.push(obj);
+        // incrementing by  j += 6 seems to bug out
+        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j++) {
+          if (j % 6 === 0) {
+            let obj = {};
+            obj.date = response.data.forecast.forecastday[0].hour[j].time;
+            obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
+            obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
+            obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
+            hourlyForecastArray.push(obj);
+          }
         }
         console.log(`hourly forecast array is ${hourlyForecastArray}`);
+
         // this.setState({fiveDayForecast: Object.assign(this.state.fiveDayForecast, fiveDayForecastArray)})
   
         // this.setState(state => {const list = state.list.concat(state.value)})
