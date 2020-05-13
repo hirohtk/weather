@@ -30,7 +30,12 @@ function ExtendedForecast(props) {
                         <div id="forecastResults" className="whiteText">
                             {
                                 props.forecastResults.map((each) => (
-                                    <p>{each.date}, {each.avgTempF}, {each.rainProbability}, {each.condition}</p>
+                                    <div className="col l2">
+                                        <h5>{each.date}</h5>
+                                        <p>Average Temperature: {each.avgTempF}F</p>
+                                        <p>Rain Probability: {each.rainProbability}%</p>
+                                        <p>{each.condition}</p>
+                                    </div>
                                 ))
                             }
                         </div>
