@@ -49,6 +49,7 @@ export function animationFunction(weatherStatus) {
     switch (weatherStatus) {
         case ("Partly cloudy"):
             makeItRain();
+            //aniIcons();
             break;
         default:
           console.log("default")
@@ -185,6 +186,11 @@ export function animationFunction(weatherStatus) {
             dy = vector2.y - vector1.y;
 
         return Math.sqrt(dx * dx + dy * dy);
+    }
+    function aniIcons() {
+        var cloudy = '<div class="cloud"</div>';
+        
+
     }
 
     //init();
