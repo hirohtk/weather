@@ -40,34 +40,13 @@ function ExtendedForecast(props) {
                             : props.forecastChosen === "extended" ?
                             props.forecastResults.map((each) => (
                                 <div className="col l3 forecastDay">
-                                    <h5>{each.date}</h5>
+                                    <h5>{each.dayOfWeek}, {each.date}</h5>
                                     <p>Average Temperature: {each.avgTempF}F</p>
                                     <p>Rain Probability: {each.rainProbability}%</p>
                                     <p>{each.condition}</p>
                                 </div>
                             )) : ""
                             }
-                            {/* {
-                                props.hourlyResults.map((each) => (
-                                    <div className="col l3 forecastDay">
-                                        <h5>{each.date.slice(11)}</h5>
-                                        <p>Temperature: {each.tempF}F</p>
-                                        <p>Rain Probability: {each.rainProbability}%</p>
-                                        <p>{each.condition}</p>
-                                    </div>
-                                ))
-                            }
-                            
-                            {
-                                props.forecastResults.map((each) => (
-                                    <div className="col l3 forecastDay">
-                                        <h5>{each.date}</h5>
-                                        <p>Average Temperature: {each.avgTempF}F</p>
-                                        <p>Rain Probability: {each.rainProbability}%</p>
-                                        <p>{each.condition}</p>
-                                    </div>
-                                ))
-                            } */}
                         </div>
                     </div>
                 </div>
