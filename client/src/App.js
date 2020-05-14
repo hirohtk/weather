@@ -9,12 +9,14 @@ import Axios from 'axios';
 import $ from 'jquery'
 import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
+import moment from "moment"
 
 class App extends React.Component {
 
   state = {
     location: [],
     currentWeather: [],
+    hourlyForecast: [],
     fiveDayForecast: [],
     forecastButtonHovered: undefined
   }
@@ -66,42 +68,47 @@ class App extends React.Component {
         let fiveDayForecastArray = [];
         for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
           let obj = {};
-          obj.date = response.data.forecast.forecastday[i].date;
+          obj.date = moment(response.data.forecast.forecastday[i].date).format('ll');
+          obj.dayOfWeek = moment(obj.date).format('dddd');
           obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
           obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
           obj.condition = response.data.forecast.forecastday[i].day.condition.text;
           fiveDayForecastArray.push(obj);
         }
-        console.log(fiveDayForecastArray);
+        console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
-        // this.setState({fiveDayForecast: Object.assign(this.state.fiveDayForecast, fiveDayForecastArray)})
-  
-        // this.setState(state => {const list = state.list.concat(state.value)})
-
-        // this.setState(prevState => ({
-        //   fiveDayForecast: prevState.fiveDayForecast.forEach(
-        //      (each, index) => (Object.assign(each, fiveDayForecastArray[index]))
-        //   )
-        // }), () => console.log(`this is fiveDayForecast in State ${this.state.fiveDayForecast} ???`));
-
-        // this.setState({fiveDayForecast: fiveDayForecastArray.map((each) => each))};
-
-        // all previous attempts to setState for the fiveDayForecast empty array failed. only when giving it indivdual elements did it work
+        let hourlyForecastArray = [];
+        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
+          console.log(j)
+            let obj = {};
+            obj.date = response.data.forecast.forecastday[0].hour[j].time;
+            obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
+            obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
+            obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
+            hourlyForecastArray.push(obj);
+        }
+        console.log(`hourly forecast array is ${hourlyForecastArray}`);
         this.setState({
-          fiveDayForecast: [fiveDayForecastArray[0], fiveDayForecastArray[1], fiveDayForecastArray[2], fiveDayForecastArray[3], fiveDayForecastArray[4]]
-        }, () => console.log(`here's the five day forecast ${this.state.fiveDayForecast}`));
-
-        this.setState({ currentWeather: [tempInF, condition] }, () => animationFunction(condition));
+          fiveDayForecast: fiveDayForecastArray.slice(1), 
+          hourlyForecast: hourlyForecastArray,
+          currentWeather: [tempInF, condition] 
+        }, () => {
+          animationFunction(condition);
+          console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`)
+        });
       });
     return;
   }
 
   changeForecast = (event) => {
+    
     if (event.target.dataset.name === "hourly") {
-      this.setState({ forecast: ["HOURLY DATA"] });
+      console.log("changing forecast to hourly")
+      this.setState({ forecastChosen: "hourly" });
     }
     else if (event.target.dataset.name === "fiveDay") {
-      this.setState({ forecast: ["5 DAY DATA"] });
+      console.log("changing forecast to extended")
+      this.setState({ forecastChosen: "extended" });
     }
     return;
   }
@@ -138,8 +145,11 @@ class App extends React.Component {
                 <ExtendedForecast
                   changeForecast={this.changeForecast}
                   forecastResults={this.state.fiveDayForecast}
+                  hourlyResults={this.state.hourlyForecast}
                   hovered={this.state.forecastButtonHovered}
-                  handleHover={this.handleHover}>
+                  handleHover={this.handleHover}
+                  forecastChosen={this.state.forecastChosen}
+                  >
                 </ExtendedForecast>
               </div>
             </div>
