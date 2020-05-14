@@ -77,15 +77,15 @@ class App extends React.Component {
 
         let hourlyForecastArray = [];
         // incrementing by  j += 6 seems to bug out
-        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j++) {
-          if (j % 6 === 0) {
+        
+        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
+          console.log(j)
             let obj = {};
             obj.date = response.data.forecast.forecastday[0].hour[j].time;
             obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
             obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
             obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
             hourlyForecastArray.push(obj);
-          }
         }
         console.log(`hourly forecast array is ${hourlyForecastArray}`);
 
@@ -104,12 +104,13 @@ class App extends React.Component {
         // all previous attempts to setState for the fiveDayForecast empty array failed. only when giving it indivdual elements did it work
         // omitting today (fiveDayForecastArray[0]).  Intending to handle this on hourly
         this.setState({
-          fiveDayForecast: [fiveDayForecastArray[1], fiveDayForecastArray[2], fiveDayForecastArray[3], fiveDayForecastArray[4]]
-        }, () => console.log(`here's the five day forecast ${this.state.fiveDayForecast}`));
-        this.setState({
-          hourlyForecast: [hourlyForecastArray[0], hourlyForecastArray[1], hourlyForecastArray[2], hourlyForecastArray[3]]
-        }, () => console.log(`heres the current hourly forecast`))
-        this.setState({ currentWeather: [tempInF, condition] }, () => animationFunction(condition));
+          fiveDayForecast: fiveDayForecastArray, 
+          hourlyForecast: hourlyForecastArray,
+          currentWeather: [tempInF, condition] 
+        }, () => {
+          animationFunction(condition);
+          console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`)
+        });
       });
     return;
   }
