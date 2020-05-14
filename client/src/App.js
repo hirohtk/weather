@@ -9,6 +9,7 @@ import Axios from 'axios';
 import $ from 'jquery'
 import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
+import moment from "moment"
 
 class App extends React.Component {
 
@@ -67,7 +68,8 @@ class App extends React.Component {
         let fiveDayForecastArray = [];
         for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
           let obj = {};
-          obj.date = response.data.forecast.forecastday[i].date;
+          obj.date = moment(response.data.forecast.forecastday[i].date).format('ll');
+          obj.dayOfWeek = moment(obj.date).format('dddd');
           obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
           obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
           obj.condition = response.data.forecast.forecastday[i].day.condition.text;
@@ -76,8 +78,6 @@ class App extends React.Component {
         console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
         let hourlyForecastArray = [];
-        // incrementing by  j += 6 seems to bug out
-        
         for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
           console.log(j)
             let obj = {};
@@ -88,21 +88,6 @@ class App extends React.Component {
             hourlyForecastArray.push(obj);
         }
         console.log(`hourly forecast array is ${hourlyForecastArray}`);
-
-        // this.setState({fiveDayForecast: Object.assign(this.state.fiveDayForecast, fiveDayForecastArray)})
-  
-        // this.setState(state => {const list = state.list.concat(state.value)})
-
-        // this.setState(prevState => ({
-        //   fiveDayForecast: prevState.fiveDayForecast.forEach(
-        //      (each, index) => (Object.assign(each, fiveDayForecastArray[index]))
-        //   )
-        // }), () => console.log(`this is fiveDayForecast in State ${this.state.fiveDayForecast} ???`));
-
-        // this.setState({fiveDayForecast: fiveDayForecastArray.map((each) => each))};
-
-        // all previous attempts to setState for the fiveDayForecast empty array failed. only when giving it indivdual elements did it work
-        // omitting today (fiveDayForecastArray[0]).  Intending to handle this on hourly
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1), 
           hourlyForecast: hourlyForecastArray,
