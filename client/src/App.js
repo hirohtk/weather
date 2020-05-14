@@ -104,7 +104,7 @@ class App extends React.Component {
         // all previous attempts to setState for the fiveDayForecast empty array failed. only when giving it indivdual elements did it work
         // omitting today (fiveDayForecastArray[0]).  Intending to handle this on hourly
         this.setState({
-          fiveDayForecast: fiveDayForecastArray, 
+          fiveDayForecast: fiveDayForecastArray.slice(1), 
           hourlyForecast: hourlyForecastArray,
           currentWeather: [tempInF, condition] 
         }, () => {
@@ -116,11 +116,14 @@ class App extends React.Component {
   }
 
   changeForecast = (event) => {
+    
     if (event.target.dataset.name === "hourly") {
-      this.setState({ forecast: ["HOURLY DATA"] });
+      console.log("changing forecast to hourly")
+      this.setState({ forecastChosen: "hourly" });
     }
     else if (event.target.dataset.name === "fiveDay") {
-      this.setState({ forecast: ["5 DAY DATA"] });
+      console.log("changing forecast to extended")
+      this.setState({ forecastChosen: "extended" });
     }
     return;
   }
@@ -159,7 +162,9 @@ class App extends React.Component {
                   forecastResults={this.state.fiveDayForecast}
                   hourlyResults={this.state.hourlyForecast}
                   hovered={this.state.forecastButtonHovered}
-                  handleHover={this.handleHover}>
+                  handleHover={this.handleHover}
+                  forecastChosen={this.state.forecastChosen}
+                  >
                 </ExtendedForecast>
               </div>
             </div>
