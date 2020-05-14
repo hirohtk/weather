@@ -58,11 +58,11 @@ export function animationFunction(weatherStatus) {
     //     //makeItRain();
     // });
 
-    $('.snow-toggle.toggle').on('click', function () {
-        $('body').toggleClass('snow-toggle');
-        $('.snow-toggle.toggle').toggleClass('active');
-        run();
-    });
+    // $('.snow-toggle.toggle').on('click', function () {
+    //     $('body').toggleClass('snow-toggle');
+    //     $('.snow-toggle.toggle').toggleClass('active');
+    //     run();
+    // });
 
     // $('.rain-toggle.toggle').on('click', function () {
     //     console.log("button clicked")
@@ -73,126 +73,110 @@ export function animationFunction(weatherStatus) {
 
     //----------------------------------------------------
     //SNOWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-    var canvas = document.getElementById("myFireworks");
-    var context = canvas.getContext("2d");
-    var maxParticles = 6000;
+    var canvas = document.querySelector('.fireworks'),
+        ctx = canvas.getContext('2d'),
+        windowW = window.innerWidth,
+        windowH = window.innerHeight,
+        numFlakes = 200,
+        flakes = [];
+
+    function Flake(x, y) {
+        var maxWeight = 5,
+            maxSpeed = 3;
+
+        this.x = x;
+        this.y = y;
+        this.r = randomBetween(0, 1);
+        this.a = randomBetween(0, Math.PI);
+        this.aStep = 0.01;
 
 
+        this.weight = randomBetween(2, maxWeight);
+        this.alpha = (this.weight / maxWeight);
+        this.speed = (this.weight / maxWeight) * maxSpeed;
 
-    var snowColors = ["white", "ghostwhite", "snow", "whitesmoke"];
+        this.update = function () {
+            this.x += Math.cos(this.a) * this.r;
+            this.a += this.aStep;
 
-    let frame = 0;
-
-    class Vector {
-        constructor(x, y) {
-            this.x = x;
-            this.y = y;
+            this.y += this.speed;
         }
+
     }
 
-    class Particle {
-        constructor(x, y, dx, dy, dx2, dy2, r, color) {
-            this.active = true;
-            this.position = new Vector(x, y);
-            this.velocity = new Vector(dx, dy);
-            this.acceleration = new Vector(dx2, dy2);
-            this.radius = r;
-            this.color = color;
+    function init() {
+        var i = numFlakes,
+            flake,
+            x,
+            y;
+
+        while (i--) {
+            x = randomBetween(0, windowW, true);
+            y = randomBetween(0, windowH, true);
+
+
+            flake = new Flake(x, y);
+            flakes.push(flake);
         }
 
-        update() {
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-        }
-
-        draw(context) {
-            context.save();
-            context.fillStyle = this.color;
-            context.beginPath();
-            context.arc(
-                this.position.x,
-                this.position.y,
-                this.radius,
-                0,
-                2 * Math.PI,
-                false
-            );
-            context.fill();
-            context.restore();
-        }
+        scaleCanvas();
+        loop();
     }
 
-    // window.addEventListener("load", e => {
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeight;
-    // });
+    function scaleCanvas() {
+        canvas.width = windowW;
+        canvas.height = windowH;
+    }
 
-    // window.addEventListener("resize", e => {
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeight;
-    // });
+    function loop() {
+        var i = flakes.length,
+            z,
+            dist,
+            flakeA,
+            flakeB;
 
-    let particles = [];
+        // clear canvas
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, windowW, windowH);
+        ctx.restore();
 
-    function run() {
-        frame++;
-        // fill with black background
-        context.fillStyle = "black";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        // loop of hell
+        while (i--) {
 
-        if (particles.length === maxParticles) {
-            particles = [];
-        }
+            flakeA = flakes[i];
+            flakeA.update();
 
-        // generate particles
-        particles.push(
-            new Particle(
-                getRandomArbitrary(0, canvas.width),
-                0,
-                getRandomArbitrary(-0.5, 0.5),
-                getRandomArbitrary(0, 3),
-                getRandomArbitrary(-1, 1),
-                getRandomArbitrary(1, 0),
-                getRandomArbitrary(1, 3),
-                rand(snowColors)
-            )
-        );
 
-        for (let i = 0; i <= particles.length - 1; i++) {
-            particles[i].draw(context);
-            particles[i].update();
+            ctx.beginPath();
+            ctx.arc(flakeA.x, flakeA.y, flakeA.weight, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + flakeA.alpha + ')';
+            ctx.fill();
 
-            if (particles[i].radius === 3) {
-                particles[i].velocity.y += 4;
-            }
-
-            if (particles[i].radius === 2) {
-                particles[i].velocity.y += 3;
-            }
-
-            if (particles[i].radius === 1) {
-                particles[i].velocity.y += 2;
+            if (flakeA.y >= windowH) {
+                flakeA.y = -flakeA.weight;
             }
         }
 
-        requestAnimationFrame(run);
+        requestAnimationFrame(loop);
     }
 
-    /* 
-    * https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-    */
-    function getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
+    function randomBetween(min, max, round) {
+        var num = Math.random() * (max - min + 1) + min;
+
+        if (round) {
+            return Math.floor(num);
+        } else {
+            return num;
+        }
     }
 
-    /*
-    * https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
-    */
-    function rand(items) {
-        return items[~~(items.length * Math.random())];
-    }
+    function distanceBetween(vector1, vector2) {
+        var dx = vector2.x - vector1.x,
+            dy = vector2.y - vector1.y;
 
-    // run();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 
     switch (weatherStatus) {
         case ("Light rain"):
@@ -200,7 +184,7 @@ export function animationFunction(weatherStatus) {
             //aniIcons();
             break;
         case ("Partly cloudy"):
-            run();
+            //init();
             break;
         default:
             console.log("default")
