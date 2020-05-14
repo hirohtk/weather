@@ -1,5 +1,11 @@
 import React from 'react';
 import "./extendedForecast.css"
+import Sun from "./icons/sun.js";
+import Clouds from "./icons/clouds.js"
+import Flurries from "./icons/flurries.js"
+import Rainie from "./icons/rainie.js"
+import Sunrain from "./icons/sunrain.js"
+import Thunder from "./icons/thunder.js"
 
 function ExtendedForecast(props) {
 

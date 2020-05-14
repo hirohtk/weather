@@ -1,3 +1,7 @@
+html {
+  color: currentColor !important;
+}
+
 .App {
   text-align: center;
 }
