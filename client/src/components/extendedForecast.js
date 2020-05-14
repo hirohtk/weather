@@ -1,5 +1,11 @@
 import React from 'react';
 import "./extendedForecast.css"
+import Sun from "./icons/sun.js";
+import Clouds from "./icons/clouds.js"
+import Flurries from "./icons/flurries.js"
+import Rainie from "./icons/rainie.js"
+import Sunrain from "./icons/sunrain.js"
+import Thunder from "./icons/thunder.js"
 
 function ExtendedForecast(props) {
 
@@ -28,11 +34,15 @@ function ExtendedForecast(props) {
                     </div>
                     <div className="row">
                         <div id="forecastResults" className="whiteText">
-                            {
+                            
+                            <Sun></Sun>
+                            
+                            
+                            {/* {
                                 props.forecastResults.map((each) => (
                                     <p>{each.date}, {each.avgTempF}, {each.rainProbability}, {each.condition}</p>
                                 ))
-                            }
+                            } */}
                         </div>
                     </div>
                 </div>
