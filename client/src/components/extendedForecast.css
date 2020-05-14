@@ -42,3 +42,11 @@
         background-color: lightgray;
     }
 }
+
+.forecastDay {
+    border: 1px dotted rgb(195, 195, 195);
+    border-radius: 2px;
+    /* margin-left: 5px;
+    margin-right: 5px; */
+    height: 13rem;
+}
