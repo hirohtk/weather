@@ -20,7 +20,7 @@ function ExtendedForecast(props) {
                                 <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={props.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
-                                    Hourly for Today
+                                    Hourly
                                 </div>
                             </div>
                             <div className="col l6">
@@ -34,26 +34,53 @@ function ExtendedForecast(props) {
                     </div>
                     <div className="row">
                         <div id="forecastResults" className="whiteText">
-                            { props.forecastChosen === "hourly" ? 
-                            props.hourlyResults.map((each) => (
-                                    <div className="col l3 forecastDay">
+                            {props.forecastChosen === "hourly" ?
+                                props.hourlyResults.map((each) => (
+                                    <div className="forecastDayHourly">
                                         <h5>{each.date.slice(11)}</h5>
                                         <p>Temperature: {each.tempF}F</p>
                                         <p>Rain Probability: {each.rainProbability}%</p>
                                         <p>{each.condition}</p>
                                     </div>
-                                )) 
-                            : props.forecastChosen === "extended" ?
-                            props.forecastResults.map((each) => (
-                                <div className="col l3 forecastDay">
-                                    <h5>{each.dayOfWeek}, {each.date}</h5>
-                                    <p>Average Temperature: {each.avgTempF}F</p>
-                                    <p>Rain Probability: {each.rainProbability}%</p>
-                                    <p>{each.condition}</p>
-                                </div>
-                            )) : ""
+                                ))
+                                : props.forecastChosen === "extended" ?
+                                    props.forecastResults.map((each) => (
+                                        <div className="col l3 forecastDayExtended">
+                                            <h5>{each.dayOfWeek}, {each.date}</h5>
+                                            <p>Average Temperature: {each.avgTempF}F</p>
+                                            <p>Rain Probability: {each.rainProbability}%</p>
+                                            <p>{each.condition}</p>
+                                        </div>
+                                    )) : ""
                             }
                         </div>
+                        {/* <div id="forecastResults" className="whiteText">
+                            <div class="carousel">
+                                {props.forecastChosen === "hourly" ?
+                                    props.hourlyResults.map((each) => (
+                                        <a class="carousel-item">
+                                            <div className="forecastDay">
+                                            <h5>{each.date.slice(11)}</h5>
+                                            <p>Temperature: {each.tempF}F</p>
+                                            <p>Rain Probability: {each.rainProbability}%</p>
+                                            <p>{each.condition}</p>
+                                        </div>
+                                        </a>
+                                    ))
+                                    : props.forecastChosen === "extended" ?
+                                        props.forecastResults.map((each) => (
+                                            <a class="carousel-item" >
+                                                <div className="forecastDay">
+                                                <h5>{each.dayOfWeek}, {each.date}</h5>
+                                                <p>Average Temperature: {each.avgTempF}F</p>
+                                                <p>Rain Probability: {each.rainProbability}%</p>
+                                                <p>{each.condition}</p>
+                                            </div>
+                                            </a>
+                                        )) : ""
+                                }
+                            </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

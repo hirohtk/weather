@@ -78,16 +78,29 @@ class App extends React.Component {
         console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
         let hourlyForecastArray = [];
-        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
-          console.log(j)
-            let obj = {};
-            obj.date = response.data.forecast.forecastday[0].hour[j].time;
-            obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
-            obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
-            obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
-            hourlyForecastArray.push(obj);
+        // FOR 5 DAYS HOURLY DATA
+        for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
+          console.log(`doing day ${k} now`)
+          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += 6) {
+              let obj = {};
+              obj.date = response.data.forecast.forecastday[k].hour[j].time;
+              obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+              obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
+              obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
+              hourlyForecastArray.push(obj);
+          }
         }
-        console.log(`hourly forecast array is ${hourlyForecastArray}`);
+        // FOR ONE DAY HOURLY DATA
+        // for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
+        //   console.log(j)
+        //     let obj = {};
+        //     obj.date = response.data.forecast.forecastday[0].hour[j].time;
+        //     obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
+        //     obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
+        //     obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
+        //     hourlyForecastArray.push(obj);
+        // }
+        console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1), 
           hourlyForecast: hourlyForecastArray,
