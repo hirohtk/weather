@@ -33,7 +33,7 @@ function ExtendedForecast(props) {
                         </div>
                     </div>
                     <div className="row">
-                        <div id="forecastResults" className="whiteText">
+                        <div id={props.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText">
                             {props.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each) => (
                                     <div className="forecastDayHourly">

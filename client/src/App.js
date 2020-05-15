@@ -15,6 +15,7 @@ class App extends React.Component {
 
   state = {
     location: [],
+    now: "",
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
@@ -22,6 +23,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    setInterval(() => {
+      this.setState({now: moment().format('MMMM Do YYYY, h:mm:ss a')});
+    }, 1000);
     this.getCurrentLocation();
   }
 
@@ -151,6 +155,7 @@ class App extends React.Component {
             <div className="boxForEverything">
               <div className="row">
                 <CurrentWeather
+                now={this.state.now}
                   location={this.state.location}
                   weather={this.state.currentWeather}></CurrentWeather>
               </div>
