@@ -37,7 +37,7 @@ function ExtendedForecast(props) {
                             {props.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each) => (
                                     <div className="forecastDayHourly">
-                                        <h5>{each.date.slice(11)}</h5>
+                                        <h5>{each.date}</h5>
                                         <p>Temperature: {each.tempF}F</p>
                                         <p>Rain Probability: {each.rainProbability}%</p>
                                         <p>{each.condition}</p>
