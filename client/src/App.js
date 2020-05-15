@@ -85,9 +85,9 @@ class App extends React.Component {
         // FOR 5 DAYS HOURLY DATA
         for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
           console.log(`doing day ${k} now`)
-          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += 6) {
+          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += 3) {
               let obj = {};
-              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY, h:mm');
+              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY, h:mm a');
               obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
               obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
               obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
