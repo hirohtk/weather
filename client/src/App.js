@@ -9,7 +9,9 @@ import Axios from 'axios';
 import $ from 'jquery'
 import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
-import moment from "moment"
+import moment from "moment";
+
+
 
 class App extends React.Component {
 
@@ -106,19 +108,20 @@ class App extends React.Component {
         // }
         console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
         this.setState({
-          fiveDayForecast: fiveDayForecastArray.slice(1), 
+          fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
-          currentWeather: [tempInF, condition] 
+          currentWeather: [tempInF, condition]
         }, () => {
           animationFunction(condition);
-          console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`)
+          console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`);
+          console.log(`currentWeather is ${this.state.currentWeather}`)
         });
       });
     return;
   }
 
   changeForecast = (event) => {
-    
+
     if (event.target.dataset.name === "hourly") {
       console.log("changing forecast to hourly")
       this.setState({ forecastChosen: "hourly" });
@@ -153,7 +156,8 @@ class App extends React.Component {
         <div className="container">
           <div className="row">
             <Animation
-              weather={this.state.weather}></Animation>
+              weather={this.state.currentWeather}>
+            </Animation>
             <div className="boxForEverything">
               <div className="row">
                 <CurrentWeather
@@ -170,7 +174,7 @@ class App extends React.Component {
                   hovered={this.state.forecastButtonHovered}
                   handleHover={this.handleHover}
                   forecastChosen={this.state.forecastChosen}
-                  >
+                >
                 </ExtendedForecast>
               </div>
             </div>
