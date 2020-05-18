@@ -1,4 +1,4 @@
-function colorLogic(dayOfWeek) {
+export function colorLogic(dayOfWeek) {
 
     const colorDayArray = ["yellow", "pink", "green", "orange", "blue", "indigo", "purple"]
 
@@ -20,5 +20,3 @@ function colorLogic(dayOfWeek) {
             default: return "white"
         }
 }
-
-console.log(colorLogic("Monday"));

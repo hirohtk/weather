@@ -1,11 +1,13 @@
 import React from 'react';
 import "./extendedForecast.css"
-import Sun from "./icons/sun.js";
-import Clouds from "./icons/clouds.js"
-import Flurries from "./icons/flurries.js"
-import Rainie from "./icons/rainie.js"
-import Sunrain from "./icons/sunrain.js"
-import Thunder from "./icons/thunder.js"
+// import Sun from "./icons/sun.js";
+// import Clouds from "./icons/clouds.js"
+// import Flurries from "./icons/flurries.js"
+// import Rainie from "./icons/rainie.js"
+// import Sunrain from "./icons/sunrain.js"
+// import Thunder from "./icons/thunder.js"
+// import { PromiseProvider } from 'mongoose';
+import {colorLogic} from "./logic/colorLogic";
 
 function ExtendedForecast(props) {
 
@@ -35,9 +37,10 @@ function ExtendedForecast(props) {
                     <div className="row">
                         <div id={props.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText">
                             {props.forecastChosen === "hourly" ?
-                                props.hourlyResults.map((each) => (
-                                    <div className="forecastDayHourly">
-                                        <h5>{each.date}</h5>
+                                props.hourlyResults.map((each) => ( 
+                                    <div className="forecastDayHourly" style={colorLogic(each.dayOfWeek)}>
+                                        <h5>{each.dayOfWeek}, {each.time}</h5>
+                                        <p>{each.date}</p>
                                         <p>Temperature: {each.tempF}F</p>
                                         <p>Rain Probability: {each.rainProbability}%</p>
                                         <p>{each.condition}</p>
@@ -45,7 +48,7 @@ function ExtendedForecast(props) {
                                 ))
                                 : props.forecastChosen === "extended" ?
                                     props.forecastResults.map((each) => (
-                                        <div className="col l3 forecastDayExtended">
+                                        <div className="col l3 forecastDayExtended" style={colorLogic(each.dayOfWeek)}>
                                             <h5>{each.dayOfWeek}, {each.date}</h5>
                                             <p>Average Temperature: {each.avgTempF}F</p>
                                             <p>Rain Probability: {each.rainProbability}%</p>

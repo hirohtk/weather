@@ -44,17 +44,18 @@
 }
 
 .forecastDayHourly {
-    border: 1px dotted rgb(195, 195, 195);
+    border: 1px dotted;
     border-radius: 2px;
     /* margin-left: 5px;
     margin-right: 5px; */
     height: 13rem;
     width: 24rem;
     display:inline-block;
+    margin-bottom: 20px;
 }
 
 .forecastDayExtended {
-    border: 1px dotted rgb(195, 195, 195);
+    border: 1px dashed;
     border-radius: 2px;
     /* margin-left: 5px;
     margin-right: 5px; */
