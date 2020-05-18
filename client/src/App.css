@@ -44,6 +44,6 @@ html {
 .boxForEverything {
   position: absolute;
   top: 64px;
-  width:100%;
+  left: 25%;
   height: 100%
 }

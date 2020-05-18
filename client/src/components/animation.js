@@ -16,16 +16,18 @@ function Animation(props) {
             {/* <div class="snow-on"></div> */}
             <div className="rainy-on"></div>
 
-            <div className="toggles">
+            <div>
+                {props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
+            </div>
+
+            {/* <div className="toggles">
                 <div className="splat-toggle toggle active">SPLAT</div>
                 <div className="back-row-toggle toggle active">BACK<br></br>ROW</div>
                 <div className="single-toggle toggle">SINGLE</div>
                 <div className="snow-toggle toggle">SNOW</div>
                 <div className="rainy-toggle toggle active">RAIN</div>
-                <div>
-                    {props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
-                </div>
-            </div>
+
+            </div> */}
 
         </div>
 

@@ -17,6 +17,7 @@ class App extends React.Component {
 
   state = {
     location: [],
+    now: "",
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
@@ -24,6 +25,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    setInterval(() => {
+      this.setState({now: moment().format('MMMM Do YYYY, h:mm:ss a')});
+    }, 1000);
     this.getCurrentLocation();
   }
 
@@ -80,16 +84,29 @@ class App extends React.Component {
         console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
         let hourlyForecastArray = [];
-        for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
-          console.log(j)
-          let obj = {};
-          obj.date = response.data.forecast.forecastday[0].hour[j].time;
-          obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
-          obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
-          obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
-          hourlyForecastArray.push(obj);
+        // FOR 5 DAYS HOURLY DATA
+        for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
+          console.log(`doing day ${k} now`)
+          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += 3) {
+              let obj = {};
+              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY, h:mm a');
+              obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+              obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
+              obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
+              hourlyForecastArray.push(obj);
+          }
         }
-        console.log(`hourly forecast array is ${hourlyForecastArray}`);
+        // FOR ONE DAY HOURLY DATA
+        // for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
+        //   console.log(j)
+        //     let obj = {};
+        //     obj.date = response.data.forecast.forecastday[0].hour[j].time;
+        //     obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
+        //     obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
+        //     obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
+        //     hourlyForecastArray.push(obj);
+        // }
+        console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
@@ -133,7 +150,9 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Nav></Nav>
+        <Nav
+        // Splitting moment's result at the comma (.split gives an array)
+        time={this.state.now.split(",")[1]}></Nav>
         <div className="container">
           <div className="row">
             <Animation
@@ -142,6 +161,8 @@ class App extends React.Component {
             <div className="boxForEverything">
               <div className="row">
                 <CurrentWeather
+                // Splitting moment's result at the comma (.split gives an array)
+                now={this.state.now.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}></CurrentWeather>
               </div>
