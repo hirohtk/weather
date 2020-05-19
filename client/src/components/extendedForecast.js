@@ -2,6 +2,7 @@ import React from 'react';
 import "./extendedForecast.css"
 // import { PromiseProvider } from 'mongoose';
 import {colorLogic} from "./logic/colorLogic";
+import {iconLogic} from "./logic/iconLogic";
 
 function ExtendedForecast(props) {
 
@@ -38,6 +39,7 @@ function ExtendedForecast(props) {
                                         <p>Temperature: {each.tempF}F</p>
                                         <p>Rain Probability: {each.rainProbability}%</p>
                                         <p>{each.condition}</p>
+                                        <span>{iconLogic(each.condition)}</span>
                                     </div>
                                 ))
                                 : props.forecastChosen === "extended" ?
@@ -47,6 +49,7 @@ function ExtendedForecast(props) {
                                             <p>Average Temperature: {each.avgTempF}F</p>
                                             <p>Rain Probability: {each.rainProbability}%</p>
                                             <p>{each.condition}</p>
+                                            <span>{iconLogic(each.condition)}</span>
                                         </div>
                                     )) : ""
                             }
