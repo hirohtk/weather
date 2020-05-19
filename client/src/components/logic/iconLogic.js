@@ -24,6 +24,9 @@ export function iconLogic(condition) {
         if (condition.includes("rain")) {
             return "Rainy";
         }
+        else if (condition.includes("cloud") || condition.includes("Overcast")) {
+            return "Cloudy";
+        }
         else {
             return "";
         }
@@ -43,6 +46,6 @@ export function iconLogic(condition) {
         return conditions.mixed;
         case "Thunderstorm":
         return conditions.thunder;
-        default: return <p>No icon</p>
+        default: return <p style={{color:"red"}}>No icon</p>
     }
 }
