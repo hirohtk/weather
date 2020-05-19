@@ -9,12 +9,12 @@ function Animation(props) {
         <div className="Scott">
 
             <canvas className="fireworks" id="myFireworks"></canvas>
-
-            <div className="rainy front-row"></div>
-            <div className="rainy back-row"></div>
+            {/* SCOTT IF YOU WANT TO TEST THE RAINY DIVS BELOW TAKE OUT style={{display: "none"}}  */}
+            <div className="rainy front-row" style={{display: "none"}}></div>
+            <div className="rainy back-row" style={{display: "none"}}></div>
 
             {/* <div class="snow-on"></div> */}
-            <div className="rainy-on"></div>
+            <div className="rainy-on" style={{display: "none"}}></div>
 
             <div>
                 {props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
