@@ -21,10 +21,10 @@ export function iconLogic(condition) {
     // API weather conditions than icons at the moment.
 
     let pooler = (condition) => {
-        if (condition.includes("rain")) {
+        if (condition.match(/^(Patchy rain possible|Light rain shower|Light drizzle|Heavy rain at times)$/)) {
             return "Rainy";
         }
-        else if (condition.includes("cloud") || condition.includes("Overcast")) {
+        else if (condition.match(/^(Partly cloudy|Overcast|Cloudy)$/)) {
             return "Cloudy";
         }
         else {

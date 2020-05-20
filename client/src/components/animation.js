@@ -5,19 +5,16 @@ import "./icons.css"
 import SunAnimation from './sunAnimation';
 
 function Animation(props) {
+    console.log(`ehhh ${props.weather[0]}`);
     return (
         <div className="Scott">
-
-            <canvas className="fireworks" id="myFireworks"></canvas>
-            {/* SCOTT IF YOU WANT TO TEST THE RAINY DIVS BELOW TAKE OUT style={{display: "none"}}  */}
-            <div className="rainy front-row" style={{display: "none"}}></div>
-            <div className="rainy back-row" style={{display: "none"}}></div>
-
-            {/* <div class="snow-on"></div> */}
-            <div className="rainy-on" style={{display: "none"}}></div>
-
+            {props.weather[0].contains("cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>}
+            {/* {props.weather[0].contains("cloudy") ?
+                <><div className="rainy front-row"></div>
+                    <div className="rainy back-row"></div>
+                    <div className="rainy-on"></div></> : <></>} */}
             <div>
-                {props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
+                {props.weather[0].contains("Sunny") ? <SunAnimation></SunAnimation> : ""}
             </div>
 
             {/* <div className="toggles">

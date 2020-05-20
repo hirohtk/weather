@@ -142,6 +142,7 @@ export function animationFunction(weatherStatus) {
             break;
         case ("Partly cloudy"):
             // init();
+            makeItRain();
             break;
         // case ("Sunny"):
         //     SunAnimation();
