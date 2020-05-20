@@ -6,19 +6,9 @@ import _ from 'underscore'
 export function animationFunction(weatherStatus) {
     window.human = false;
 
-
-    var canvasEl = document.querySelector('.fireworks');
-
-    function setCanvasSize() {
-        canvasEl.width = window.innerWidth * 2;
-        canvasEl.height = window.innerHeight * 2;
-        canvasEl.style.width = window.innerWidth + 'px';
-        canvasEl.style.height = window.innerHeight + 'px';
-        canvasEl.getContext('2d').scale(2, 2);
-    }
-
-
     //RAINNNNNNNNNNNNNNNNNNNNNNN
+
+    // DOES NOT REQUIRE USE OF CANAVS AT ALL
     var centerX = window.innerWidth;
     var centerY = window.innerHeight;
     var makeItRain = function () {
@@ -47,34 +37,19 @@ export function animationFunction(weatherStatus) {
         $('.rainy.back-row').append(backDrops);
     }
 
-    // $('.splat-toggle.toggle').on('click', function () {
-    //     $('body').toggleClass('splat-toggle');
-    //     $('.splat-toggle.toggle').toggleClass('active');
-    //     //makeItRain();
-    // });
-
-    // $('.single-toggle.toggle').on('click', function () {
-    //     $('body').toggleClass('single-toggle');
-    //     $('.single-toggle.toggle').toggleClass('active');
-    //     //makeItRain();
-    // });
-
-    // $('.snow-toggle.toggle').on('click', function () {
-    //     $('body').toggleClass('snow-toggle');
-    //     $('.snow-toggle.toggle').toggleClass('active');
-    //     init();
-    // });
-
-    // $('.rain-toggle.toggle').on('click', function () {
-    //     console.log("button clicked")
-    //     $('body').toggleClass('rain-toggle');
-    //     $('.rain-toggle.toggle').toggleClass('active');
-    //     makeItRain();
-    // });
-
     //----------------------------------------------------
     //SNOWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
     function init() {
+
+        var canvasEl = document.querySelector('.fireworks');
+
+        function setCanvasSize() {
+            canvasEl.width = window.innerWidth * 2;
+            canvasEl.height = window.innerHeight * 2;
+            canvasEl.style.width = window.innerWidth + 'px';
+            canvasEl.style.height = window.innerHeight + 'px';
+            canvasEl.getContext('2d').scale(2, 2);
+        }
         var canvas = document.getElementById('myFireworks');
         var ctx = canvas.getContext('2d');
         var flakeArray = [];
@@ -132,6 +107,9 @@ export function animationFunction(weatherStatus) {
                 }
             }
         }, 16);
+
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize, false);
     }
 
 
@@ -151,11 +129,5 @@ export function animationFunction(weatherStatus) {
         default:
             console.log("default")
     }
-    //init();
-
-    //makeItRain();
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize, false);
-
 
 }

@@ -5,17 +5,22 @@ import "./icons.css"
 import SunAnimation from './sunAnimation';
 
 function Animation(props) {
-    console.log(`ehhh ${props.weather[0]}`);
+// console.log(`is this loading out of order? ${props.weather[1]}`)
     return (
         <div className="Scott">
-            {props.weather[0].contains("cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>}
-            {/* {props.weather[0].contains("cloudy") ?
+
+{/* FOR NOW, SET .includes ARGUMENT TO BE CURRENT ACTUAL WEATHER CONDITION */}
+
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
+
+            {props.weather[1] === undefined ? <></> : props.weather[1].includes("cloudy") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
-                    <div className="rainy-on"></div></> : <></>} */}
+                    <div className="rainy-on"></div></> : <></>}
+
             <div>
-                {props.weather[0].contains("Sunny") ? <SunAnimation></SunAnimation> : ""}
-            </div>
+                {props.weather[1] === undefined ? <></> : props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
+            </div> */}
 
             {/* <div className="toggles">
                 <div className="splat-toggle toggle active">SPLAT</div>

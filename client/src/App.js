@@ -169,7 +169,7 @@ class App extends React.Component {
                 // Splitting moment's result at the comma (.split gives an array)
                 now={this.state.now.split(",")[0]}
                   location={this.state.location}
-                  weather={this.state.currentWeather}></CurrentWeather>
+                  weather={this.state.currentWeather}><p>{this.state.CurrentWeather}</p></CurrentWeather>
               </div>
               <div className="row">
                 <ExtendedForecast
