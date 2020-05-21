@@ -3,6 +3,7 @@ import "./rain.css"
 import "./icons.css"
 //import "./cloud.scss"
 import SunAnimation from './sunAnimation';
+import { animationFunction } from "./components/logic/animationLogic";
 
 function Animation(props) {
 // console.log(`is this loading out of order? ${props.weather[1]}`)
@@ -10,14 +11,16 @@ function Animation(props) {
         <div className="Scott">
 
             {/* FOR NOW TO TEST, PUT ACTUAL CURRENT CONDITION  */}
+{/* Snonw */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Sunny") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast"") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
-
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast"") ?
+{/* Rain */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
 
+{/* Sun */}
             {/* <div>
                 {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ? <SunAnimation></SunAnimation> : ""}
             </div>  */}
