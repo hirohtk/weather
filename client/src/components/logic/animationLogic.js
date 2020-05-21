@@ -112,13 +112,16 @@ export function animationFunction(weatherStatus) {
         window.addEventListener('resize', setCanvasSize, false);
     }
 
+    // init();
+    // makeItRain();
+
 
     switch (weatherStatus) {
         case ("Light rain"):
             makeItRain();
             //aniIcons();
             break;
-        case ("Partly cloudy"):
+        case ("Overcast"):
             // init();
             makeItRain();
             break;
