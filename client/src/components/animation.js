@@ -1,12 +1,12 @@
 import React from 'react';
 import "./rain.css"
 import "./icons.css"
-//import "./cloud.scss"
+import "./cloudAnimation.css"
 import SunAnimation from './sunAnimation';
 import { animationFunction } from "./components/logic/animationLogic";
 
 function Animation(props) {
-// console.log(`is this loading out of order? ${props.weather[1]}`)
+console.log(`is this loading out of order? ${props.weather[1]}`)
     return (
         <div className="Scott">
 
@@ -19,6 +19,11 @@ function Animation(props) {
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
+
+{/* clouds */}
+            {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ?
+                <><div className="hero"></div>
+                  <div className="heroClouds"></div></> : <></>}
 
 {/* Sun */}
             {/* <div>
