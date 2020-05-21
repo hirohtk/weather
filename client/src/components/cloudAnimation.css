@@ -1,0 +1,50 @@
+.hero {
+    width: 100%;
+    min-height: 750px;
+    background-image: url('http://zackcerny.com/images/hero-image-top.png');
+    background-size: cover;
+    background-position: center center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.heroClouds {
+    width: 2500px;
+    height: 750px;
+    background-image: url('https://i.imgur.com/hAaTm7J.jpg');
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    animation: clouds 70s infinite linear;
+}
+
+@keyframes clouds {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -1024px 0;
+    }
+}
+
+@-webkit-keyframes clouds {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -1024px 0;
+    }
+}
+
+@-moz-keyframes clouds {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -1024px 0;
+    }
+}
