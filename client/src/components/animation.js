@@ -9,18 +9,18 @@ function Animation(props) {
     return (
         <div className="Scott">
 
-{/* FOR NOW, SET .includes ARGUMENT TO BE CURRENT ACTUAL WEATHER CONDITION */}
+            {/* FOR NOW TO TEST, PUT ACTUAL CURRENT CONDITION  */}
 
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast"") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
-            {props.weather[1] === undefined ? <></> : props.weather[1].includes("cloudy") ?
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast"") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
-                    <div className="rainy-on"></div></> : <></>}
+                    <div className="rainy-on"></div></> : <></>} */}
 
-            <div>
-                {props.weather[1] === undefined ? <></> : props.weather[1] === "Sunny" ? <SunAnimation></SunAnimation> : ""}
-            </div> */}
+            {/* <div>
+                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ? <SunAnimation></SunAnimation> : ""}
+            </div>  */}
 
             {/* <div className="toggles">
                 <div className="splat-toggle toggle active">SPLAT</div>
