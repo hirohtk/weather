@@ -21,7 +21,9 @@ class App extends React.Component {
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
-    forecastButtonHovered: undefined
+    forecastButtonHovered: undefined,
+    howManyForecastedDays: "",
+    hourIncrement: 6,
   }
 
   componentDidMount() {
@@ -87,9 +89,11 @@ class App extends React.Component {
         // FOR 5 DAYS HOURLY DATA
         for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
           console.log(`doing day ${k} now`)
-          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += 3) {
+          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
               let obj = {};
-              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY, h:mm a');
+              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
+              obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
+              obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
               obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
               obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
               obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
@@ -110,7 +114,8 @@ class App extends React.Component {
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
-          currentWeather: [tempInF, condition]
+          currentWeather: [tempInF, condition],
+          howManyForecastedDays: response.data.forecast.forecastday.length,
         }, () => {
           animationFunction(condition);
           console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`);
@@ -164,7 +169,7 @@ class App extends React.Component {
                 // Splitting moment's result at the comma (.split gives an array)
                 now={this.state.now.split(",")[0]}
                   location={this.state.location}
-                  weather={this.state.currentWeather}></CurrentWeather>
+                  weather={this.state.currentWeather}><p>{this.state.CurrentWeather}</p></CurrentWeather>
               </div>
               <div className="row">
                 <ExtendedForecast
