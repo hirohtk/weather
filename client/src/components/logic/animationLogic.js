@@ -121,9 +121,9 @@ export function animationFunction(weatherStatus) {
             makeItRain();
             //aniIcons();
             break;
-        case ("Overcast"):
-            // init();
-            makeItRain();
+        case ("Partly cloudy"):
+            init();
+            // makeItRain();
             break;
         // case ("Sunny"):
         //     SunAnimation();

@@ -8,7 +8,7 @@ import './App.css';
 import Axios from 'axios';
 import $ from 'jquery'
 import _ from 'underscore'
-// import { animationFunction } from "./components/logic/animationLogic"
+import { animationFunction } from "./components/logic/animationLogic"
 import moment from "moment";
 
 
