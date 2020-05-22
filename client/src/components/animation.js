@@ -12,10 +12,10 @@ console.log(`is this loading out of order? ${props.weather[1]}`)
 
             {/* FOR NOW TO TEST, PUT ACTUAL CURRENT CONDITION  */}
 {/* Snonw */}
-            {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
 {/* Rain */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
@@ -27,7 +27,7 @@ console.log(`is this loading out of order? ${props.weather[1]}`)
 
 {/* Sun */}
             {/* <div>
-                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ? <SunAnimation></SunAnimation> : ""}
+                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <SunAnimation></SunAnimation> : ""}
             </div>  */}
 
             {/* <div className="toggles">
