@@ -11,7 +11,7 @@ class Nav extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sidebarOpen: true
+      sidebarOpen: false
     }
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
   }
@@ -23,6 +23,7 @@ class Nav extends React.Component {
   }
 
   render() {
+    const props = this.props
     return (
       <>
         {/* <ul id="dropdown1" class="dropdown-content">
@@ -32,20 +33,28 @@ class Nav extends React.Component {
               <li><a href="#!">three</a></li>
             </ul> */}
         <nav>
-          <div class="nav-wrapper">
-            <Sidebar
-              sidebar={<b>Sidebar content</b>}
+        <Sidebar
+              sidebar={<><b>Sidebar content</b>
+              <hr></hr>
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+              <div>4</div>
+
+              </>}
               open={this.state.sidebarOpen}
               onSetOpen={this.onSetSidebarOpen}
-              styles={{ sidebar: { background: "white" } }}
+              styles={{ sidebar: { background: "gray", width: "20rem" } }}
             >
-              <button onClick={() => this.onSetSidebarOpen(true)}>
-                Open sidebar
-        </button>
+              
             </Sidebar>
+          <div class="nav-wrapper">
+          <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
+          <i class="material-icons">menu</i>
+        </button>
             <a href="#" class="brand-logo">Weather App</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li>{props.time}</li>
+              <li>{this.props.time}</li>
               {/* <li><Dropdown options={options} onChange={_onSelect} value={"|||"} placeholder="Select an option" /></li> */}
               {/* <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li> */}
             </ul>
