@@ -2,9 +2,13 @@ nav, .nav-wrapper {
     background-color: rgba(202, 202, 202, 0.322) !important;
     width: 100%;
 }
-
+ 
 nav, .brand-logo {
     left: 1rem;
+}
+
+.brand-logo {
+    position: relative;
 }
 
 .Dropdown-placeholder, .is-selected {
