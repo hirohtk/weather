@@ -27,10 +27,12 @@ export function iconLogic(condition) {
         else if (condition.match(/^(Partly cloudy|Overcast|Cloudy)$/)) {
             return "Cloudy";
         }
+        else if (condition.match(/^(Sunny)$/)) {
+            return "Sunny";
+        }
         else {
             return "";
         }
-        
     }
 
     switch (pooler(condition)) {
