@@ -5,26 +5,26 @@ import "./cloudAnimation.css"
 import SunAnimation from './sunAnimation';
 
 function Animation(props) {
-console.log(`is this loading out of order? ${props.weather[1]}`)
+    console.log(`is this loading out of order? ${props.weather[1]}`)
     return (
         <div className="Scott">
 
             {/* FOR NOW TO TEST, PUT ACTUAL CURRENT CONDITION  */}
-{/* Snonw */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Sunny") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
+            {/* Snonw */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
-{/* Rain */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
+            {/* Rain */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Party cloudy") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
 
-{/* clouds */}
-            {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ?
+            {/* clouds */}
+            {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
                 <><div className="hero"></div>
-                  <div className="heroClouds"></div></> : <></>}
+                    <div className="heroClouds"></div></> : <></>}
 
-{/* Sun */}
+            {/* Sun */}
             {/* <div>
                 {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ? <SunAnimation></SunAnimation> : ""}
             </div>  */}
