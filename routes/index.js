@@ -1,6 +1,7 @@
 const path = require("path");
 const router = require("express").Router();
 const db = require("../model/index");
+const axios = require("axios");
 
 const passport = require("passport");
 
@@ -51,6 +52,12 @@ router.post("/api/register", function (req, res) {
     }
   });
 });
+
+router.get("/api/googleplaces/:place", function (req, res) {
+  axios.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc[0]}%20${loc[1]}%20${loc[2]}&inputtype=textquery&fields=photos&key${apiKey}").then(response => {
+    
+  })
+})
 
 router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) {
   res.json("Login Success")

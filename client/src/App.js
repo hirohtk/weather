@@ -11,8 +11,6 @@ import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
 import moment from "moment";
 
-
-
 class App extends React.Component {
 
   state = {
@@ -55,9 +53,12 @@ class App extends React.Component {
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
           console.log(response);
-          let loc = response.data.plus_code.compound_code;
-          console.log(response.data.plus_code.compound_code.slice(8).split(","));
-          this.setState({ location: loc.slice(8).split(",") }, () => this.callAPI(latitude, longitude));
+          let loc = response.data.plus_code.compound_code.slice(8).split(",");
+          console.log(loc);
+          Axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc[0]}%20${loc[1]}%20${loc[2]}&inputtype=textquery&fields=photos&key${apiKey}`).then( response => {
+            console.log(`google place API response is $${response}`)
+            this.setState({ location: loc }, () => this.callAPI(latitude, longitude));
+          })
         })
     }
     geolocationFunction();
