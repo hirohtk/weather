@@ -1,9 +1,16 @@
 nav, .nav-wrapper {
-    background-color: rgba(202, 202, 202, 0) !important;
+    background-color: rgba(202, 202, 202, 0.322) !important;
+    width: 100%;
 }
-
+ 
 nav, .brand-logo {
     left: 1rem;
+}
+
+.brand-logo {
+    position: relative !important;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .Dropdown-placeholder, .is-selected {
@@ -19,4 +26,14 @@ nav, .brand-logo {
 
 .Dropdown-control {
     padding: 8px 24px 8px 10px !important;
+}
+
+.sidebarButton {
+    float: left;
+    background-color: black;
+    color: white;
+    height: 64px;
+    width: 64px;
+    border-radius: 2px;
+    border: 1px solid white;
 }

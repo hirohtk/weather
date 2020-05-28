@@ -1,6 +1,7 @@
 // A module can only have one default export, but as many named exports as you'd like (zero, one, two, or many). You can import them all together:
 import $ from 'jquery'
 import _ from 'underscore'
+import "./animationLogic.css"
 
 
 export function animationFunction(weatherStatus) {
@@ -122,8 +123,13 @@ export function animationFunction(weatherStatus) {
             //aniIcons();
             break;
         case ("Partly cloudy"):
+<<<<<<< HEAD
             init();
             //makeItRain();
+=======
+            // init();
+            // makeItRain();
+>>>>>>> master
             break;
         // case ("Sunny"):
         //     SunAnimation();
