@@ -2,6 +2,8 @@ const path = require("path");
 const router = require("express").Router();
 const db = require("../model/index");
 const axios = require("axios");
+require('dotenv').load();
+let apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
 
 const passport = require("passport");
 
@@ -54,8 +56,10 @@ router.post("/api/register", function (req, res) {
 });
 
 router.get("/api/googleplaces/:place", function (req, res) {
-  axios.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc[0]}%20${loc[1]}%20${loc[2]}&inputtype=textquery&fields=photos&key${apiKey}").then(response => {
-    
+  let loc = req.params.place
+  axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc[0]}%20${loc[1]}%20${loc[2]}&inputtype=textquery&fields=photos&key${apiKey}`).then(response => {
+    console.log(response);
+    res.json(response);
   })
 })
 
