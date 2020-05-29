@@ -60,8 +60,13 @@ router.get("/api/googleplaces/:place", function (req, res) {
   let loc = req.params.place
   console.log(`serverside loc is ${loc}`)
   axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc}&inputtype=textquery&fields=photos&key=${apiKey}`).then(response => {
-    console.log(response.data);
-    res.json(response.data);
+    // console.log(response.data);
+    let photoRef = response.data.candidates[0].photos[0].photo_reference;
+    axios.get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${apiKey}`).then(response => {
+      // THIS IS RAW IMAGE DATA- RENDERING ON CLIENT SIDE
+      console.log(response.data);
+      res.json(response.data);
+    })
   })
 })
 

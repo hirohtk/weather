@@ -22,10 +22,11 @@ class App extends React.Component {
     forecastButtonHovered: undefined,
     howManyForecastedDays: "",
     hourIncrement: 6,
+    locationImage: ""
   }
 
   componentDidMount() {
-    this.setState({today: moment().format('MMMM Do YYYY, h:mm:ss a')});
+    this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getCurrentLocation();
   }
 
@@ -53,9 +54,13 @@ class App extends React.Component {
           console.log(response);
           let loc = response.data.plus_code.compound_code.slice(8).split(",");
           console.log(loc);
-          Axios.get(`/api/googleplaces/${loc}`).then( response => {
-            console.log(`google place API response from BACKEND is $${response}`)
-            this.setState({ location: loc }, () => this.callAPI(latitude, longitude));
+          Axios.get(`/api/googleplaces/${loc}`).then(response => {
+            console.log(`google place API response from BACKEND is ${JSON.stringify(response.data)}`)
+            // convert to Base64
+            let b64Response = btoa(response.data);
+            // THIS IS WHAT I WILL USE IN IMG's SRC
+            let b64ResponseString = 'data:image/jpg;base64,' + b64Response;
+            this.setState({ location: loc, locationImage: b64ResponseString }, () => this.callAPI(latitude, longitude));
           })
         })
     }
@@ -89,14 +94,14 @@ class App extends React.Component {
         for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
           console.log(`doing day ${k} now`)
           for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
-              let obj = {};
-              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
-              obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
-              obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
-              obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
-              obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
-              obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
-              hourlyForecastArray.push(obj);
+            let obj = {};
+            obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
+            obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
+            obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
+            obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+            obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
+            obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
+            hourlyForecastArray.push(obj);
           }
         }
         // FOR ONE DAY HOURLY DATA
@@ -163,10 +168,12 @@ class App extends React.Component {
             <div className="boxForEverything">
               <div className="row">
                 <CurrentWeather
-                // Splitting moment's result at the comma (.split gives an array)
-                today={this.state.today.split(",")[0]}
+                  // Splitting moment's result at the comma (.split gives an array)
+                  today={this.state.today.split(",")[0]}
                   location={this.state.location}
-                  weather={this.state.currentWeather}><p>{this.state.CurrentWeather}</p></CurrentWeather>
+                  weather={this.state.currentWeather}
+                  image={this.state.locationImage}
+                  ><p>{this.state.CurrentWeather}</p></CurrentWeather>
               </div>
               <div className="row">
                 <ExtendedForecast
