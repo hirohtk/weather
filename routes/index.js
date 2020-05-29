@@ -58,9 +58,10 @@ router.post("/api/register", function (req, res) {
 
 router.get("/api/googleplaces/:place", function (req, res) {
   let loc = req.params.place
+  console.log(`serverside loc is ${loc}`)
   axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc}&inputtype=textquery&fields=photos&key=${apiKey}`).then(response => {
-    console.log(response);
-    res.json(response);
+    console.log(response.data);
+    res.json(response.data);
   })
 })
 

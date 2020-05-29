@@ -15,7 +15,7 @@ class App extends React.Component {
 
   state = {
     location: [],
-    now: "",
+    today: "",
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
@@ -25,9 +25,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      this.setState({now: moment().format('MMMM Do YYYY, h:mm:ss a')});
-    }, 1000);
+    this.setState({today: moment().format('MMMM Do YYYY, h:mm:ss a')});
     this.getCurrentLocation();
   }
 
@@ -156,9 +154,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Nav
-        // Splitting moment's result at the comma (.split gives an array)
-        time={this.state.now.split(",")[1]}></Nav>
+        <Nav></Nav>
         <div className="container">
           <div className="row">
             <Animation
@@ -168,7 +164,7 @@ class App extends React.Component {
               <div className="row">
                 <CurrentWeather
                 // Splitting moment's result at the comma (.split gives an array)
-                now={this.state.now.split(",")[0]}
+                today={this.state.today.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}><p>{this.state.CurrentWeather}</p></CurrentWeather>
               </div>
