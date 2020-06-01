@@ -241,7 +241,7 @@ html {
     background: #fff;
   }
   
-  .sun {
+  .sunIcon {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -283,7 +283,7 @@ html {
   .rays:before {
     transform: rotate(120deg);
   }
-  .cloud + .sun {
+  .cloud + .sunIcon {
     margin: -2em 1em;
   }
   

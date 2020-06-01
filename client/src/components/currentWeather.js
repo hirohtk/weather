@@ -1,6 +1,6 @@
 import React from 'react';
 import "./currentWeather.css"
-
+import {iconLogic} from "./logic/iconLogic";
 
 function CurrentWeather(props) {
 
@@ -12,6 +12,10 @@ function CurrentWeather(props) {
                     <p className="whiteText">{props.location}</p>
                     <p className="whiteText">{props.weather[0]}F</p>
                     <p className="whiteText">{props.weather[1]}</p>
+                    {
+                        props.weather[1] === undefined ? <></> : <span>{iconLogic(props.weather[1])}</span>
+                    }
+                    <img src={props.image}></img>
                 </div>
             </div>
 

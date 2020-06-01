@@ -11,25 +11,22 @@ import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
 import moment from "moment";
 
-
-
 class App extends React.Component {
 
   state = {
     location: [],
-    now: "",
+    today: "",
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
     forecastButtonHovered: undefined,
     howManyForecastedDays: "",
     hourIncrement: 6,
+    locationImage: ""
   }
 
   componentDidMount() {
-    setInterval(() => {
-      this.setState({now: moment().format('MMMM Do YYYY, h:mm:ss a')});
-    }, 1000);
+    this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getCurrentLocation();
   }
 
@@ -55,9 +52,23 @@ class App extends React.Component {
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
           console.log(response);
-          let loc = response.data.plus_code.compound_code;
-          console.log(response.data.plus_code.compound_code.slice(8).split(","));
-          this.setState({ location: loc.slice(8).split(",") }, () => this.callAPI(latitude, longitude));
+          let loc = response.data.plus_code.compound_code.slice(8).split(",");
+          console.log(loc);
+          Axios.get(`/api/googleplaces/${loc}`).then(response => {
+            console.log(`google place API response from BACKEND is ${response.data}`)
+            // // convert to Base64
+            // let b64Response = btoa(response.data);
+            // // THIS IS WHAT I WILL USE IN IMG's SRC
+            // console.log(b64Response);
+            // let b64ResponseString = 'data:image/jpeg;base64,' + b64Response;
+          //   function hexToBase64(str) {
+          //     return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
+          // }
+          // let b64ResponseString = 'data:image/jpeg;base64,' + hexToBase64(response.data);
+          let image = response.data;
+          console.log(image);
+            this.setState({ location: loc, locationImage: image }, () => this.callAPI(latitude, longitude));
+          })
         })
     }
     geolocationFunction();
@@ -90,14 +101,14 @@ class App extends React.Component {
         for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
           console.log(`doing day ${k} now`)
           for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
-              let obj = {};
-              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
-              obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
-              obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
-              obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
-              obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
-              obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
-              hourlyForecastArray.push(obj);
+            let obj = {};
+            obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
+            obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
+            obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
+            obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+            obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
+            obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
+            hourlyForecastArray.push(obj);
           }
         }
         // FOR ONE DAY HOURLY DATA
@@ -155,9 +166,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Nav
-        // Splitting moment's result at the comma (.split gives an array)
-        time={this.state.now.split(",")[1]}></Nav>
+        <Nav></Nav>
         <div className="container">
           <div className="row">
             <Animation
@@ -166,10 +175,12 @@ class App extends React.Component {
             <div className="boxForEverything">
               <div className="row">
                 <CurrentWeather
-                // Splitting moment's result at the comma (.split gives an array)
-                now={this.state.now.split(",")[0]}
+                  // Splitting moment's result at the comma (.split gives an array)
+                  today={this.state.today.split(",")[0]}
                   location={this.state.location}
-                  weather={this.state.currentWeather}><p>{this.state.CurrentWeather}</p></CurrentWeather>
+                  weather={this.state.currentWeather}
+                  image={this.state.locationImage}
+                  ><p>{this.state.CurrentWeather}</p></CurrentWeather>
               </div>
               <div className="row">
                 <ExtendedForecast
