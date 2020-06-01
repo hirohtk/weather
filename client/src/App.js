@@ -55,12 +55,19 @@ class App extends React.Component {
           let loc = response.data.plus_code.compound_code.slice(8).split(",");
           console.log(loc);
           Axios.get(`/api/googleplaces/${loc}`).then(response => {
-            console.log(`google place API response from BACKEND is ${JSON.stringify(response.data)}`)
-            // convert to Base64
-            let b64Response = btoa(response.data);
-            // THIS IS WHAT I WILL USE IN IMG's SRC
-            let b64ResponseString = 'data:image/jpg;base64,' + b64Response;
-            this.setState({ location: loc, locationImage: b64ResponseString }, () => this.callAPI(latitude, longitude));
+            console.log(`google place API response from BACKEND is ${response.data}`)
+            // // convert to Base64
+            // let b64Response = btoa(response.data);
+            // // THIS IS WHAT I WILL USE IN IMG's SRC
+            // console.log(b64Response);
+            // let b64ResponseString = 'data:image/jpeg;base64,' + b64Response;
+          //   function hexToBase64(str) {
+          //     return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
+          // }
+          // let b64ResponseString = 'data:image/jpeg;base64,' + hexToBase64(response.data);
+          let image = response.data;
+          console.log(image);
+            this.setState({ location: loc, locationImage: image }, () => this.callAPI(latitude, longitude));
           })
         })
     }
