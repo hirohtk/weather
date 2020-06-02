@@ -168,6 +168,7 @@ class App extends React.Component {
       <div className="App">
         <Nav></Nav>
         <div className="container">
+          <img src={this.state.locationImage} id="backgroundImage"></img>
           <div className="row">
             <Animation
               weather={this.state.currentWeather}>

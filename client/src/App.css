@@ -46,5 +46,13 @@ html {
   top: 64px;
   /* left: 25%; */
   height: 100%;
-  
+}
+
+#backgroundImage {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 64px;
+  opacity: 0.15;
+  width: 100%;
 }
