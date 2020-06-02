@@ -39,8 +39,12 @@ class App extends React.Component {
       let geoSuccess = (position) => {
         console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
         console.log("Geoposition gives " + position.coords.longitude + " for longitude");
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+        // latitude = position.coords.latitude;
+        // longitude = position.coords.longitude;
+        // TEST ONLY
+        latitude = 21.472717;
+        longitude =  -157.996759;
+        // TEST ONLY
         googleAPI(latitude, longitude);
       }
       navigator.geolocation.getCurrentPosition(geoSuccess);

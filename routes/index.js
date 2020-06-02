@@ -64,7 +64,6 @@ router.get("/api/googleplaces/:place", function (req, res) {
     let photoRef = response.data.candidates[0].photos[0].photo_reference;
     axios.get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=2400&photoreference=${photoRef}&key=${apiKey}`).then(response => {
       // FOUND URL IN THE RESPONSE.config - USING THIS INSTEAD OF response.DATA
-      console.log(response.config.url);
       res.json(response.config.url);
     })
   })
