@@ -123,13 +123,8 @@ export function animationFunction(weatherStatus) {
             //aniIcons();
             break;
         case ("Partly cloudy"):
-<<<<<<< HEAD
-            init();
-            //makeItRain();
-=======
             // init();
             // makeItRain();
->>>>>>> master
             break;
         // case ("Sunny"):
         //     SunAnimation();

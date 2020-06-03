@@ -202,7 +202,7 @@ html {
     font-size: 1em; /* control icon size here */
   }
   
-  .cloud {
+  .cloudie {
     position: absolute;
     z-index: 1;
     top: 50%;
@@ -216,7 +216,7 @@ html {
       0 0 0 0.375em #fff, -2.1875em 0.6875em 0 -0.3125em #fff,
       2.0625em 0.9375em 0 -0.5625em #fff;
   }
-  .cloud:after {
+  .cloudie:after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -227,7 +227,7 @@ html {
     background: currentColor;
     box-shadow: 0 0.4375em 0 -0.0625em #fff;
   }
-  .cloud:nth-child(2) {
+  .cloudie:nth-child(2) {
     z-index: 0;
     background: #fff;
     box-shadow: -2.1875em 0.6875em 0 -0.6875em #fff,
@@ -237,7 +237,7 @@ html {
     transform: scale(0.5) translate(6em, -3em);
     animation: cloud 4s linear infinite;
   }
-  .cloud:nth-child(2):after {
+  .cloudie:nth-child(2):after {
     background: #fff;
   }
   

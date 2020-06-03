@@ -2,7 +2,7 @@ import React from 'react';
 import "./rain.css"
 import "./icons.css"
 import "./cloudAnimation.css"
-import SunAnimation from './sunAnimation';
+import PartlyCloudy from './partlyCloudy'
 // import { animationFunction } from "./components/logic/animationLogic";
 
 function Animation(props) {
@@ -26,9 +26,9 @@ function Animation(props) {
                   <div className="heroClouds"></div></> : <></>} */}
 
             {/* Sun */}
-            {/* <div>
-                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <SunAnimation></SunAnimation> : ""}
-            </div>  */}
+            <div>
+                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Sunny") ? <PartlyCloudy></PartlyCloudy> : ""}
+            </div> 
 
             {/* <div className="toggles">
                 <div className="splat-toggle toggle active">SPLAT</div>
