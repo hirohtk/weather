@@ -13,7 +13,7 @@
     "gsap": "^3.2.6",
     "keyframe": "^2.1.0",
     "moment": "^2.25.3",
-    "mongoose": "^5.9.16",
+    "mongoose": "^5.9.17",
     "nodemon": "^2.0.3",
     "passport": "^0.4.1",
     "passport-local-mongoose": "^6.0.1",
