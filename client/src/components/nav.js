@@ -5,18 +5,26 @@ import $ from 'jquery'
 // import 'react-dropdown/style.css';
 import { PromiseProvider } from 'mongoose';
 import Sidebar from "react-sidebar";
+import moment from "moment";
 
 class Nav extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      sidebarOpen: false
+      sidebarOpen: false,
+      now: ""
     }
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
   }
 
   // why did this have to be outside the constructor?  
+
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({now: moment().format('h:mm:ss a')});
+    }, 1000);
+  }
 
   onSetSidebarOpen(open) {
     this.setState({ sidebarOpen: open });
@@ -54,7 +62,7 @@ class Nav extends React.Component {
         </button>
             <a href="#" class="brand-logo">Weather App</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li>{this.props.time}</li>
+              <li>{this.state.now}</li>
               {/* <li><Dropdown options={options} onChange={_onSelect} value={"|||"} placeholder="Select an option" /></li> */}
               {/* <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li> */}
             </ul>
