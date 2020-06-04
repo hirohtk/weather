@@ -56,14 +56,13 @@ class App extends React.Component {
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
           console.log(response);
-          // PSEUDOCODE:  Need to find which index of array's types is LOCALITY data.results[0].address_components[2].types
           let ind;
           for (let i = 0; i < response.data.results[0].address_components.length; i++) {
             if (response.data.results[0].address_components[i].types[0] === "locality") {
               ind = i;
             }
           }
-          // let loc = response.data.plus_code.compound_code.slice(8).split(",");
+          let longformLoc = response.data.plus_code.compound_code.slice(8).split(",");
           let loc = response.data.results[0].address_components[ind].long_name + ", " + response.data.results[0].address_components[ind+2].long_name;
           console.log(`new LOC is ${loc}`);
           Axios.get(`/api/googleplaces/${loc}`).then(response => {
@@ -79,7 +78,7 @@ class App extends React.Component {
           // let b64ResponseString = 'data:image/jpeg;base64,' + hexToBase64(response.data);
           let image = response.data;
           console.log(image);
-            this.setState({ location: loc, locationImage: image }, () => this.callAPI(latitude, longitude));
+            this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
           })
         })
     }
