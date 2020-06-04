@@ -42,8 +42,8 @@ class App extends React.Component {
         // latitude = position.coords.latitude;
         // longitude = position.coords.longitude;
         // TEST ONLY
-        latitude = 21.472717;
-        longitude =  -157.996759;
+        latitude = 48.858176 
+        longitude = 2.294820
         // TEST ONLY
         googleAPI(latitude, longitude);
       }
