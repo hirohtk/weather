@@ -62,7 +62,7 @@ class Nav extends React.Component {
         </button>
             <a href="#" class="brand-logo">Weather App</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-              <li>{this.state.now}</li>
+              <li id="time">{this.state.now}</li>
               {/* <li><Dropdown options={options} onChange={_onSelect} value={"|||"} placeholder="Select an option" /></li> */}
               {/* <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li> */}
             </ul>
