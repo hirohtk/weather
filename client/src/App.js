@@ -39,8 +39,12 @@ class App extends React.Component {
       let geoSuccess = (position) => {
         console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
         console.log("Geoposition gives " + position.coords.longitude + " for longitude");
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+        // latitude = position.coords.latitude;
+        // longitude = position.coords.longitude;
+        // TEST ONLY
+        latitude = 48.858176 
+        longitude = 2.294820
+        // TEST ONLY
         googleAPI(latitude, longitude);
       }
       navigator.geolocation.getCurrentPosition(geoSuccess);
@@ -136,19 +140,6 @@ class App extends React.Component {
     return;
   }
 
-  changeForecast = (event) => {
-
-    if (event.target.dataset.name === "hourly") {
-      console.log("changing forecast to hourly")
-      this.setState({ forecastChosen: "hourly" });
-    }
-    else if (event.target.dataset.name === "fiveDay") {
-      console.log("changing forecast to extended")
-      this.setState({ forecastChosen: "extended" });
-    }
-    return;
-  }
-
   handleHover = (event) => {
     console.log("handling hover...")
     if (this.state.forecastButtonHovered != undefined) {
@@ -168,6 +159,7 @@ class App extends React.Component {
       <div className="App">
         <Nav></Nav>
         <div className="container">
+          <img src={this.state.locationImage} id="backgroundImage"></img>
           <div className="row">
             <Animation
               weather={this.state.currentWeather}>

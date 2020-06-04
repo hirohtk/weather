@@ -15,7 +15,7 @@ function CurrentWeather(props) {
                     {
                         props.weather[1] === undefined ? <></> : <span>{iconLogic(props.weather[1])}</span>
                     }
-                    <img src={props.image}></img>
+                    {/* <img src={props.image}></img> */}
                 </div>
             </div>
 
