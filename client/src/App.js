@@ -41,9 +41,9 @@ class App extends React.Component {
         console.log("Geoposition gives " + position.coords.longitude + " for longitude");
         // latitude = position.coords.latitude;
         // longitude = position.coords.longitude;
-        // TEST ONLY
-        latitude = 48.858176 
-        longitude = 2.294820
+        // TEST ONLY, , , , 
+        latitude = 47.424822
+        longitude = -122.159094
         // TEST ONLY
         googleAPI(latitude, longitude);
       }
@@ -56,8 +56,15 @@ class App extends React.Component {
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
           console.log(response);
-          let loc = response.data.plus_code.compound_code.slice(8).split(",");
-          console.log(loc);
+          let ind;
+          for (let i = 0; i < response.data.results[0].address_components.length; i++) {
+            if (response.data.results[0].address_components[i].types[0] === "locality") {
+              ind = i;
+            }
+          }
+          let longformLoc = response.data.plus_code.compound_code.slice(8).split(",");
+          let loc = response.data.results[0].address_components[ind].long_name + ", " + response.data.results[0].address_components[ind+2].long_name;
+          console.log(`new LOC is ${loc}`);
           Axios.get(`/api/googleplaces/${loc}`).then(response => {
             console.log(`google place API response from BACKEND is ${response.data}`)
             // // convert to Base64
@@ -71,7 +78,7 @@ class App extends React.Component {
           // let b64ResponseString = 'data:image/jpeg;base64,' + hexToBase64(response.data);
           let image = response.data;
           console.log(image);
-            this.setState({ location: loc, locationImage: image }, () => this.callAPI(latitude, longitude));
+            this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
           })
         })
     }
