@@ -16,11 +16,13 @@ class ExtendedForecast extends React.Component {
     constructor(props) {
         super(props);
         this.ref = React.createRef();
-        this.locationRefs = [];
+        this.locationRefsHourly = [];
+        this.locationRefsExtended = [];
         this.state = {
             isScrolling: false,
             clientX: 0,
             scrollX: 0,
+            forecastChosen: ""
         }
     }
 
@@ -50,25 +52,50 @@ class ExtendedForecast extends React.Component {
 
     styles = (probability) => {
         let math = (probability).toString() + "px";
-        let bottom = { bottom: math}
+        let bottom = { bottom: math }
         return bottom;
     }
 
-    componentDidUpdate() {
+    changeForecast = (event) => {
+
+        if (event.target.dataset.name === "hourly") {
+            console.log("changing forecast to hourly")
+            this.setState({ forecastChosen: "hourly" }, ()  => this.getPointCoords("hourly"));
+        }
+        else if (event.target.dataset.name === "fiveDay") {
+            console.log("changing forecast to extended")
+            this.setState({ forecastChosen: "extended" }, ()  => this.getPointCoords("extended"));
+        }
+        
+    }
+
+    getPointCoords = (which) => {
+        let references;
+        if (which === "hourly") {
+            references = this.locationRefsHourly;
+        }
+        else {
+            references = this.locationRefsExtended;
+        }
         // 1.  use of refs are set by following this https://stackoverflow.com/questions/54314945/reactjs-how-to-use-ref-inside-map-function
         // Q? What is the ref param in the function actually representing?  
         // 2.. next step use the ref to identify each element so I can do this https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element-relative-to-the-browser-window
         // 3.  last, with the coordinates of each element, map some lines using this https://stackoverflow.com/questions/19382872/how-to-connect-html-divs-with-lines
-        console.log(`this.locationrefs is ${this.locationRefs}`)
-        console.log(this.locationRefs.length);
+        console.log(`this.locationrefs is ${references}`)
+        console.log(references.length);
         console.log(`this should be a loop giving me a bunch of coordinates`)
-        for (let i = 0; i < this.locationRefs.length; i++) {
-            let rect = this.locationRefs[i].getBoundingClientRect();
-            console.log(rect.top, rect.right, rect.bottom, rect.left);  
+        for (let i = 0; i < references.length; i++) {
+            console.log(`i is ${i}`);
+            let rect = references[i].getBoundingClientRect();
+            console.log(rect.top, rect.right, rect.bottom, rect.left);
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect    
         }
     }
-    
+
+    componentDidUpdate() {
+
+    }
+
     render() {
         const props = this.props;
 
@@ -80,14 +107,14 @@ class ExtendedForecast extends React.Component {
                         <div className="row">
                             <div id="forecastOptions" className="whiteText">
                                 <div className="col l6">
-                                    <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={props.changeForecast}
+                                    <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                         onMouseEnter={props.handleHover}
                                         onMouseLeave={props.handleHover}>
                                         Hourly
                                 </div>
                                 </div>
                                 <div className="col l6">
-                                    <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={props.changeForecast}
+                                    <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
                                         onMouseEnter={props.handleHover}
                                         onMouseLeave={props.handleHover}>
                                         4 Day
@@ -96,14 +123,14 @@ class ExtendedForecast extends React.Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div id={props.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText"
+                            <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText"
                                 ref={this.ref}
                                 onMouseDown={this.onMouseDown}
                                 onMouseUp={this.onMouseUp}
                                 onMouseMove={this.onMouseMove}
                                 onMouseLeave={this.onMouseLeave}
                             >
-                                {props.forecastChosen === "hourly" ?
+                                {this.state.forecastChosen === "hourly" ?
                                     props.hourlyResults.map((each, index) => (
                                         <div className="forecastDayHourly" style={colorLogic(each.dayOfWeek)} >
                                             <h5>{each.dayOfWeek}, {each.time}</h5>
@@ -112,13 +139,13 @@ class ExtendedForecast extends React.Component {
                                             <p>{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
                                             <div className="tempGraphBox">
-                                                    <div className="temperatureDot" style={this.styles(each.rainProbability)}
-                                                    ref={ref => this.locationRefs[index] = ref}>'</div>
-                                                </div>
-                                                <p>Rain: {each.rainProbability}%</p>
+                                                <div className="temperatureDot" style={this.styles(each.rainProbability)}
+                                                    ref={ref => this.locationRefsHourly[index] = ref}>'</div>
+                                            </div>
+                                            <p>Rain: {each.rainProbability}%</p>
                                         </div>
                                     ))
-                                    : props.forecastChosen === "extended" ?
+                                    : this.state.forecastChosen === "extended" ?
                                         props.forecastResults.map((each, index) => (
                                             <div className="col l3 forecastDayExtended" style={colorLogic(each.dayOfWeek)}>
                                                 <h5>{each.dayOfWeek}, {each.date}</h5>
@@ -126,8 +153,8 @@ class ExtendedForecast extends React.Component {
                                                 <p>{each.condition}</p>
                                                 <span>{iconLogic(each.condition)}</span>
                                                 <div className="tempGraphBox">
-                                                    <div className="temperatureDot" style={this.styles(each.rainProbability)} 
-                                                    ref={ref => this.locationRefs[index] = ref}>'</div>
+                                                    <div className="temperatureDot" style={this.styles(each.rainProbability)}
+                                                        ref={ref => this.locationRefsExtended[index] = ref}>'</div>
                                                 </div>
                                                 <p>Rain: {each.rainProbability}%</p>
                                             </div>

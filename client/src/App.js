@@ -140,19 +140,6 @@ class App extends React.Component {
     return;
   }
 
-  changeForecast = (event) => {
-
-    if (event.target.dataset.name === "hourly") {
-      console.log("changing forecast to hourly")
-      this.setState({ forecastChosen: "hourly" });
-    }
-    else if (event.target.dataset.name === "fiveDay") {
-      console.log("changing forecast to extended")
-      this.setState({ forecastChosen: "extended" });
-    }
-    return;
-  }
-
   handleHover = (event) => {
     console.log("handling hover...")
     if (this.state.forecastButtonHovered != undefined) {
