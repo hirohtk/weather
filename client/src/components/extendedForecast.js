@@ -22,7 +22,8 @@ class ExtendedForecast extends React.Component {
             isScrolling: false,
             clientX: 0,
             scrollX: 0,
-            forecastChosen: ""
+            forecastChosen: "",
+            lineData: []
         }
     }
 
@@ -84,12 +85,17 @@ class ExtendedForecast extends React.Component {
         console.log(`this.locationrefs is ${references}`)
         console.log(references.length);
         console.log(`this should be a loop giving me a bunch of coordinates`)
+        let coordinateArray = [];
         for (let i = 0; i < references.length; i++) {
             console.log(`i is ${i}`);
             let rect = references[i].getBoundingClientRect();
+            // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
             console.log(rect.top, rect.right, rect.bottom, rect.left);
-            // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect    
+            let obj = {left: rect.left, top: rect.top}
+            coordinateArray.push(obj);
         }
+        console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
+        this.setState({lineData: coordinateArray});
     }
 
     componentDidUpdate() {
@@ -153,6 +159,12 @@ class ExtendedForecast extends React.Component {
                                                 <p>{each.condition}</p>
                                                 <span>{iconLogic(each.condition)}</span>
                                                 <div className="tempGraphBox">
+                                                    {index < props.forecastResults.length ? 
+                                                    <svg width="500" height="500"><line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index+1].left} y2={this.state.lineData[index+1].top} stroke="white"/></svg>
+                                                        : <></>
+                                                    }
+                                                    {index < props.forecastResults.length ? <svg width="500" height="500"><line x1="50" y1="50" x2="350" y2="350" stroke="white"/></svg> : <></>}
+
                                                     <div className="temperatureDot" style={this.styles(each.rainProbability)}
                                                         ref={ref => this.locationRefsExtended[index] = ref}>'</div>
                                                 </div>
