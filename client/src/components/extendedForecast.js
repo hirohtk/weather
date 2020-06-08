@@ -16,13 +16,15 @@ class ExtendedForecast extends React.Component {
     constructor(props) {
         super(props);
         this.ref = React.createRef();
+        this.parentRef = React.createRef();
         this.locationRefsHourly = [];
         this.locationRefsExtended = [];
         this.state = {
             isScrolling: false,
             clientX: 0,
             scrollX: 0,
-            forecastChosen: ""
+            forecastChosen: "",
+            lineData: [{ top: "top", left: "left" }, { top: "top", left: "left" }, { top: "top", left: "left" }, { top: "top", left: "left" }]
         }
     }
 
@@ -60,13 +62,13 @@ class ExtendedForecast extends React.Component {
 
         if (event.target.dataset.name === "hourly") {
             console.log("changing forecast to hourly")
-            this.setState({ forecastChosen: "hourly" }, ()  => this.getPointCoords("hourly"));
+            this.setState({ forecastChosen: "hourly" }, () => this.getPointCoords("hourly"));
         }
         else if (event.target.dataset.name === "fiveDay") {
             console.log("changing forecast to extended")
-            this.setState({ forecastChosen: "extended" }, ()  => this.getPointCoords("extended"));
+            this.setState({ forecastChosen: "extended" }, () => this.getPointCoords("extended"));
         }
-        
+
     }
 
     getPointCoords = (which) => {
@@ -84,12 +86,22 @@ class ExtendedForecast extends React.Component {
         console.log(`this.locationrefs is ${references}`)
         console.log(references.length);
         console.log(`this should be a loop giving me a bunch of coordinates`)
+        let parentRefCoords = this.parentRef.current.getBoundingClientRect();
+        // let test = document.getElementById("test");
+        // let a = test.getBoundingClientRect();
+        // console.log(`****, ${a.top, a.right, a.bottom, a.left}`);
+        console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
+        let coordinateArray = [];
         for (let i = 0; i < references.length; i++) {
             console.log(`i is ${i}`);
             let rect = references[i].getBoundingClientRect();
+            // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
             console.log(rect.top, rect.right, rect.bottom, rect.left);
-            // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect    
+            let obj = { top: rect.top - parentRefCoords.top, left: rect.left - parentRefCoords.left };
+            coordinateArray.push(obj);
         }
+        console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
+        this.setState({ lineData: coordinateArray });
     }
 
     componentDidUpdate() {
@@ -98,7 +110,6 @@ class ExtendedForecast extends React.Component {
 
     render() {
         const props = this.props;
-
         return (
             <>
                 <div className="outerForecastBox">
@@ -122,7 +133,7 @@ class ExtendedForecast extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row" ref={this.parentRef} id="test">
                             <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText"
                                 ref={this.ref}
                                 onMouseDown={this.onMouseDown}
@@ -130,6 +141,24 @@ class ExtendedForecast extends React.Component {
                                 onMouseMove={this.onMouseMove}
                                 onMouseLeave={this.onMouseLeave}
                             >
+                                {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
+                                <svg width="2000" height="1000" id="svg">
+                                    {/* SETUP TERNARY */}
+                                    {
+                                        props.forecastResults.map((each, index) => (
+                                            index < props.forecastResults.length - 1 ?
+                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" />
+                                                : <></>
+                                        ))
+                                    }
+                                    {/* {
+                                        props.hourlyResults.map((each, index) => (
+                                            index < props.hourlyResults.length - 1 ?
+                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" />
+                                                : <></>
+                                        ))
+                                    } */}
+                                </svg>
                                 {this.state.forecastChosen === "hourly" ?
                                     props.hourlyResults.map((each, index) => (
                                         <div className="forecastDayHourly" style={colorLogic(each.dayOfWeek)} >
@@ -139,6 +168,10 @@ class ExtendedForecast extends React.Component {
                                             <p>{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
                                             <div className="tempGraphBox">
+                                                {/* {index < props.forecastResults.length - 1 ?
+                                                    <svg width="300" height="300" ><line x1={this.state.lineData[index].left - 500} y1={this.state.lineData[index].top - 500} x2={this.state.lineData[index + 1].left - 500} y2={this.state.lineData[index + 1].top - 500} stroke="white" /></svg>
+                                                    : <></>
+                                                } */}
                                                 <div className="temperatureDot" style={this.styles(each.rainProbability)}
                                                     ref={ref => this.locationRefsHourly[index] = ref}>'</div>
                                             </div>
@@ -152,7 +185,13 @@ class ExtendedForecast extends React.Component {
                                                 <p>Average Temperature: {each.avgTempF}F</p>
                                                 <p>{each.condition}</p>
                                                 <span>{iconLogic(each.condition)}</span>
+
                                                 <div className="tempGraphBox">
+
+                                                    {/* {index < props.forecastResults.length - 1 ? 
+                                                        <svg width="500" height="500"><line x1="500" y1="650" x2="320" y2="670" stroke="white"/></svg>
+                                                        : <></>
+                                                    } */}
                                                     <div className="temperatureDot" style={this.styles(each.rainProbability)}
                                                         ref={ref => this.locationRefsExtended[index] = ref}>'</div>
                                                 </div>

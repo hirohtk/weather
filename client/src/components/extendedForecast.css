@@ -44,6 +44,11 @@
     }
 }
 
+#svg {
+    position: absolute;
+    left: 0px;
+}
+
 .forecastDayHourly {
     border: 1px dotted;
     border-radius: 2px;
