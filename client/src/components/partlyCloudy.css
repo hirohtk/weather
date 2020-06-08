@@ -79,7 +79,7 @@ html {
 
 /* Clouds */
 
-.cloudwrapperOne,
+/* .cloudwrapperOne, */
 .cloudwrapperTwo,
 .cloudwrapperThree {
 	animation: movecloudsoversky 60s linear infinite;
@@ -95,7 +95,7 @@ html {
 	animation-delay: -2s;
 }
 
-.cloud {
+.cloud9 {
 	width: 200px;
 	height: 60px;
 	background: white;
@@ -104,8 +104,8 @@ html {
 	z-index: 2000;
 }
 
-.cloud:before,
-.cloud:after {
+.cloud9:before,
+.cloud9:after {
 	content: "";
 	background: white;
 	position: absolute;
@@ -117,7 +117,7 @@ html {
 	transform: rotate(30deg);
 }
 
-.cloud:after {
+.cloud9:after {
 	width: 120px;
 	height: 120px;
 	top: -55px;

@@ -13,6 +13,29 @@
     width: 100%;
 }
 
-.whiteText {
+.fontSizing {
     color:white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+
+}
+
+.testText {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color:white;
+}
+
+/* .whiteText {
+    color:white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+} */
+
+.whiteTextInfo {
+    color:white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
 }
