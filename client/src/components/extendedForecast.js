@@ -16,6 +16,7 @@ class ExtendedForecast extends React.Component {
     constructor(props) {
         super(props);
         this.ref = React.createRef();
+        this.parentRef = React.createRef();
         this.locationRefsHourly = [];
         this.locationRefsExtended = [];
         this.state = {
@@ -85,13 +86,18 @@ class ExtendedForecast extends React.Component {
         console.log(`this.locationrefs is ${references}`)
         console.log(references.length);
         console.log(`this should be a loop giving me a bunch of coordinates`)
+        let parentRefCoords = this.parentRef.current.getBoundingClientRect();
+        // let test = document.getElementById("test");
+        // let a = test.getBoundingClientRect();
+        // console.log(`****, ${a.top, a.right, a.bottom, a.left}`);
+        console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
         let coordinateArray = [];
         for (let i = 0; i < references.length; i++) {
             console.log(`i is ${i}`);
             let rect = references[i].getBoundingClientRect();
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
             console.log(rect.top, rect.right, rect.bottom, rect.left);
-            let obj = {top: rect.top, left: rect.left};
+            let obj = {top: rect.top - parentRefCoords.top, left: rect.left - parentRefCoords.left};
             coordinateArray.push(obj);
         }
         console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
@@ -127,7 +133,7 @@ class ExtendedForecast extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row" ref={this.parentRef} id="test">
                             <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText"
                                 ref={this.ref}
                                 onMouseDown={this.onMouseDown}
@@ -144,6 +150,10 @@ class ExtendedForecast extends React.Component {
                                             <p>{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
                                             <div className="tempGraphBox">
+                                            {index < props.forecastResults.length - 1? 
+                                                    <svg width="300" height="300" ><line x1={this.state.lineData[index].left - 500} y1={this.state.lineData[index].top  - 500} x2={this.state.lineData[index+1].left  - 500} y2={this.state.lineData[index+1].top  - 500} stroke="white"/></svg>
+                                                        : <></>
+                                                    }
                                                 <div className="temperatureDot" style={this.styles(each.rainProbability)}
                                                     ref={ref => this.locationRefsHourly[index] = ref}>'</div>
                                             </div>
@@ -161,7 +171,7 @@ class ExtendedForecast extends React.Component {
                                                 <div className="tempGraphBox">
                                                     
                                                     {index < props.forecastResults.length - 1? 
-                                                    <svg width="500" height="500"><line x1={this.state.lineData[index].left - 500} y1={this.state.lineData[index].top  - 500} x2={this.state.lineData[index+1].left  - 500} y2={this.state.lineData[index+1].top  - 500} stroke="white"/></svg>
+                                                    <svg width="300" height="300" ><line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index+1].left} y2={this.state.lineData[index+1].top} stroke="white"/></svg>
                                                         : <></>
                                                     }
                                                     {/* {index < props.forecastResults.length - 1 ? 
