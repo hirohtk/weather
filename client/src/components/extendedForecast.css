@@ -57,6 +57,10 @@
     font-weight: 300;
     font-size: 15px;
 }
+#svg {
+    position: absolute;
+    left: 0px;
+}
 
 .forecastDayHourly {
     border: 1px dotted;
