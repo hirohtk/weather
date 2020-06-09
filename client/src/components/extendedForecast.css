@@ -10,7 +10,7 @@
 
 .outerForecastBox {
     position: absolute;
-    height: 25rem;
+    height: 50rem;
     width: 100%;
 }
 
@@ -50,6 +50,7 @@
 .pClassNewFont {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
+    color: white;
 }
 
 .pNewFontSize {
@@ -63,8 +64,8 @@
 }
 
 .forecastDayHourly {
-    border: 1px dotted;
-    border-radius: 2px;
+    border-right: 1px solid white;
+    /* border-radius: 2px; */
     /* margin-left: 5px;
     margin-right: 5px; */
     height: 38rem;
@@ -74,7 +75,7 @@
 }
 
 .forecastDayExtended {
-    border: 1px dashed;
+    border-right: 1px solid white;
     border-radius: 2px;
     /* margin-left: 5px;
     margin-right: 5px; */
@@ -108,4 +109,27 @@
     border-radius: 10px;
     margin: 0 auto;
     position: relative;
+}
+
+/* testing layout */
+:root {
+	--gradient: linear-gradient(315deg, #485461 0%, #28313b 74%);
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	line-height: 1.25em;
+}
+
+.weather-gradient {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-image: var(--gradient);
+	border-radius: 25px;
+    opacity: 0.5;
+    z-index: -1;
 }

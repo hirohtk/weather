@@ -15,7 +15,7 @@ function Animation(props) {
             {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
 {/* Rain */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ?
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
@@ -26,9 +26,9 @@ function Animation(props) {
                   <div className="heroClouds"></div></> : <></>} */}
 
             {/* Sun */}
-            <div>
+            {/* <div>
                 {props.weather[1] === undefined ? <></> : props.weather[1].includes("Sunny") ? <PartlyCloudy></PartlyCloudy> : ""}
-            </div> 
+            </div>  */}
 
             {/* <div className="toggles">
                 <div className="splat-toggle toggle active">SPLAT</div>
