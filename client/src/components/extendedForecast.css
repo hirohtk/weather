@@ -61,6 +61,13 @@
 #svg {
     position: absolute;
     left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+line {
+    overflow-x: scroll;
 }
 
 .forecastDayHourly {
