@@ -70,7 +70,7 @@ class ExtendedForecast extends React.Component {
         else if (event.target.dataset.name === "fiveDay") {
             this.setState({ forecastChosen: "extended" }, () => {
                 this.getPointCoords("extended");
-                console.log(`changing forecast to extended, tI should see some refs here because that's what pointcoords is using ${this.locationRefsExtended}`)
+                console.log(`changing forecast to extended, I should see some refs here because that's what pointcoords is using ${this.locationRefsExtended}`)
             });
         }
     }
