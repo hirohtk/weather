@@ -4,6 +4,7 @@ import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
+import Clock from "./components/clock"
 import './App.css';
 import Axios from 'axios';
 import $ from 'jquery'
@@ -164,6 +165,7 @@ class App extends React.Component {
             </Animation>
             <div className="boxForEverything">
               <div className="row">
+                <div className="col l6">
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
@@ -171,6 +173,10 @@ class App extends React.Component {
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
                   ><p>{this.state.CurrentWeather}</p></CurrentWeather>
+                </div>
+                <div className="col l6">
+                <Clock></Clock>
+                </div>
               </div>
               <div className="row">
                 <ExtendedForecast
