@@ -2,11 +2,11 @@ import React from 'react';
 import "./rain.css"
 import "./icons.css"
 import "./cloudAnimation.css"
-import SunAnimation from './sunAnimation';
+import PartlyCloudy from './partlyCloudy'
 // import { animationFunction } from "./components/logic/animationLogic";
 
 function Animation(props) {
-console.log(`is this loading out of order? ${props.weather[1]}`)
+    console.log(`is this loading out of order? ${props.weather[1]}`)
     return (
         <div className="Scott">
 
@@ -15,7 +15,7 @@ console.log(`is this loading out of order? ${props.weather[1]}`)
             {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
 {/* Rain */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ?
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?
                 <><div className="rainy front-row"></div>
                     <div className="rainy back-row"></div>
                     <div className="rainy-on"></div></> : <></>} */}
@@ -25,9 +25,9 @@ console.log(`is this loading out of order? ${props.weather[1]}`)
                 <><div className="hero"></div>
                   <div className="heroClouds"></div></> : <></>} */}
 
-{/* Sun */}
+            {/* Sun */}
             {/* <div>
-                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <SunAnimation></SunAnimation> : ""}
+                {props.weather[1] === undefined ? <></> : props.weather[1].includes("Sunny") ? <PartlyCloudy></PartlyCloudy> : ""}
             </div>  */}
 
             {/* <div className="toggles">

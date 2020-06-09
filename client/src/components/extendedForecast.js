@@ -117,8 +117,9 @@ class ExtendedForecast extends React.Component {
         return (
             <>
                 <div className="outerForecastBox">
-                    <h5 className="whiteText">Extended Forecast</h5>
-                    <div className="forecastBox">
+                    <h5 className="pClassNewFont">Extended Forecast</h5>
+                    {/* <div className="forecastBox"> */}
+                    <div className="weather-gradient"></div>
                         <div className="row">
                             <div id="forecastOptions" className="whiteText">
                                 <div className="col l6">
@@ -162,11 +163,11 @@ class ExtendedForecast extends React.Component {
                                 </svg>
                                 {this.state.forecastChosen === "hourly" ?
                                     props.hourlyResults.map((each, index) => (
-                                        <div className="forecastDayHourly" style={colorLogic(each.dayOfWeek)} >
-                                            <h5>{each.dayOfWeek}, {each.time}</h5>
-                                            <p>{each.date}</p>
-                                            <p>Temperature: {each.tempF}F</p>
-                                            <p>{each.condition}</p>
+                                        <div className="forecastDayHourly">
+                                            <h5 className="pClassNewFont">{each.dayOfWeek}, {each.time}</h5>
+                                            <p className="pNewFontSize">{each.date}</p>
+                                            <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
                                             <div className="tempGraphBox">
                                                 <div className="temperatureDot" style={this.styles(each.rainProbability)}
@@ -177,10 +178,10 @@ class ExtendedForecast extends React.Component {
                                     ))
                                     : this.state.forecastChosen === "extended" ?
                                         props.forecastResults.map((each, index) => (
-                                            <div className="col l3 forecastDayExtended" style={colorLogic(each.dayOfWeek)}>
-                                                <h5>{each.dayOfWeek}, {each.date}</h5>
-                                                <p>Average Temperature: {each.avgTempF}F</p>
-                                                <p>{each.condition}</p>
+                                            <div className="col l3 forecastDayExtended">
+                                                <h5 className="pClassNewFont">{each.dayOfWeek}, {each.date}</h5>
+                                                <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
+                                                <p className="pNewFontSize">{each.condition}</p>
                                                 <span>{iconLogic(each.condition)}</span>
 
                                                 <div className="tempGraphBox">
@@ -194,7 +195,7 @@ class ExtendedForecast extends React.Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                
             </>
         )
     }
