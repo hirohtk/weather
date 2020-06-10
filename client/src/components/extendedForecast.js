@@ -23,7 +23,7 @@ class ExtendedForecast extends React.Component {
             isScrolling: false,
             clientX: 0,
             scrollX: 0,
-            forecastChosen: "extended",
+            forecastChosen: "",
             lineData: [],
         }
     }
@@ -139,7 +139,7 @@ class ExtendedForecast extends React.Component {
                             </div>
                         </div>
                         <div className="row" ref={this.parentRef} id="test">
-                            <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : ""} className="whiteText"
+                            <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
                                 ref={this.ref}
                                 onMouseDown={this.onMouseDown}
                                 onMouseUp={this.onMouseUp}
