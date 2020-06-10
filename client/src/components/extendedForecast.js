@@ -23,7 +23,7 @@ class ExtendedForecast extends React.Component {
             isScrolling: false,
             clientX: 0,
             scrollX: 0,
-            forecastChosen: "",
+            forecastChosen: "extended",
             lineData: [],
         }
     }
