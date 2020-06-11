@@ -152,11 +152,11 @@ class ExtendedForecast extends React.Component {
                                     to run), then don't render the lines.*/}
                                     {this.state.lineData.length === 0 ? <></> : this.state.forecastChosen === "hourly" ?  props.hourlyResults.map((each, index) => (
                                             index < props.hourlyResults.length - 1 ?
-                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" />
+                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" stroke-dasharray="2, 2" />
                                                 : <></>
                                         )) : props.forecastResults.map((each, index) => (
                                             index < props.forecastResults.length - 1 ?
-                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" />
+                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="white" stroke-dasharray="2, 2" />
                                                 : <></>
                                         
                                         ))}
