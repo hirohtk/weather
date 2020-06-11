@@ -1,10 +1,12 @@
 nav, .nav-wrapper {
-    background-color: rgba(202, 202, 202, 0.322) !important;
+    background-color: rgba(0, 0, 0, 0.596) !important;
     width: 100%;
 }
  
 nav, .brand-logo {
-    left: 1rem;
+   
+    top: 10px;
+   
 }
 
 .brand-logo {
@@ -22,6 +24,8 @@ nav, .brand-logo {
 .Dropdown-menu {
     width: 300% !important;
     right: 0px !important;
+    position: fixed;
+    z-index: 10
 }
 
 .Dropdown-control {
@@ -36,9 +40,7 @@ nav, .brand-logo {
     width: 64px;
     border-radius: 2px;
     border: 1px solid white;
+    position:fixed;
+    left: 0px;
 }
 
-#time {
-    position:relative;
-    right: 1rem;
-}
