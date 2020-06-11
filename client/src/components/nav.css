@@ -1,12 +1,11 @@
 nav, .nav-wrapper {
     background-color: rgba(0, 0, 0, 0.596) !important;
     width: 100%;
+    border: none;
 }
  
 nav, .brand-logo {
-   
     top: 10px;
-   
 }
 
 .brand-logo {
@@ -19,6 +18,7 @@ nav, .brand-logo {
     height: 46px;
     width:1rem;
     left: 6px !important;
+    
 }
 
 .Dropdown-menu {
@@ -30,6 +30,7 @@ nav, .brand-logo {
 
 .Dropdown-control {
     padding: 8px 24px 8px 10px !important;
+    
 }
 
 .sidebarButton {
