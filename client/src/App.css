@@ -49,10 +49,10 @@ html {
 }
 
 #backgroundImage {
-  position: absolute;
+  position: fixed;
   z-index: -1;
   left: 0;
-  top: 64px;
+  top: -100px;
   opacity: 0.15;
   width: 100%;
 }
