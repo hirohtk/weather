@@ -6,6 +6,11 @@
     bottom:0px;
 }
 
+@keyframes appear {
+    0% {opacity: 0}
+    100% {opacity: 1;}
+}
+
 .containerForFriends {
     position: relative;
     width: 90%;
@@ -13,6 +18,8 @@
     border-radius: 2px;
     height: 100%;
     right: -13px;
+    opacity: 1;
+    animation: appear 1s
 }
 
 .theFriends {

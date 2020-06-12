@@ -20,7 +20,7 @@ class Nav extends React.Component {
 
   // why did this have to be outside the constructor?  
 
-  onSetSidebarOpen(open) {
+  onSetSidebarOpen = (open) => {
     this.setState({ sidebarOpen: open });
   }
 
@@ -31,7 +31,7 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions">Login</div>
+            <div className="menuOptions" onClick={props.login()}>{props.loggedIn ? "Logout" : "Login"}</div>
             <div className="menuOptions">Sign Up</div>
           </>}
           open={this.state.sidebarOpen}
