@@ -45,3 +45,8 @@ nav, .brand-logo {
     left: 0px;
 }
 
+.menuOptions {
+    text-align: left;
+    font-weight:bold;
+    font-size: 20px;
+}

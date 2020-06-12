@@ -31,8 +31,8 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div>Login</div>
-            <div>Sign Up</div>
+            <div className="menuOptions">Login</div>
+            <div className="menuOptions">Sign Up</div>
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}

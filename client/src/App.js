@@ -5,6 +5,7 @@ import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
 import Clock from "./components/clock"
+import FriendsModule from "./components/friendsModule"
 import './App.css';
 import Axios from 'axios';
 import $ from 'jquery'
@@ -157,6 +158,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Nav></Nav>
+        <FriendsModule></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>
           <div className="row">
