@@ -1,0 +1,62 @@
+.friendsOverlord{
+    position: fixed;
+    right: 0px;
+    height: 30rem;
+    width: 15%;
+    bottom:0px;
+}
+
+.friendsOverlordVanish{
+    position: fixed;
+    right: 0px;
+    height: 30rem;
+    width: 15%;
+    bottom:0px;
+    opacity: 0;
+    animation: vanish 1s;
+}
+
+@keyframes appear {
+    0% {opacity: 0}
+    100% {opacity: 1;}
+}
+
+@keyframes vanish {
+    100% {opacity: 1}
+    0% {opacity: 0}
+}
+
+.containerForFriends {
+    position: relative;
+    width: 90%;
+    border: 1px solid white;
+    border-radius: 2px;
+    height: 100%;
+    right: -13px;
+    opacity: 1;
+    animation: appear 1s
+}
+
+.theFriends {
+    color:white;
+    text-align: left;
+    margin-left: 1rem;
+}
+
+.tinyFriendPic {
+    height: 20px;
+    width: 20px;
+}
+
+.online, .offline {
+    font-size: 12px;
+    margin-right: 0.5rem;
+}
+
+.online {
+    color: green;
+}
+
+.offline {
+    color: maroon;
+}

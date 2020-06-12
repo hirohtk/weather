@@ -5,6 +5,7 @@ import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
 import Clock from "./components/clock"
+import FriendsModule from "./components/friendsModule"
 import './App.css';
 import Axios from 'axios';
 import $ from 'jquery'
@@ -23,7 +24,8 @@ class App extends React.Component {
     forecastButtonHovered: undefined,
     howManyForecastedDays: "",
     hourIncrement: 6,
-    locationImage: ""
+    locationImage: "",
+    loggedIn: "false"
   }
 
   componentDidMount() {
@@ -158,10 +160,26 @@ class App extends React.Component {
     return;
   }
 
+  login = (credentials) => {
+    if (this.state.loggedIn === "false") {
+      //handle auth
+      this.setState({loggedIn: "true"})
+    }
+    else {
+      this.setState({loggedIn: "false"})
+    }
+  }
+
+
   render() {
     return (
       <div className="App">
-        <Nav></Nav>
+        <Nav 
+        login={this.login}
+        loggedIn={this.state.loggedIn}></Nav>
+        <FriendsModule 
+        loggedIn={this.state.loggedIn}
+        ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>
           <div className="row">

@@ -24,11 +24,14 @@ export function iconLogic(condition) {
         if (condition.match(/^(Patchy rain possible|Light rain shower|Light drizzle|Heavy rain at times|Moderate rain at times|Light rain|Patchy light drizzle|Moderate or heavy rain shower|Heavy rain|Moderate rain)$/)) {
             return "Rainy";
         }
-        else if (condition.match(/^(Partly cloudy|Overcast|Cloudy)$/)) {
+        else if (condition.match(/^(Overcast|Cloudy)$/)) {
             return "Cloudy";
         }
-        else if (condition.match(/^(Sunny)$/)) {
+        else if (condition.match(/^(Sunny|Clear)$/)) {
             return "Sunny";
+        }
+        else if (condition.match(/^(Partly cloudy)$/)) {
+            return "Partly cloudy"
         }
         else {
             return "";
