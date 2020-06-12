@@ -25,7 +25,7 @@ class App extends React.Component {
     howManyForecastedDays: "",
     hourIncrement: 6,
     locationImage: "",
-    loggedIn = "false"
+    loggedIn: "false"
   }
 
   componentDidMount() {

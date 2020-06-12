@@ -49,4 +49,6 @@ nav, .brand-logo {
     text-align: left;
     font-weight:bold;
     font-size: 20px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }

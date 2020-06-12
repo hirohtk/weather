@@ -31,7 +31,7 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions" onClick={props.login()}>{props.loggedIn ? "Logout" : "Login"}</div>
+            <div className="menuOptions" onClick={() => props.login()}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
             <div className="menuOptions">Sign Up</div>
           </>}
           open={this.state.sidebarOpen}

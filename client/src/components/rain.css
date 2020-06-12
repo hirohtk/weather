@@ -258,6 +258,19 @@ html {
     box-shadow: 0 0 0 0.375em #fff;
     animation: spin 12s infinite linear;
   }
+
+  .sunIconMixed {
+    position: absolute;
+    top: 38%;
+    left: 75%;
+    width: 2.5em;
+    height: 2.5em;
+    margin: -1.25em;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0.375em #fff;
+    animation: spin 12s infinite linear;
+  }
   .rays {
     position: absolute;
     top: -2em;

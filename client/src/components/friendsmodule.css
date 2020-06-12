@@ -6,9 +6,24 @@
     bottom:0px;
 }
 
+.friendsOverlordVanish{
+    position: fixed;
+    right: 0px;
+    height: 30rem;
+    width: 15%;
+    bottom:0px;
+    opacity: 0;
+    animation: vanish 1s;
+}
+
 @keyframes appear {
     0% {opacity: 0}
     100% {opacity: 1;}
+}
+
+@keyframes vanish {
+    100% {opacity: 1}
+    0% {opacity: 0}
 }
 
 .containerForFriends {
