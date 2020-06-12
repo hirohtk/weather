@@ -86,6 +86,11 @@ class App extends React.Component {
         console.log(response);
         let tempInF = response.data.current.temp_f;
         let condition = response.data.current.condition.text;
+        //testing
+        let windDirection = response.data.current.wind_dir;
+        let windSpeed = response.data.current.wind_mph;
+        let windDegree = response.data.current.wind_degree;
+        let humid = response.data.current.humidity;
 
         let fiveDayForecastArray = [];
         for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
@@ -128,7 +133,7 @@ class App extends React.Component {
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
-          currentWeather: [tempInF, condition],
+          currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree],
           howManyForecastedDays: response.data.forecast.forecastday.length,
         }, () => {
           animationFunction(condition);
@@ -165,18 +170,20 @@ class App extends React.Component {
             </Animation>
             <div className="boxForEverything">
               <div className="row">
-                <div className="col l6">
+                {/* <div className="col l6"> */}
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
-                  ><p>{this.state.CurrentWeather}</p></CurrentWeather>
-                </div>
-                <div className="col l6">
-                <Clock></Clock>
-                </div>
+                  clock = {<Clock></Clock>}
+                  ><p>{this.state.CurrentWeather}</p>
+                  </CurrentWeather>
+                {/* </div> */}
+                {/* <div className="col l6"> */}
+                {/* <Clock></Clock> */}
+                {/* </div> */}
               </div>
               <div className="row">
                 <ExtendedForecast
