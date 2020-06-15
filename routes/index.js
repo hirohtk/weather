@@ -44,7 +44,11 @@ router.post("/api/login", (req, res, next) => {
 });
 
 router.post("/api/register", function (req, res) {
+  console.log("register route")
+  console.log(req.body);
+  console.log(req.body.username)
   db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
+    console.log("mongoose went")
     if (err) {
       console.log("error", err);
       res.json(err);

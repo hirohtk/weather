@@ -20,6 +20,7 @@ class Nav extends React.Component {
       loggingIn: false,
       registering: false,
       enteringCredentials: false,
+      currentUser: undefined
     }
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
   }
@@ -42,7 +43,7 @@ class Nav extends React.Component {
   doLogOrReg = () => {
     let credentials = {
       username: this.state.username,
-      password: this.state.userpassword
+      password: this.state.password
     }
     //login
     if (this.state.loggingIn === true) {
@@ -84,12 +85,12 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, loggingIn: true})}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
-            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, registering: true})}>Sign Up</div>
+            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, loggingIn: true, registering: false, username: "", password: ""})}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
+            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, registering: true, loggingIn: false, username: "", password: ""})}>Sign Up</div>
             {this.state.enteringCredentials ? 
             <>
-            <input placeholder="Username" name="username" value={this.state.userName} maxLength="16" onChange={this.loginRegisterGate}></input>
-            <input placeholder="Password" name="password" type="password" value={this.state.userPassword} maxLength="16" onChange={this.loginRegisterGate}></input>
+            <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
+            <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
             <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
           </>}
           open={this.state.sidebarOpen}
@@ -100,6 +101,9 @@ class Nav extends React.Component {
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
               <i class="material-icons">menu</i>
             </button>
+            { this.state.currentUser === undefined ? <></> : 
+              <span className="welcome">Welcome, {this.state.currentUser[0]}~</span> 
+            }
         {/* <nav>
           <div class="nav-wrapper">
             <a href="#" class="brand-logo">Weather App</a>
