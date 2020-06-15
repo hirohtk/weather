@@ -29,7 +29,7 @@
 .containerForFriends {
     position: relative;
     width: 90%;
-    border: 1px solid white;
+    /* border: 1px solid white; */
     border-radius: 2px;
     height: 100%;
     right: -13px;
@@ -59,4 +59,17 @@
 
 .offline {
     color: maroon;
+}
+
+/* testing */
+
+.friends-gradient {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+    background-image: linear-gradient(147deg, #d7d7d7 0%, #353535 74%);
+    border-radius: 25px;
+	opacity: 0.5;
 }

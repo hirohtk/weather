@@ -93,6 +93,7 @@ class App extends React.Component {
         let windSpeed = response.data.current.wind_mph;
         let windDegree = response.data.current.wind_degree;
         let humid = response.data.current.humidity;
+        let uvIndex = response.data.current.uv;
 
         let fiveDayForecastArray = [];
         for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
@@ -135,7 +136,7 @@ class App extends React.Component {
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
-          currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree],
+          currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
           howManyForecastedDays: response.data.forecast.forecastday.length,
         }, () => {
           animationFunction(condition);

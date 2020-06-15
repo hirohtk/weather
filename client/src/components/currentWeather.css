@@ -59,8 +59,21 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     font-size: 20px;
-    line-height: 350%
-;
+    line-height: 200%;
+}
+
+.whiteTextToolTip {
+    color:white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+}
+
+.whiteTextToolBold {
+    color:white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
 }
 
 /* testing new style */
@@ -108,3 +121,30 @@
 .weather-desc {
 	margin: 0;
 }
+
+
+/* tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+	background-image: var(--gradient);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    top: -5px;
+    left: 105%;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }

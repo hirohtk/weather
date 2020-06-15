@@ -21,7 +21,7 @@ export function iconLogic(condition) {
     // API weather conditions than icons at the moment.
 
     let pooler = (condition) => {
-        if (condition.match(/^(Patchy rain possible|Light rain shower|Light drizzle|Heavy rain at times|Moderate rain at times|Light rain|Patchy light drizzle|Moderate or heavy rain shower|Heavy rain|Moderate rain)$/)) {
+        if (condition.match(/^(Patchy light rain|Patchy rain possible|Light rain shower|Light drizzle|Heavy rain at times|Moderate rain at times|Light rain|Patchy light drizzle|Moderate or heavy rain shower|Heavy rain|Moderate rain)$/)) {
             return "Rainy";
         }
         else if (condition.match(/^(Overcast|Cloudy)$/)) {
