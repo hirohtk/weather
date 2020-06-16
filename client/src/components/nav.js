@@ -6,6 +6,8 @@ import $ from 'jquery'
 import { PromiseProvider } from 'mongoose';
 import Sidebar from "react-sidebar";
 import axios from "axios"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import moment from "moment";
 
 class Nav extends React.Component {
@@ -33,10 +35,10 @@ class Nav extends React.Component {
 
   loginRegisterGate = (event) => {
     if (event.target.name === "username") {
-      this.setState({username: event.target.value});
+      this.setState({ username: event.target.value });
     }
     else {
-      this.setState({password: event.target.value});
+      this.setState({ password: event.target.value });
     }
   }
 
@@ -52,12 +54,12 @@ class Nav extends React.Component {
         if (err) {
         }
         else if (response.data === "Failure") {
-          console.log("failure", `Error: Username and/or Password incorrect.`);
+          notify("failure", `Error: Username and/or Password incorrect.`);
         }
         else {
           // WILL NEED TO CREATE A PROPS FUNCTION TO PASS THIS INFO TO APP RATHER THAN KEEP IT HERE 
-          this.setState({currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: ""});
-          console.log("success", `${response.data.username} is now logged in!`);
+          this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "" });
+          notify("success", `${response.data.username} is now logged in!`);
         }
       });
     }
@@ -67,11 +69,11 @@ class Nav extends React.Component {
         console.log(`response from registering is ${JSON.stringify(response.data)}`);
         if (response.data.name === "UserExistsError") {
           console.log(`the error for registration is ${err}`)
-          console.log("failure", `Sorry!  Username in use- please select another name.`);
+          notify("failure", `Sorry!  Username in use- please select another name.`);
         }
         else {
-          this.setState({registering: false, username: "", password: ""})
-          console.log("success", `${credentials.username} is now registered!`);
+          this.setState({ registering: false, username: "", password: "" })
+          notify("info", `${credentials.username} is now registered!`);
           // GRAB USER DETAILS -- response.data is the username
         }
       });
@@ -85,13 +87,16 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, loggingIn: true, registering: false, username: "", password: ""})}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
-            <div className="menuOptions" onClick={() => this.setState({enteringCredentials: true, registering: true, loggingIn: false, username: "", password: ""})}>Sign Up</div>
-            {this.state.enteringCredentials ? 
-            <>
-            <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
-            <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
-            <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
+            <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}} onClick={() => this.setState({ enteringCredentials: true, loggingIn: true, registering: false, username: "", password: "" })}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
+            <div className="menuOptions" style={this.state.registering ? { color: "white" } : {}} onClick={() => this.setState({ enteringCredentials: true, registering: true, loggingIn: false, username: "", password: "" })}>Sign Up</div>
+            {this.state.enteringCredentials ?
+              <>
+                <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
+                <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
+                <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
+            {this.state.currentUser === undefined ? <></> :
+              <span>{this.state.currentUser[0]} is now logged in!</span>
+            }
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}
@@ -99,18 +104,19 @@ class Nav extends React.Component {
         >
         </Sidebar>
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
-              <i class="material-icons">menu</i>
-            </button>
-            { this.state.currentUser === undefined ? <></> : 
-              <span className="welcome">Welcome, {this.state.currentUser[0]}~</span> 
-            }
-        {/* <nav>
-          <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Weather App</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-            </ul>
-          </div>
-        </nav> */}
+          <i class="material-icons">menu</i>
+        </button>
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
       </>
     )
   }

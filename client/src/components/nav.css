@@ -61,3 +61,14 @@ nav, .brand-logo {
     font-weight: 400;
     font-size: 20px;
 }
+
+@keyframes fade {
+    0% {opacity: 1};
+    75% {opacity: 1}
+    100% {opacity: 0}
+}
+
+.confirmation {
+    opacity: 0;
+    animation: fade 4s
+}
