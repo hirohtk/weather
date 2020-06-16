@@ -25,8 +25,8 @@ class App extends React.Component {
     howManyForecastedDays: "",
     hourIncrement: 6,
     locationImage: "",
-    loggedIn: "false",
-  
+    loggedIn: false,
+    currentUser: []
   }
 
   componentDidMount() {
@@ -156,14 +156,21 @@ class App extends React.Component {
     return;
   }
 
-
+  handleLogin = (credentials, doWhich) => {
+    // login
+    doWhich === "login" ? this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }) 
+    : 
+    this.setState({ currentUser: [], loggedIn: false }) 
+  }
 
   render() {
     return (
       <div className="App">
         <Nav 
         loggedIn={this.state.loggedIn}
-        enterCredentials={this.state.enteringCredentials}></Nav>
+        handleLogin={this.handleLogin}
+        currentUser={this.state.currentUser}
+        ></Nav>
         <FriendsModule 
         loggedIn={this.state.loggedIn}
         ></FriendsModule>

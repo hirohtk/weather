@@ -54,12 +54,13 @@ class Nav extends React.Component {
         if (err) {
         }
         else if (response.data === "Failure") {
-          notify("failure", `Error: Username and/or Password incorrect.`);
+          toast.error(`Error: Username and/or Password incorrect.`);
         }
         else {
           // WILL NEED TO CREATE A PROPS FUNCTION TO PASS THIS INFO TO APP RATHER THAN KEEP IT HERE 
-          this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "" });
-          notify("success", `${response.data.username} is now logged in!`);
+          this.setState({loggingIn: false, username: "", password: "", enteringCredentials: false}, () => this.props.handleLogin({username: response.data.username, id: response.data.id}, "login"));
+          // this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "", loggedIn: true });
+          toast.success(`${response.data.username} is now logged in!`);
         }
       });
     }
@@ -69,11 +70,11 @@ class Nav extends React.Component {
         console.log(`response from registering is ${JSON.stringify(response.data)}`);
         if (response.data.name === "UserExistsError") {
           console.log(`the error for registration is ${err}`)
-          notify("failure", `Sorry!  Username in use- please select another name.`);
+          toast.error(`Sorry!  Username in use- please select another name.`);
         }
         else {
-          this.setState({ registering: false, username: "", password: "" })
-          notify("info", `${credentials.username} is now registered!`);
+          this.setState({ registering: false, username: "", password: "", enteringCredentials: false})
+          toast.info(`${credentials.username} is now registered!`);
           // GRAB USER DETAILS -- response.data is the username
         }
       });
@@ -87,16 +88,20 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}} onClick={() => this.setState({ enteringCredentials: true, loggingIn: true, registering: false, username: "", password: "" })}>{props.loggedIn === "true" ? "Logout" : "Login"}</div>
+            <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}} 
+            onClick={() => {
+              props.loggedIn ? props.handleLogin({}, "logout") :
+              this.setState({ enteringCredentials: true, loggingIn: true, registering: false, username: "", password: "" })
+            }
+              }>
+              {props.loggedIn ? "Logout" : "Login"}
+              </div>
             <div className="menuOptions" style={this.state.registering ? { color: "white" } : {}} onClick={() => this.setState({ enteringCredentials: true, registering: true, loggingIn: false, username: "", password: "" })}>Sign Up</div>
             {this.state.enteringCredentials ?
               <>
                 <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
-            {this.state.currentUser === undefined ? <></> :
-              <span>{this.state.currentUser[0]} is now logged in!</span>
-            }
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}
@@ -106,6 +111,9 @@ class Nav extends React.Component {
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
           <i class="material-icons">menu</i>
         </button>
+        {props.currentUser.length === 0 ? <></> :
+              <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+            }
         <ToastContainer
           position="bottom-left"
           autoClose={5000}
