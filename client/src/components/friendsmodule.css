@@ -37,6 +37,11 @@
     animation: appear 1s
 }
 
+.searchForFriends {
+    position: relative;
+    width: 100%;
+}
+
 .theFriends {
     color:white;
     text-align: left;

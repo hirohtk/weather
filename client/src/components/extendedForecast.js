@@ -101,7 +101,7 @@ class ExtendedForecast extends React.Component {
             let rect = references[i].getBoundingClientRect();
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
             console.log(rect.top, rect.right, rect.bottom, rect.left);
-            let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left };
+            let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left + 2};
             coordinateArray.push(obj);
         }
         console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
