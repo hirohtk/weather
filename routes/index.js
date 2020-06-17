@@ -73,8 +73,6 @@ router.get("/api/googleplaces/:place", function (req, res) {
   })
 })
 
-
-
 router.get("/api/allusers/:user", function (req, res) {
   console.log(`finding user by username ${req.params.user}`);
   db.Users.find({username: req.params.user}).then(response => {

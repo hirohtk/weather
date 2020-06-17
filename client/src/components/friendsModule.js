@@ -31,7 +31,7 @@ class Friends extends React.Component {
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p>
                         <div className="searchForFriends">
                         <input placeholder="Search for a user!" name="searchTerm" value={this.state.searchTerm} maxLength="16" onChange={this.searchInputHandler}></input>
-                        <button id="loginSubmit" onClick={this.doLogOrReg}>Go!</button>
+                        <button id="loginSubmit" onClick={this.searchHandler}>Go!</button>
                         </div>
                     </div>
 
