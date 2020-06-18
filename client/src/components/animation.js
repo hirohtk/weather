@@ -12,7 +12,7 @@ function Animation(props) {
 
             {/* FOR NOW TO TEST, PUT ACTUAL CURRENT CONDITION  */}
 {/* Snonw */}
-            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Partly cloudy") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
+            {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ? <canvas className="fireworks" id="myFireworks"></canvas> : <></>} */}
 
 {/* Rain */}
             {/* {props.weather[1] === undefined ? <></> : props.weather[1].includes("Overcast") ?

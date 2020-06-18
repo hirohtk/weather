@@ -266,9 +266,9 @@ html {
     width: 2.5em;
     height: 2.5em;
     margin: -1.25em;
-    background: white;
+    background: yellow;
     border-radius: 50%;
-    box-shadow: 0 0 0 0.375em #fff;
+    box-shadow: 0 0 0 0.375em yellow;
     animation: spin 12s infinite linear;
   }
   .rays {
@@ -279,9 +279,9 @@ html {
     width: 0.375em;
     height: 1.125em;
     margin-left: -0.1875em;
-    background: #fff;
+    background: yellow;
     border-radius: 0.25em;
-    box-shadow: 0 5.375em #fff;
+    box-shadow: 0 5.375em yellow;
   }
   .rays:before,
   .rays:after {
@@ -294,9 +294,9 @@ html {
     height: 1.125em;
     transform: rotate(60deg);
     transform-origin: 50% 3.25em;
-    background: #fff;
+    background: yellow;
     border-radius: 0.25em;
-    box-shadow: 0 5.375em #fff;
+    box-shadow: 0 5.375em yellow;
   }
   .rays:before {
     transform: rotate(120deg);
