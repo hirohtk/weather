@@ -25,7 +25,8 @@ class App extends React.Component {
     howManyForecastedDays: "",
     hourIncrement: 6,
     locationImage: "",
-    loggedIn: "false"
+    loggedIn: false,
+    currentUser: []
   }
 
   componentDidMount() {
@@ -161,25 +162,24 @@ class App extends React.Component {
     return;
   }
 
-  login = (credentials) => {
-    if (this.state.loggedIn === "false") {
-      //handle auth
-      this.setState({loggedIn: "true"})
-    }
-    else {
-      this.setState({loggedIn: "false"})
-    }
+  handleLogin = (credentials, doWhich) => {
+    // login
+    doWhich === "login" ? this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }) 
+    : 
+    this.setState({ currentUser: [], loggedIn: false }) 
   }
-
 
   render() {
     return (
       <div className="App">
         <Nav 
-        login={this.login}
-        loggedIn={this.state.loggedIn}></Nav>
+        loggedIn={this.state.loggedIn}
+        handleLogin={this.handleLogin}
+        currentUser={this.state.currentUser}
+        ></Nav>
         <FriendsModule 
         loggedIn={this.state.loggedIn}
+        user={this.state.currentUser}
         ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>

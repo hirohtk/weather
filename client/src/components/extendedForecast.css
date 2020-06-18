@@ -148,10 +148,10 @@ line {
 }
 
 .temperatureDot {
-    width: 1px;
-    height: 1px;
-    /* border-radius: 50%;
-    background-color: white; */
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
     /* margin-left: auto;
     margin-right: auto; */
     position: absolute;
