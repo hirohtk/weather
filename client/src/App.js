@@ -173,6 +173,7 @@ class App extends React.Component {
         ></Nav>
         <FriendsModule 
         loggedIn={this.state.loggedIn}
+        user={this.state.currentUser}
         ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>

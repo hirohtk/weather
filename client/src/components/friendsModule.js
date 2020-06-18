@@ -9,13 +9,20 @@ class Friends extends React.Component {
         this.state = {
             searchTerm: "",
             friendResults: [],
-            searching: false
+            searching: false,
+            myID: props.user
         }
     }
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
 
     clearResults = () => this.setState({ friendResults: [], searching: false });
+
+    addFriend = (id) => {
+        axios.put(`/api/adduser/${id}`, {userID: this.state.myID[1]}).then(response => {
+            console.log(response);
+        });
+    };
 
     searchHandler = () => {
         axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
@@ -24,7 +31,7 @@ class Friends extends React.Component {
                 this.setState({ friendResults: [] });
             }
             else {
-                this.setState({ friendResults: [response.data[0].username] });
+                this.setState({ friendResults: [{username: response.data[0].username, id: response.data[0].id}] });
             }
             this.setState({ searching: true });
         })
@@ -50,7 +57,7 @@ class Friends extends React.Component {
                                     </> :
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
-                                            <p className="whiteText">{each}</p>)}
+                                            <p className="whiteText">{each.username}<button onClick={this.addFriend(each.id)}>Add</button></p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}
