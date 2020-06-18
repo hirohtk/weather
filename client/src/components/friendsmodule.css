@@ -53,6 +53,10 @@
     width: 20px;
 }
 
+.whiteText {
+    color: white;
+}
+
 .online, .offline {
     font-size: 12px;
     margin-right: 0.5rem;
