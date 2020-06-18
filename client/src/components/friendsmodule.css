@@ -37,6 +37,11 @@
     animation: appear 1s
 }
 
+.searchForFriends {
+    position: relative;
+    width: 100%;
+}
+
 .theFriends {
     color:white;
     text-align: left;
@@ -46,6 +51,10 @@
 .tinyFriendPic {
     height: 20px;
     width: 20px;
+}
+
+.whiteText {
+    color: white;
 }
 
 .online, .offline {

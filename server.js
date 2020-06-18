@@ -17,12 +17,12 @@ const expressSession = require('express-session')({
 
 
 // Connect to the Mongo DB
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/weather";
-// mongoose.connect(
-//   MONGODB_URI,
-//   { useNewUrlParser: true, useUnifiedTopology: true },
-//   console.log("Connected to MongoDB!")
-// );
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/weather";
+mongoose.connect(
+  MONGODB_URI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  console.log("Connected to MongoDB!")
+);
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {

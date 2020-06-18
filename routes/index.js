@@ -44,7 +44,11 @@ router.post("/api/login", (req, res, next) => {
 });
 
 router.post("/api/register", function (req, res) {
+  console.log("register route")
+  console.log(req.body);
+  console.log(req.body.username)
   db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
+    console.log("mongoose went")
     if (err) {
       console.log("error", err);
       res.json(err);
@@ -68,6 +72,20 @@ router.get("/api/googleplaces/:place", function (req, res) {
     })
   })
 })
+
+router.get("/api/allusers/:user", function (req, res) {
+  console.log(`finding user by username ${req.params.user}`);
+  db.Users.find({username: req.params.user}).then(response => {
+    console.log(response)
+    res.json(response);
+  })
+});
+
+router.put("/api/addusers/:id", function (req, res) {
+  console.log(`adding user by userid ${req.params.id}`);
+  console.log(`you are ${req.body.userID}`);
+  
+});
 
 router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) {
   res.json("Login Success")
