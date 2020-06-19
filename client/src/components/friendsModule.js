@@ -9,6 +9,7 @@ class Friends extends React.Component {
         this.state = {
             searchTerm: "",
             friendResults: [],
+            friendsList: [],
             searching: false,
         }
     }
@@ -17,11 +18,18 @@ class Friends extends React.Component {
 
     clearResults = () => this.setState({ friendResults: [], searching: false });
 
+    loadFriends = () => {
+        console.log(`loading friends for: ${this.props.user[1]}`);
+        axios.get(`/api/loadfriends/${this.props.user[1]}`).then(response => {
+            console.log(`querying for friends returns ${response.data}`)
+            this.setState({friendsList: response.data.friends}, () => this.clearResults());
+        })
+    }
+
     addFriend = (id) => {
-        console.log(`adding friend, their id is ${id}`);
-        console.log(`my id is ${this.props.user[1]}`);
         axios.put(`/api/addusers/${id}`, {userID: this.props.user[1]}).then(response => {
-            console.log(`I need at least the username from this response to set in state ${response}`);
+            console.log(`I need at least the username from this response to set in state ${JSON.stringify(response)}`);
+            this.loadFriends();
         });
     };
 
@@ -39,7 +47,11 @@ class Friends extends React.Component {
     }
 
     componentDidMount = () => {
-        
+        // I think I can extend this usage for componentdidupdate for when people log on and off (hopefully server broadcasts to this component
+        // causing a rerender?)
+        if (this.props.loggedIn) {
+            this.loadFriends()
+        }
     }
 
     render() {
@@ -50,10 +62,19 @@ class Friends extends React.Component {
                     <div className="containerForFriends">
                     <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
-                        {}
-                        <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
+                        {this.state.friendsList === undefined ? <></> : this.state.friendsList.length === 0 ? 
+                        <>
+                        <h5>No friends yet!</h5>
+                        </> 
+                        : 
+                        <>
+                        {this.state.friendsList.map((each, index) => (
+                            <p className="theFriends"><i class="material-icons offline">lens</i>{each}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                        ))}
+                        </>}
+                        {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
-                        <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p>
+                        <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p> */}
                         <div className="searchForFriends">
                             <input placeholder="Search for a user!" name="searchTerm" value={this.state.searchTerm} maxLength="16" onChange={this.searchInputHandler} className="whiteText"></input>
                             <button id="loginSubmit" onClick={this.searchHandler}>Go!</button>
@@ -64,7 +85,8 @@ class Friends extends React.Component {
                                     </> :
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
-                                            <p className="whiteText">{each.username}<button onClick={this.addFriend(each.id)}>Add</button></p>)}
+                                        // NEED ARROW FUNCTION TO INVOKE this.addFriend()
+                                            <p className="whiteText">{each.username}<button onClick={() => this.addFriend(each.id)}>Add</button></p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}

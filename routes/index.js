@@ -73,6 +73,14 @@ router.get("/api/googleplaces/:place", function (req, res) {
   })
 })
 
+router.get("/api/loadfriends/:id", function (req, res) {
+  console.log(`req.params.id is ${req.params.id} which should be me`)
+  db.Users.findById(req.params.id).then(response => {
+  console.log(`friends for this person are ${response}`);
+    res.json(response.friends);
+  })
+})
+
 router.get("/api/allusers/:user", function (req, res) {
   console.log(`finding user by username ${req.params.user}`);
   db.Users.find({username: req.params.user}).then(response => {

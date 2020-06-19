@@ -21,7 +21,6 @@ class App extends React.Component {
     currentWeather: [],
     hourlyForecast: [],
     fiveDayForecast: [],
-    forecastButtonHovered: undefined,
     howManyForecastedDays: "",
     hourIncrement: 6,
     locationImage: "",
@@ -148,20 +147,6 @@ class App extends React.Component {
     return;
   }
 
-  handleHover = (event) => {
-    console.log("handling hover...")
-    if (this.state.forecastButtonHovered != undefined) {
-      this.setState({ forecastButtonHovered: undefined });
-    }
-    else if (event.target.dataset.name === "hourly") {
-      this.setState({ forecastButtonHovered: "hourly" });
-    }
-    else if (event.target.dataset.name === "fiveDay") {
-      this.setState({ forecastButtonHovered: "fiveDay" });
-    }
-    return;
-  }
-
   handleLogin = (credentials, doWhich) => {
     // login
     doWhich === "login" ? this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }) 
@@ -209,8 +194,6 @@ class App extends React.Component {
                   changeForecast={this.changeForecast}
                   forecastResults={this.state.fiveDayForecast}
                   hourlyResults={this.state.hourlyForecast}
-                  hovered={this.state.forecastButtonHovered}
-                  handleHover={this.handleHover}
                   forecastChosen={this.state.forecastChosen}
                 >
                 </ExtendedForecast>
