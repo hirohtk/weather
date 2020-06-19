@@ -10,7 +10,6 @@ class Friends extends React.Component {
             searchTerm: "",
             friendResults: [],
             searching: false,
-            myID: props.user
         }
     }
 
@@ -19,8 +18,10 @@ class Friends extends React.Component {
     clearResults = () => this.setState({ friendResults: [], searching: false });
 
     addFriend = (id) => {
-        axios.put(`/api/adduser/${id}`, {userID: this.state.myID[1]}).then(response => {
-            console.log(response);
+        console.log(`adding friend, their id is ${id}`);
+        console.log(`my id is ${this.props.user[1]}`);
+        axios.put(`/api/addusers/${id}`, {userID: this.props.user[1]}).then(response => {
+            console.log(`I need at least the username from this response to set in state ${response}`);
         });
     };
 
@@ -31,10 +32,14 @@ class Friends extends React.Component {
                 this.setState({ friendResults: [] });
             }
             else {
-                this.setState({ friendResults: [{username: response.data[0].username, id: response.data[0].id}] });
+                this.setState({ friendResults: [{username: response.data[0].username, id: response.data[0]._id}] });
             }
             this.setState({ searching: true });
         })
+    }
+
+    componentDidMount = () => {
+        
     }
 
     render() {
@@ -45,6 +50,7 @@ class Friends extends React.Component {
                     <div className="containerForFriends">
                     <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
+                        {}
                         <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p>

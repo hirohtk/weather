@@ -84,7 +84,10 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   console.log(`adding user by userid ${req.params.id}`);
   console.log(`you are ${req.body.userID}`);
-  
+  db.Users.findByIdAndUpdate(req.body.userID, {$push: {friends: req.params.id}}).then(response => {
+    console.log(response)
+    res.json(response);
+  })
 });
 
 router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) {

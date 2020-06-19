@@ -50,7 +50,7 @@ class Nav extends React.Component {
     //login
     if (this.state.loggingIn === true) {
       axios.post("/api/login", credentials).then((response, err) => {
-        // console.log(response.data);
+        console.log(`response.data from logging in is ${JSON.stringify(response.data)}`);
         if (err) {
         }
         else if (response.data === "Failure") {
