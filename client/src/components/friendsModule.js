@@ -9,29 +9,11 @@ class Friends extends React.Component {
         this.state = {
             searchTerm: "",
             friendResults: [],
-            friendsList: [],
             searching: false,
         }
     }
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
-
-    clearResults = () => this.setState({ friendResults: [], searching: false });
-
-    loadFriends = () => {
-        console.log(`loading friends for: ${this.props.user[1]}`);
-        axios.get(`/api/loadfriends/${this.props.user[1]}`).then(response => {
-            console.log(`querying for friends returns ${response.data}`)
-            this.setState({friendsList: response.data.friends}, () => this.clearResults());
-        })
-    }
-
-    addFriend = (id) => {
-        axios.put(`/api/addusers/${id}`, {userID: this.props.user[1]}).then(response => {
-            console.log(`I need at least the username from this response to set in state ${JSON.stringify(response)}`);
-            this.loadFriends();
-        });
-    };
 
     searchHandler = () => {
         axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
@@ -50,7 +32,7 @@ class Friends extends React.Component {
         // I think I can extend this usage for componentdidupdate for when people log on and off (hopefully server broadcasts to this component
         // causing a rerender?)
         if (this.props.loggedIn) {
-            this.loadFriends()
+            this.props.loadFriends();
         }
     }
 
@@ -62,14 +44,14 @@ class Friends extends React.Component {
                     <div className="containerForFriends">
                     <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
-                        {this.state.friendsList === undefined ? <></> : this.state.friendsList.length === 0 ? 
+                        {this.props.friendsList === undefined ? <>Friends list is undefined</> : this.props.friendsList.length === 0 ? 
                         <>
                         <h5>No friends yet!</h5>
                         </> 
                         : 
                         <>
-                        {this.state.friendsList.map((each, index) => (
-                            <p className="theFriends"><i class="material-icons offline">lens</i>{each}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                        {this.props.friendsList.map((each, index) => (
+                            <p className="theFriends"><i class="material-icons offline">lens</i>{each}{index}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                         ))}
                         </>}
                         {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
@@ -86,7 +68,7 @@ class Friends extends React.Component {
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
                                         // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                            <p className="whiteText">{each.username}<button onClick={() => this.addFriend(each.id)}>Add</button></p>)}
+                                            <p className="whiteText">{each.username}<button onClick={() => this.props.addFriend(each.id)}>Add</button></p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}

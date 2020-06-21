@@ -25,7 +25,8 @@ class App extends React.Component {
     hourIncrement: 6,
     locationImage: "",
     loggedIn: false,
-    currentUser: []
+    currentUser: [],
+    friendsList: [],
   }
 
   componentDidMount() {
@@ -66,12 +67,12 @@ class App extends React.Component {
             }
           }
           let longformLoc = response.data.plus_code.compound_code.slice(8).split(",");
-          let loc = response.data.results[0].address_components[ind].long_name + ", " + response.data.results[0].address_components[ind+2].long_name;
+          let loc = response.data.results[0].address_components[ind].long_name + ", " + response.data.results[0].address_components[ind + 2].long_name;
           console.log(`new LOC is ${loc}`);
           Axios.get(`/api/googleplaces/${loc}`).then(response => {
             console.log(`google place API response from BACKEND is ${response.data}`)
-          let image = response.data;
-          console.log(image);
+            let image = response.data;
+            console.log(image);
             this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
           })
         })
@@ -147,24 +148,51 @@ class App extends React.Component {
     return;
   }
 
+  clearResults = () => this.setState({ friendResults: [], searching: false });
+
   handleLogin = (credentials, doWhich) => {
     // login
-    doWhich === "login" ? this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }) 
-    : 
-    this.setState({ currentUser: [], loggedIn: false }) 
+    if (doWhich === "login") {
+      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }, () => {
+        this.loadFriends();
+      });
+    }
+    else {
+      this.setState({ currentUser: [], loggedIn: false })
+    }
   }
+
+  loadFriends = () => {
+    console.log(`loading friends for: ${this.state.currentUser[1]}`);
+    Axios.get(`/api/loadfriends/${this.state.currentUser[1]}`).then(response => {
+      console.log(`querying for friends returns ${response.data}`)
+      this.setState({ friendsList: response.data}, () => {
+        console.log(`friendslist in state is ${this.state.friendsList}`)
+        this.clearResults()});
+    })
+  }
+
+  addFriend = (id) => {
+    Axios.put(`/api/addusers/${id}`, { userID: this.state.currentUser[1] }).then(response => {
+      console.log(`I need at least the username from this response to set in state ${JSON.stringify(response)}`);
+      this.loadFriends();
+    });
+  };
 
   render() {
     return (
       <div className="App">
-        <Nav 
-        loggedIn={this.state.loggedIn}
-        handleLogin={this.handleLogin}
-        currentUser={this.state.currentUser}
+        <Nav
+          loggedIn={this.state.loggedIn}
+          handleLogin={this.handleLogin}
+          currentUser={this.state.currentUser}
         ></Nav>
-        <FriendsModule 
-        loggedIn={this.state.loggedIn}
-        user={this.state.currentUser}
+        <FriendsModule
+          loggedIn={this.state.loggedIn}
+          user={this.state.currentUser}
+          loadFriends={this.state.loadFriends}
+          addFriend={this.state.addFriend}
+          friendsList={this.state.friendsList}
         ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>
@@ -181,9 +209,9 @@ class App extends React.Component {
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
-                  clock = {<Clock></Clock>}
-                  ><p>{this.state.CurrentWeather}</p>
-                  </CurrentWeather>
+                  clock={<Clock></Clock>}
+                ><p>{this.state.CurrentWeather}</p>
+                </CurrentWeather>
                 {/* </div> */}
                 {/* <div className="col l6"> */}
                 {/* <Clock></Clock> */}
