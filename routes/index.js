@@ -48,14 +48,13 @@ router.post("/api/register", function (req, res) {
   console.log(req.body);
   console.log(req.body.username)
   db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
-    console.log("mongoose went")
     if (err) {
       console.log("error", err);
       res.json(err);
     }
     else {
       console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
-      db.FriendsList.create({userID: user._id}).then(res.json({name: response.username}));
+      db.FriendsList.create({userID: response._id}).then(() => res.json({name: response.username}));
     }
   });
 });

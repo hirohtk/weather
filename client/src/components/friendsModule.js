@@ -34,11 +34,17 @@ class Friends extends React.Component {
     loadFriends = () => {
         console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
-            console.log(`querying for friends returns ${response.data[0].friends}`);
-            this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
-                console.log(`friendslist in state is ${this.state.friendsList}`)
-                this.clearResults()
-            });
+            // if a new user, the response.data array will have zero length, preventing access of data.  conditional below handles that
+            if (response.data.length === 0) {
+                return;
+            }
+            else {
+                console.log(`querying for friends returns ${response.data[0].friends}`);
+                this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
+                    console.log(`friendslist in state is ${this.state.friendsList}`)
+                    this.clearResults()
+                });
+            }
         })
     }
 
