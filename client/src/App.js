@@ -26,7 +26,7 @@ class App extends React.Component {
     locationImage: "",
     loggedIn: false,
     currentUser: [],
-    friendsList: [],
+
   }
 
   componentDidMount() {
@@ -148,36 +148,15 @@ class App extends React.Component {
     return;
   }
 
-  clearResults = () => this.setState({ friendResults: [], searching: false });
-
   handleLogin = (credentials, doWhich) => {
     // login
     if (doWhich === "login") {
-      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }, () => {
-        this.loadFriends();
-      });
+      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true })
     }
     else {
       this.setState({ currentUser: [], loggedIn: false })
     }
   }
-
-  loadFriends = () => {
-    console.log(`loading friends for: ${this.state.currentUser[1]}`);
-    Axios.get(`/api/loadfriends/${this.state.currentUser[1]}`).then(response => {
-      console.log(`querying for friends returns ${response.data}`)
-      this.setState({ friendsList: response.data}, () => {
-        console.log(`friendslist in state is ${this.state.friendsList}`)
-        this.clearResults()});
-    })
-  }
-
-  addFriend = (id) => {
-    Axios.put(`/api/addusers/${id}`, { userID: this.state.currentUser[1] }).then(response => {
-      console.log(`I need at least the username from this response to set in state ${JSON.stringify(response)}`);
-      this.loadFriends();
-    });
-  };
 
   render() {
     return (
@@ -189,9 +168,9 @@ class App extends React.Component {
         ></Nav>
         <FriendsModule
           loggedIn={this.state.loggedIn}
-          user={this.state.currentUser}
-          loadFriends={this.state.loadFriends}
-          addFriend={this.state.addFriend}
+          currentUser={this.state.currentUser}
+          loadFriends={this.loadFriends}
+          addFriend={this.addFriend}
           friendsList={this.state.friendsList}
         ></FriendsModule>
         <div className="container">
