@@ -55,7 +55,7 @@ router.post("/api/register", function (req, res) {
     }
     else {
       console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
-      res.json({name: response.username})
+      db.FriendsList.create({userID: user._id}).then(res.json({name: response.username}));
     }
   });
 });
@@ -75,9 +75,10 @@ router.get("/api/googleplaces/:place", function (req, res) {
 
 router.get("/api/loadfriends/:id", function (req, res) {
   console.log(`req.params.id is ${req.params.id} which should be me`)
-  db.Users.findById(req.params.id).then(response => {
+  db.FriendsList.find({userID: req.params.id}).populate("friends").then(response => {
   console.log(`friends for this person are ${response}`);
-    res.json(response.friends);
+  // response.friends is an array
+    res.json(response);
   })
 })
 
@@ -92,7 +93,7 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   console.log(`adding user by userid ${req.params.id}`);
   console.log(`you are ${req.body.userID}`);
-  db.Users.findByIdAndUpdate(req.body.userID, {$push: {friends: req.params.id}}).then(response => {
+  db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
     console.log(response)
     res.json(response);
   })

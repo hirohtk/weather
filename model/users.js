@@ -12,12 +12,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
   },
-  friends: [{
-    type: String
-  }]
- 
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

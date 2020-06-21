@@ -34,8 +34,8 @@ class Friends extends React.Component {
     loadFriends = () => {
         console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
-            console.log(`querying for friends returns ${response.data}`)
-            this.setState({ friendsList: response.data, friendsLoaded: true }, () => {
+            console.log(`querying for friends returns ${response.data[0].friends}`);
+            this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
                 console.log(`friendslist in state is ${this.state.friendsList}`)
                 this.clearResults()
             });
@@ -43,8 +43,7 @@ class Friends extends React.Component {
     }
 
     addFriend = (id) => {
-        axios.put(`/api/addusers/${id}`, { userID: this.state.currentUser[1] }).then(response => {
-            console.log(`I need at least the username from this response to set in state ${JSON.stringify(response)}`);
+        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1]}).then(response => {
             this.loadFriends();
         });
     };
@@ -58,7 +57,10 @@ class Friends extends React.Component {
     }
 
     componentDidUpdate = () => {
-        if (this.props.loggedIn === true && !this.state.friendsLoaded) {
+        if (this.props.loggedIn === false && this.state.friendsLoaded === true) {
+            this.setState({friendsLoaded: false});
+        }
+        if (this.props.loggedIn === true && this.state.friendsLoaded === false) {
             this.loadFriends();
         }
     }
@@ -78,7 +80,7 @@ class Friends extends React.Component {
                             :
                             <>
                                 {this.state.friendsList.map((each, index) => (
-                                    <p className="theFriends"><i class="material-icons offline">lens</i>{each}{index}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                                    <p className="theFriends"><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                                 ))}
                             </>}
                         {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
