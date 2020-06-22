@@ -10,7 +10,10 @@ class Friends extends React.Component {
             searchTerm: "",
             friendResults: [],
             friendsList: [],
-            friendsLoaded: false
+            friendsLoaded: false,
+            chat: false,
+            chattingWith: "",
+            chattingWithID: ""
         }
     }
 
@@ -71,11 +74,28 @@ class Friends extends React.Component {
         }
     }
 
+    showChat = (action, username, id) => {
+        if (action === "open") {
+            this.setState({chat: true, chattingWith: username, chattingWithID: id});
+        }
+        else {
+            this.setState({chat: false, chattingWith: "", chattingWithID: ""});
+        }
+        
+    }
+
     render() {
         const props = this.props
         return (
             <>
                 {props.loggedIn === true ? <div className="friendsOverlord">
+                    {this.state.chat ? 
+                    <div className="chatBox">
+                        <h5>Chatting with {this.state.chattingWith}</h5>
+                        <button onClick={() => this.showChat("close")}>Close</button>
+                    </div> 
+                    : 
+                    <></>}
                     <div className="containerForFriends">
                         <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
@@ -86,7 +106,7 @@ class Friends extends React.Component {
                             :
                             <>
                                 {this.state.friendsList.map((each, index) => (
-                                    <p className="theFriends"><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                                    <p className="theFriends" onClick={() => this.showChat("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                                 ))}
                             </>}
                         {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
