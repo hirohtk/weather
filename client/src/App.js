@@ -26,7 +26,7 @@ class App extends React.Component {
     locationImage: "",
     loggedIn: false,
     currentUser: [],
-
+    coordinates: []
   }
 
   componentDidMount() {
@@ -49,7 +49,7 @@ class App extends React.Component {
         // latitude = 47.424822
         // longitude = -122.159094
         // TEST ONLY
-        googleAPI(latitude, longitude);
+        this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
       }
       navigator.geolocation.getCurrentPosition(geoSuccess);
     }
@@ -148,10 +148,20 @@ class App extends React.Component {
     return;
   }
 
+  setLastKnownCoords = () => {
+    // 6/22/20:  IF USER LOGS IN BEFORE THE COMPONENT MOUNTS (i.e. handleLogin fires before component mounts and runs, currentUser[1] will be null)
+    Axios.put(`/api/updatecoords/:${this.state.currentUser[1]}`, this.state.coordinates).then(response => {
+      console.log(`your last known coordinates were updated in the db`);
+      console.log(response)
+    })
+  }
+
   handleLogin = (credentials, doWhich) => {
     // login
     if (doWhich === "login") {
-      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true })
+      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }, () => {
+        this.setLastKnownCoords();
+      })
     }
     else {
       this.setState({ currentUser: [], loggedIn: false })

@@ -98,6 +98,15 @@ router.put("/api/addusers/:id", function (req, res) {
   })
 });
 
+router.put("/api/updatecoords/:id", function (req, res) {
+  console.log(`pushing your coords, which are ${req.body.coords}`);
+  db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coords}}).then((response) => {
+    console.log(response);
+    // response not necessary to send, 
+    res.json(response);
+  })
+});
+
 router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) {
   res.json("Login Success")
 });
