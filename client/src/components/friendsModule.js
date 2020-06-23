@@ -99,6 +99,7 @@ class Friends extends React.Component {
                     <div className="containerForFriends">
                         <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
+                        <div className="theActualList">
                         {this.state.friendsList === undefined ? <>Friends list is undefined</> : this.state.friendsList.length === 0 ?
                             <>
                                 <h5>No friends yet!</h5>
@@ -109,6 +110,7 @@ class Friends extends React.Component {
                                     <p className="theFriends" onClick={() => this.showChat("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                                 ))}
                             </>}
+                        </div>
                         {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p> */}
