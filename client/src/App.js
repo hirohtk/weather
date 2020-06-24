@@ -106,12 +106,12 @@ class App extends React.Component {
           obj.condition = response.data.forecast.forecastday[i].day.condition.text;
           fiveDayForecastArray.push(obj);
         }
-        console.log(`five day forecast array is ${fiveDayForecastArray}`);
+        // console.log(`five day forecast array is ${fiveDayForecastArray}`);
 
         let hourlyForecastArray = [];
         // FOR 5 DAYS HOURLY DATA
         for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
-          console.log(`doing day ${k} now`)
+          // console.log(`doing day ${k} now`)
           for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
             let obj = {};
             obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
@@ -133,7 +133,7 @@ class App extends React.Component {
         //     obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
         //     hourlyForecastArray.push(obj);
         // }
-        console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
+        // console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
         this.setState({
           fiveDayForecast: fiveDayForecastArray.slice(1),
           hourlyForecast: hourlyForecastArray,
@@ -141,8 +141,8 @@ class App extends React.Component {
           howManyForecastedDays: response.data.forecast.forecastday.length,
         }, () => {
           animationFunction(condition);
-          console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`);
-          console.log(`currentWeather is ${this.state.currentWeather}`)
+          // console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`);
+          // console.log(`currentWeather is ${this.state.currentWeather}`)
         });
       });
     return;
@@ -150,7 +150,8 @@ class App extends React.Component {
 
   setLastKnownCoords = () => {
     // 6/22/20:  IF USER LOGS IN BEFORE THE COMPONENT MOUNTS (i.e. handleLogin fires before component mounts and runs, currentUser[1] will be null)
-    Axios.put(`/api/updatecoords/:${this.state.currentUser[1]}`, this.state.coordinates).then(response => {
+    console.log(`just to make sure, these are my coordinates ${this.state.coordinates}`);
+    Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, {coordinates: this.state.coordinates}).then(response => {
       console.log(`your last known coordinates were updated in the db`);
       console.log(response)
     })
