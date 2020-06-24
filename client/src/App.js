@@ -246,7 +246,9 @@ class App extends React.Component {
                 <div className="col l4">
                 {this.state.showFriendWeather ? 
                 <FriendWeather
-                friendUsername={this.state.friendUsername} 
+                friendUsername={this.state.friendUsername}
+                friendLocation={this.state.friendLocation}
+                friendCurrentWeather={this.state.friendCurrentWeather} 
                 >
                 </FriendWeather>
                 : <></>}

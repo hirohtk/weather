@@ -10,12 +10,12 @@ function FriendWeather(props) {
                 <div className="friendWeather">
                     <div className="weather-gradient-friend"></div>
                     <h5 className="viewingFor">Viewing weather for {props.friendUsername}!</h5>
-                    {/* <h5 className="testText">{props.location}</h5>
+                    <h5 className="testText">{props.friendLocation}</h5>
                     {
-                        props.weather[1] === undefined ? <></> : <span>{iconLogic(props.weather[1])}</span>
+                        props.friendCurrentWeather[1] === undefined ? <></> : <span>{iconLogic(props.friendCurrentWeather[1])}</span>
                     }
-                    <p className="whiteTextInfo">{props.weather[0]} &#xb0;F</p>
-                    <p className="whiteTextInfo">{props.weather[1]}</p> */}
+                    <p className="whiteTextInfo">{props.friendCurrentWeather[0]} &#xb0;F</p>
+                    <p className="whiteTextInfo">{props.friendCurrentWeather[1]}</p>
                 </div>
         </>
     )
