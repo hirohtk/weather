@@ -74,12 +74,16 @@ class Friends extends React.Component {
         }
     }
 
-    showChat = (action, username, id) => {
+    openFriend = (action, username, id) => {
         if (action === "open") {
-            this.setState({chat: true, chattingWith: username, chattingWithID: id});
+            this.setState({chat: true, chattingWith: username, chattingWithID: id}, () => {
+                this.props.provideFriendInfo(username, id);
+            });
         }
         else {
-            this.setState({chat: false, chattingWith: "", chattingWithID: ""});
+            this.setState({chat: false, chattingWith: "", chattingWithID: ""}, () => {
+                this.props.closeFriend();
+            });
         }
         
     }
@@ -92,7 +96,7 @@ class Friends extends React.Component {
                     {this.state.chat ? 
                     <div className="chatBox">
                         <h5>Chatting with {this.state.chattingWith}</h5>
-                        <button onClick={() => this.showChat("close")}>Close</button>
+                        <button onClick={() => this.openFriend("close")}>Close</button>
                     </div> 
                     : 
                     <></>}
@@ -107,7 +111,7 @@ class Friends extends React.Component {
                             :
                             <>
                                 {this.state.friendsList.map((each, index) => (
-                                    <p className="theFriends" onClick={() => this.showChat("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                                    <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                                 ))}
                             </>}
                         </div>

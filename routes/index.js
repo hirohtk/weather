@@ -99,7 +99,7 @@ router.put("/api/addusers/:id", function (req, res) {
 });
 
 router.put("/api/updatecoords/:id", function (req, res) {
-  console.log(`pushing your coords, which are ${req.body.coordindates}`);
+  console.log(`pushing your coords, which are ${req.body.coordinates}`);
   db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coordinates}}).then((response) => {
     console.log(response);
     // response not necessary to send, 

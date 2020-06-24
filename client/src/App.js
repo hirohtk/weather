@@ -6,6 +6,7 @@ import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
 import Clock from "./components/clock"
 import FriendsModule from "./components/friendsModule"
+import FriendWeather from "./components/friendWeather"
 import './App.css';
 import Axios from 'axios';
 import $ from 'jquery'
@@ -26,7 +27,8 @@ class App extends React.Component {
     locationImage: "",
     loggedIn: false,
     currentUser: [],
-    coordinates: []
+    coordinates: [],
+    showFriendWeather: false
   }
 
   componentDidMount() {
@@ -168,6 +170,14 @@ class App extends React.Component {
       this.setState({ currentUser: [], loggedIn: false })
     }
   }
+// THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
+  provideFriendInfo = (username, friendID) => {
+    this.setState({showFriendWeather: true, friendUsername: username}, () => {
+     
+    })
+  }
+
+  closeFriend = () => this.setState({showFriendWeather: false});
 
   render() {
     return (
@@ -183,6 +193,8 @@ class App extends React.Component {
           loadFriends={this.loadFriends}
           addFriend={this.addFriend}
           friendsList={this.state.friendsList}
+          provideFriendInfo={this.provideFriendInfo}
+          closeFriend={this.closeFriend}
         ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>
@@ -202,10 +214,12 @@ class App extends React.Component {
                   clock={<Clock></Clock>}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
-                {/* </div> */}
-                {/* <div className="col l6"> */}
-                {/* <Clock></Clock> */}
-                {/* </div> */}
+                {this.state.showFriendWeather ? 
+                <FriendWeather
+                friendUsername={this.state.friendUsername} 
+                >
+                </FriendWeather>
+                : <></>}
               </div>
               <div className="row">
                 <ExtendedForecast
