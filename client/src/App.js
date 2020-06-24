@@ -28,7 +28,8 @@ class App extends React.Component {
     loggedIn: false,
     currentUser: [],
     coordinates: [],
-    showFriendWeather: false
+    showFriendWeather: false,
+    friendUsername: "",
   }
 
   componentDidMount() {
@@ -173,7 +174,6 @@ class App extends React.Component {
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
   provideFriendInfo = (username, friendID) => {
     this.setState({showFriendWeather: true, friendUsername: username}, () => {
-     
     })
   }
 
@@ -204,22 +204,27 @@ class App extends React.Component {
             </Animation>
             <div className="boxForEverything">
               <div className="row">
-                {/* <div className="col l6"> */}
+                <div className="col l6">
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
-                  clock={<Clock></Clock>}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
+                </div>
+                <div className="col l4">
                 {this.state.showFriendWeather ? 
                 <FriendWeather
                 friendUsername={this.state.friendUsername} 
                 >
                 </FriendWeather>
                 : <></>}
+                </div>
+                <div className="col l2">
+                <Clock></Clock>
+                </div>
               </div>
               <div className="row">
                 <ExtendedForecast
