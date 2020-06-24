@@ -13,6 +13,7 @@ import $ from 'jquery'
 import _ from 'underscore'
 import { animationFunction } from "./components/logic/animationLogic"
 import moment from "moment";
+import e from 'express';
 
 class App extends React.Component {
 
@@ -29,15 +30,21 @@ class App extends React.Component {
     currentUser: [],
     coordinates: [],
     showFriendWeather: false,
+
     friendUsername: "",
+    friendCoordinates: [],
+    friendLocation: [],
+    friendImage: [],
+    friendCurrentWeather: [],
   }
 
   componentDidMount() {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
-    this.getCurrentLocation();
+    this.getWeatherData("self");
   }
 
-  getCurrentLocation = () => {
+  getWeatherData = (forWho) => {
+
     var latitude;
     var longitude;
 
@@ -46,13 +53,16 @@ class App extends React.Component {
       let geoSuccess = (position) => {
         console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
         console.log("Geoposition gives " + position.coords.longitude + " for longitude");
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        // TEST ONLY, , , , 
-        // latitude = 47.424822
-        // longitude = -122.159094
-        // TEST ONLY
-        this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
+        if (forWho === "self") {
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
+          this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
+        }
+        else {
+          latitude = this.state.friendCoordinates[0];
+          longitude = this.state.friendCoordinates[1];
+          googleAPI(latitude, longitude);
+        }
       }
       navigator.geolocation.getCurrentPosition(geoSuccess);
     }
@@ -76,12 +86,16 @@ class App extends React.Component {
             console.log(`google place API response from BACKEND is ${response.data}`)
             let image = response.data;
             console.log(image);
-            this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
+            if (forWho === "self") {
+              this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
+            }
+            else {
+              this.setState({ friendLocation: longformLoc, friendLocationImage: image }, () => this.callAPI(latitude, longitude));
+            }
           })
         })
     }
     geolocationFunction();
-    return;
   }
 
   callAPI = (lat, lng) => {
@@ -92,40 +106,46 @@ class App extends React.Component {
         console.log(response);
         let tempInF = response.data.current.temp_f;
         let condition = response.data.current.condition.text;
-        //testing
         let windDirection = response.data.current.wind_dir;
         let windSpeed = response.data.current.wind_mph;
         let windDegree = response.data.current.wind_degree;
         let humid = response.data.current.humidity;
         let uvIndex = response.data.current.uv;
 
-        let fiveDayForecastArray = [];
-        for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
-          let obj = {};
-          obj.date = moment(response.data.forecast.forecastday[i].date).format('ll');
-          obj.dayOfWeek = moment(obj.date).format('dddd');
-          obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
-          obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
-          obj.condition = response.data.forecast.forecastday[i].day.condition.text;
-          fiveDayForecastArray.push(obj);
-        }
-        // console.log(`five day forecast array is ${fiveDayForecastArray}`);
-
-        let hourlyForecastArray = [];
-        // FOR 5 DAYS HOURLY DATA
-        for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
-          // console.log(`doing day ${k} now`)
-          for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
+        let getFiveDay = () => {
+          let fiveDayForecastArray = [];
+          for (let i = 0; i < response.data.forecast.forecastday.length; i++) {
             let obj = {};
-            obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
-            obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
-            obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
-            obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
-            obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
-            obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
-            hourlyForecastArray.push(obj);
+            obj.date = moment(response.data.forecast.forecastday[i].date).format('ll');
+            obj.dayOfWeek = moment(obj.date).format('dddd');
+            obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
+            obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
+            obj.condition = response.data.forecast.forecastday[i].day.condition.text;
+            fiveDayForecastArray.push(obj);
           }
+          return fiveDayForecastArray;
         }
+        
+        // console.log(`five day forecast array is ${fiveDayForecastArray}`);
+        let getHourly = () => {
+          let hourlyForecastArray = [];
+          // FOR 5 DAYS HOURLY DATA
+          for (let k = 0; k < response.data.forecast.forecastday.length; k++) {
+            // console.log(`doing day ${k} now`)
+            for (let j = 0; j < response.data.forecast.forecastday[k].hour.length; j += this.state.hourIncrement) {
+              let obj = {};
+              obj.date = moment(response.data.forecast.forecastday[k].hour[j].time).format('MMMM Do YYYY');
+              obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
+              obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
+              obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+              obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
+              obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
+              hourlyForecastArray.push(obj);
+            }
+          }
+          return hourlyForecastArray;
+        }
+        
         // FOR ONE DAY HOURLY DATA
         // for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
         //   console.log(j)
@@ -137,18 +157,23 @@ class App extends React.Component {
         //     hourlyForecastArray.push(obj);
         // }
         // console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
-        this.setState({
-          fiveDayForecast: fiveDayForecastArray.slice(1),
-          hourlyForecast: hourlyForecastArray,
-          currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
-          howManyForecastedDays: response.data.forecast.forecastday.length,
-        }, () => {
-          animationFunction(condition);
-          // console.log(`here's the five day forecast ${this.state.fiveDayForecast} ${this.state.hourlyForecast}`);
-          // console.log(`currentWeather is ${this.state.currentWeather}`)
-        });
+
+        if (doWhich === "self") {
+          this.setState({
+            fiveDayForecast: getFiveDay.slice(1),
+            hourlyForecast: getHourly,
+            currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
+            howManyForecastedDays: response.data.forecast.forecastday.length,
+          }, () => {
+            // UNUSED: BACKGROUND ANIMATION FUNCTION CALL
+            // animationFunction(condition);
+            // UNUSED: BACKGROUND ANIMATION FUNCTION CALL
+          });
+        }
+        else {
+          this.setState({friendCurrentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],})
+        }
       });
-    return;
   }
 
   setLastKnownCoords = () => {
@@ -172,8 +197,12 @@ class App extends React.Component {
     }
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
-  provideFriendInfo = (username, friendID) => {
+  getFriendInfo = (username, friendID) => {
     this.setState({showFriendWeather: true, friendUsername: username}, () => {
+      Axios.get(`api/getfriendcoords/${friendID}`).then(response => {
+        console.log(`your friend, ${username} has coordinates of ${response}`);
+        this.setState({friendCoordinates: response});
+      })
     })
   }
 
@@ -193,7 +222,7 @@ class App extends React.Component {
           loadFriends={this.loadFriends}
           addFriend={this.addFriend}
           friendsList={this.state.friendsList}
-          provideFriendInfo={this.provideFriendInfo}
+          provideFriendInfo={this.getFriendInfo}
           closeFriend={this.closeFriend}
         ></FriendsModule>
         <div className="container">
