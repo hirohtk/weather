@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
@@ -9,11 +8,8 @@ import FriendsModule from "./components/friendsModule"
 import FriendWeather from "./components/friendWeather"
 import './App.css';
 import Axios from 'axios';
-import $ from 'jquery'
 import _ from 'underscore'
-import { animationFunction } from "./components/logic/animationLogic"
 import moment from "moment";
-import e from 'express';
 
 class App extends React.Component {
 
@@ -59,6 +55,7 @@ class App extends React.Component {
           this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
         }
         else {
+          console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
           latitude = this.state.friendCoordinates[0];
           longitude = this.state.friendCoordinates[1];
           googleAPI(latitude, longitude);
@@ -160,8 +157,8 @@ class App extends React.Component {
 
         if (forWho === "self") {
           this.setState({
-            fiveDayForecast: getFiveDay,
-            hourlyForecast: getHourly,
+            fiveDayForecast: getFiveDay(),
+            hourlyForecast: getHourly(),
             currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
             howManyForecastedDays: response.data.forecast.forecastday.length,
           });
@@ -178,6 +175,7 @@ class App extends React.Component {
     Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, {coordinates: this.state.coordinates}).then(response => {
       console.log(`your last known coordinates were updated in the db`);
       console.log(response)
+      this.getWeatherData("friend");
     })
   }
 
@@ -194,10 +192,11 @@ class App extends React.Component {
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
   getFriendInfo = (username, friendID) => {
-    this.setState({showFriendWeather: true, friendUsername: username}, () => {
-      Axios.get(`api/getfriendcoords/${friendID}`).then(response => {
-        console.log(`your friend, ${username} has coordinates of ${response}`);
-        this.setState({friendCoordinates: response}, () => this.getWeatherData("friend"));
+    console.log(`should be resetting friendCoordinates`)
+    this.setState({showFriendWeather: true, friendUsername: username, friendCoordinates: []}, () => {
+      Axios.get(`/api/getfriendcoords/${friendID}`).then(response => {
+        console.log(`your friend, ${username} has coordinates of ${JSON.stringify(response)}`);
+        this.setState({friendCoordinates: response.data.coordinates}, () => this.getWeatherData("friend"));
       })
     })
   }

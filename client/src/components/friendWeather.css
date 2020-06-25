@@ -13,8 +13,8 @@
 	left: 0;
 	background-image: var(--gradient);
 	border-radius: 25px;
-    opacity: 0.5;
-    z-index:-1
+    opacity: 1;
+    z-index:-10
 }
 
 .viewingFor {
@@ -22,4 +22,13 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     color:white;
+}
+
+.weather-side {
+    position: relative;
+    left: 0;
+	height: 25rem;
+	border-radius: 25px;
+	width: 100%;
+	
 }

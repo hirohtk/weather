@@ -107,7 +107,7 @@ router.put("/api/updatecoords/:id", function (req, res) {
   })
 });
 
-router.get("api/getfriendcoords/:id", function (req, res) {
+router.get("/api/getfriendcoords/:id", function (req, res) {
   db.Users.findById(req.params.id).then(response => {
     console.log(`trying to find coordinates in here:  ${response}`);
     res.json(response);
