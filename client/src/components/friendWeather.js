@@ -14,7 +14,7 @@ function FriendWeather(props) {
                     {
                         props.friendCurrentWeather[1] === undefined ? <></> : <span>{iconLogic(props.friendCurrentWeather[1])}</span>
                     }
-                    <p className="whiteTextInfo">{props.friendCurrentWeather[0]} &#xb0;F</p>
+                    <p className="whiteTextInfo">{props.friendCurrentWeather[0]}F</p>
                     <p className="whiteTextInfo">{props.friendCurrentWeather[1]}</p>
                 </div>
         </>

@@ -87,10 +87,10 @@ class App extends React.Component {
             let image = response.data;
             console.log(image);
             if (forWho === "self") {
-              this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude));
+              this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude, "self"));
             }
             else {
-              this.setState({ friendLocation: longformLoc, friendLocationImage: image }, () => this.callAPI(latitude, longitude));
+              this.setState({ friendLocation: longformLoc, friendLocationImage: image }, () => this.callAPI(latitude, longitude, "friend"));
             }
           })
         })
@@ -98,7 +98,7 @@ class App extends React.Component {
     geolocationFunction();
   }
 
-  callAPI = (lat, lng) => {
+  callAPI = (lat, lng, forWho) => {
     let apiKey = process.env.REACT_APP_NEW_WEATHER_API_KEY;
     console.log(`calling new weather API`);
     Axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lng}&days=5`)
@@ -123,7 +123,7 @@ class App extends React.Component {
             obj.condition = response.data.forecast.forecastday[i].day.condition.text;
             fiveDayForecastArray.push(obj);
           }
-          return fiveDayForecastArray;
+          return fiveDayForecastArray.slice(1);
         }
         
         // console.log(`five day forecast array is ${fiveDayForecastArray}`);
@@ -158,20 +158,16 @@ class App extends React.Component {
         // }
         // console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
 
-        if (doWhich === "self") {
+        if (forWho === "self") {
           this.setState({
-            fiveDayForecast: getFiveDay.slice(1),
+            fiveDayForecast: getFiveDay,
             hourlyForecast: getHourly,
             currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
             howManyForecastedDays: response.data.forecast.forecastday.length,
-          }, () => {
-            // UNUSED: BACKGROUND ANIMATION FUNCTION CALL
-            // animationFunction(condition);
-            // UNUSED: BACKGROUND ANIMATION FUNCTION CALL
           });
         }
         else {
-          this.setState({friendCurrentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],})
+          this.setState({friendCurrentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex]})
         }
       });
   }
@@ -201,7 +197,7 @@ class App extends React.Component {
     this.setState({showFriendWeather: true, friendUsername: username}, () => {
       Axios.get(`api/getfriendcoords/${friendID}`).then(response => {
         console.log(`your friend, ${username} has coordinates of ${response}`);
-        this.setState({friendCoordinates: response});
+        this.setState({friendCoordinates: response}, () => this.getWeatherData("friend"));
       })
     })
   }
