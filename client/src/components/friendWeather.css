@@ -1,0 +1,34 @@
+.friendWeather {
+    position: relative;
+    display: inline-flex;
+    height: 25rem;
+    width: 100%;
+}
+
+.weather-gradient-friend {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-image: var(--gradient);
+	border-radius: 25px;
+    opacity: 1;
+    z-index:-10
+}
+
+.viewingFor {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color:white;
+}
+
+.weather-side {
+    position: relative;
+    left: 0;
+	height: 25rem;
+	border-radius: 25px;
+	width: 100%;
+	
+}

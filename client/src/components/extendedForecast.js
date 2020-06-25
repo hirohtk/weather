@@ -25,6 +25,7 @@ class ExtendedForecast extends React.Component {
             scrollX: 0,
             forecastChosen: "",
             lineData: [],
+            forecastButtonHovered: undefined,
         }
     }
 
@@ -108,6 +109,19 @@ class ExtendedForecast extends React.Component {
         this.setState({lineData: coordinateArray});
     }
 
+    handleHover = (event) => {
+        if (this.state.forecastButtonHovered != undefined) {
+          this.setState({ forecastButtonHovered: undefined });
+        }
+        else if (event.target.dataset.name === "hourly") {
+          this.setState({ forecastButtonHovered: "hourly" });
+        }
+        else if (event.target.dataset.name === "fiveDay") {
+          this.setState({ forecastButtonHovered: "fiveDay" });
+        }
+        return;
+      }
+
     componentDidUpdate() {
 
     }
@@ -123,14 +137,14 @@ class ExtendedForecast extends React.Component {
                         <div className="row">
                             <div id="forecastOptions" className="whiteText">
                                 <div className="col l6">
-                                    <div className={props.hovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
+                                    <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                         onMouseEnter={props.handleHover}
                                         onMouseLeave={props.handleHover}>
                                         Hourly
                                 </div>
                                 </div>
                                 <div className="col l6">
-                                    <div className={props.hovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
+                                    <div className={this.state.forecastButtonHovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
                                         onMouseEnter={props.handleHover}
                                         onMouseLeave={props.handleHover}>
                                         4 Day

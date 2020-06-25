@@ -48,14 +48,13 @@ router.post("/api/register", function (req, res) {
   console.log(req.body);
   console.log(req.body.username)
   db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
-    console.log("mongoose went")
     if (err) {
       console.log("error", err);
       res.json(err);
     }
     else {
       console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
-      res.json({name: response.username})
+      db.FriendsList.create({userID: response._id}).then(() => res.json({name: response.username}));
     }
   });
 });
@@ -73,6 +72,15 @@ router.get("/api/googleplaces/:place", function (req, res) {
   })
 })
 
+router.get("/api/loadfriends/:id", function (req, res) {
+  console.log(`req.params.id is ${req.params.id} which should be me`)
+  db.FriendsList.find({userID: req.params.id}).populate("friends").then(response => {
+  console.log(`friends for this person are ${response}`);
+  // response.friends is an array
+    res.json(response);
+  })
+})
+
 router.get("/api/allusers/:user", function (req, res) {
   console.log(`finding user by username ${req.params.user}`);
   db.Users.find({username: req.params.user}).then(response => {
@@ -84,8 +92,27 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   console.log(`adding user by userid ${req.params.id}`);
   console.log(`you are ${req.body.userID}`);
-  
+  db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
+    console.log(response)
+    res.json(response);
+  })
 });
+
+router.put("/api/updatecoords/:id", function (req, res) {
+  console.log(`pushing your coords, which are ${req.body.coordinates}`);
+  db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coordinates}}).then((response) => {
+    console.log(response);
+    // response not necessary to send, 
+    res.json(response);
+  })
+});
+
+router.get("/api/getfriendcoords/:id", function (req, res) {
+  db.Users.findById(req.params.id).then(response => {
+    console.log(`trying to find coordinates in here:  ${response}`);
+    res.json(response);
+  })
+})
 
 router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) {
   res.json("Login Success")

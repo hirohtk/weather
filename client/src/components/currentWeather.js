@@ -47,9 +47,9 @@ function CurrentWeather(props) {
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">UV Index: </span> {props.weather[6]}/10</p>
                     </div>
                 </div>
-                
+{/*                 
 
-                {props.clock}
+                {props.clock} */}
 
             </div>
             

@@ -13,7 +13,10 @@ const UserSchema = new Schema({
   password: {
     type: String,
   },
- 
+  coordinates: {
+    type: Array,
+    required: true,
+  }
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

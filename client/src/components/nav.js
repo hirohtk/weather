@@ -43,41 +43,46 @@ class Nav extends React.Component {
   }
 
   doLogOrReg = () => {
-    let credentials = {
-      username: this.state.username,
-      password: this.state.password
+    if (this.state.password.length === 0 || this.state.username.length === 0) {
+      toast.error(`Username or password field are blank.`)
     }
-    //login
-    if (this.state.loggingIn === true) {
-      axios.post("/api/login", credentials).then((response, err) => {
-        // console.log(response.data);
-        if (err) {
-        }
-        else if (response.data === "Failure") {
-          toast.error(`Error: Username and/or Password incorrect.`);
-        }
-        else {
-          // WILL NEED TO CREATE A PROPS FUNCTION TO PASS THIS INFO TO APP RATHER THAN KEEP IT HERE 
-          this.setState({loggingIn: false, username: "", password: "", enteringCredentials: false}, () => this.props.handleLogin({username: response.data.username, id: response.data.id}, "login"));
-          // this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "", loggedIn: true });
-          toast.success(`${response.data.username} is now logged in!`);
-        }
-      });
-    }
-    //register
-    else if (this.state.registering === true) {
-      axios.post("/api/register", credentials).then((response, err) => {
-        console.log(`response from registering is ${JSON.stringify(response.data)}`);
-        if (response.data.name === "UserExistsError") {
-          console.log(`the error for registration is ${err}`)
-          toast.error(`Sorry!  Username in use- please select another name.`);
-        }
-        else {
-          this.setState({ registering: false, username: "", password: "", enteringCredentials: false})
-          toast.info(`${credentials.username} is now registered!`);
-          // GRAB USER DETAILS -- response.data is the username
-        }
-      });
+    else {
+      let credentials = {
+        username: this.state.username,
+        password: this.state.password
+      }
+      //login
+      if (this.state.loggingIn === true) {
+        axios.post("/api/login", credentials).then((response, err) => {
+          console.log(`response.data from logging in is ${JSON.stringify(response.data)}`);
+          if (err) {
+          }
+          else if (response.data === "Failure") {
+            toast.error(`Error: Username and/or Password incorrect.`);
+          }
+          else {
+            // WILL NEED TO CREATE A PROPS FUNCTION TO PASS THIS INFO TO APP RATHER THAN KEEP IT HERE 
+            this.setState({ loggingIn: false, username: "", password: "", enteringCredentials: false }, () => this.props.handleLogin({ username: response.data.username, id: response.data.id }, "login"));
+            // this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "", loggedIn: true });
+            toast.success(`${response.data.username} is now logged in!`);
+          }
+        });
+      }
+      //register
+      else if (this.state.registering === true) {
+        axios.post("/api/register", credentials).then((response, err) => {
+          console.log(`response from registering is ${JSON.stringify(response.data)}`);
+          if (response.data.name === "UserExistsError") {
+            console.log(`the error for registration is ${err}`)
+            toast.error(`Sorry!  Username in use- please select another name.`);
+          }
+          else {
+            this.setState({ registering: false, username: "", password: "", enteringCredentials: false })
+            toast.info(`${credentials.username} is now registered!`);
+            // GRAB USER DETAILS -- response.data is the username
+          }
+        });
+      }
     }
   }
 
@@ -88,14 +93,14 @@ class Nav extends React.Component {
         <Sidebar
           sidebar={<><b>Settings</b>
             <hr></hr>
-            <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}} 
-            onClick={() => {
-              props.loggedIn ? props.handleLogin({}, "logout") :
-              this.setState({ enteringCredentials: true, loggingIn: true, registering: false, username: "", password: "" })
-            }
+            <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}}
+              onClick={() => {
+                props.loggedIn ? props.handleLogin({}, "logout") :
+                  this.setState({ enteringCredentials: true, loggingIn: true, registering: false, username: "", password: "" })
+              }
               }>
               {props.loggedIn ? "Logout" : "Login"}
-              </div>
+            </div>
             <div className="menuOptions" style={this.state.registering ? { color: "white" } : {}} onClick={() => this.setState({ enteringCredentials: true, registering: true, loggingIn: false, username: "", password: "" })}>Sign Up</div>
             {this.state.enteringCredentials ?
               <>
@@ -112,8 +117,8 @@ class Nav extends React.Component {
           <i class="material-icons">menu</i>
         </button>
         {props.currentUser.length === 0 ? <></> :
-              <span className="welcome">Welcome, {props.currentUser[0]}!</span>
-            }
+          <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+        }
         <ToastContainer
           position="bottom-left"
           autoClose={5000}
