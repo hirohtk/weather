@@ -77,8 +77,11 @@ class Nav extends React.Component {
             toast.error(`Sorry!  Username in use- please select another name.`);
           }
           else {
-            this.setState({ registering: false, username: "", password: "", enteringCredentials: false })
             toast.info(`${credentials.username} is now registered!`);
+            setTimeout(() => {
+              toast.success(`Logged you in...!`);
+              this.props.handleLogin({ username: credentials.username, id: credentials.password }, "login", () => this.setState({ registering: false, username: "", password: "", enteringCredentials: false }));
+            }, 1000);
             // GRAB USER DETAILS -- response.data is the username
           }
         });

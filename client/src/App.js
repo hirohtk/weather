@@ -175,7 +175,6 @@ class App extends React.Component {
     Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, {coordinates: this.state.coordinates}).then(response => {
       console.log(`your last known coordinates were updated in the db`);
       console.log(response)
-      this.getWeatherData("friend");
     })
   }
 
