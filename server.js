@@ -5,6 +5,14 @@ const routes = require("./routes/index.js");
 const PORT = process.env.PORT || 3001;
 const passport = require('passport');
 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+io.on('connection', () => io.on('connection', client => {
+  client.on('event', data => { /* … */ });
+  client.on('disconnect', () => { /* … */ });
+}));
+server.listen(3000);
+
 // AUTH stuff
 // DIRECTLY BELOW NOT NEEDED (this is from tutorial.  express.urlencoded works with Express v4.16+)
 // const bodyParser = require('body-parser');

@@ -28,7 +28,7 @@ class Friends extends React.Component {
             else {
                 this.setState({ friendResults: [{ username: response.data[0].username, id: response.data[0]._id }] });
             }
-            this.setState({ searching: true });
+            this.setState({ searching: true, searchTerm: "" });
         })
     }
 
@@ -96,7 +96,10 @@ class Friends extends React.Component {
                     {this.state.chat ? 
                     <div className="chatBox">
                         <h5>Chatting with {this.state.chattingWith}</h5>
-                        <button onClick={() => this.openFriend("close")}>Close</button>
+                        <div id="messageArea"></div>
+                        <textarea id="typeSpace"></textarea>
+                        <span><button onClick={() => console.log("message sent")}>Send</button>
+                        <button onClick={() => this.openFriend("close")}>Close</button></span>
                     </div> 
                     : 
                     <></>}
