@@ -5,14 +5,6 @@ const routes = require("./routes/index.js");
 const PORT = process.env.PORT || 3001;
 const passport = require('passport');
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-io.on('connection', () => io.on('connection', client => {
-  client.on('event', data => { /* … */ });
-  client.on('disconnect', () => { /* … */ });
-}));
-server.listen(3000);
-
 // AUTH stuff
 // DIRECTLY BELOW NOT NEEDED (this is from tutorial.  express.urlencoded works with Express v4.16+)
 // const bodyParser = require('body-parser');
@@ -22,7 +14,6 @@ const expressSession = require('express-session')({
   resave: false,
   saveUninitialized: false
 });
-
 
 // Connect to the Mongo DB
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/weather";
@@ -49,6 +40,17 @@ app.use(passport.session());
 app.use(routes);
 
 // Start the server
-app.listen(PORT, function() {
+
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+io.on('connection', () => io.on('connection', client => {
+  client.on('event', data => { /* … */ });
+  client.on('disconnect', () => { /* … */ });
+}));
+server.listen(PORT, function () {
   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);
 });
+
+// app.listen(PORT, function() {
+//   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);
+// });
