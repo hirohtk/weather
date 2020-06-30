@@ -49,15 +49,19 @@ const io = require('socket.io')(server);
 //   client.on('disconnect', () => { /* … */ });
 // }));
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
   console.log(`a user connected, ${socket.id}`);
-  socket.on('chat message', function(msg){
-      io.emit('chat message', msg);
-      console.log('message: ' + msg);
-    });
-  socket.on('disconnect', function(){
-      console.log('user disconnected');
-    });
+  // socket.on('chat message', function(msg){
+  //     io.emit('chat message', msg);
+  //     console.log('message: ' + msg);
+  //   });
+  // socket.on('disconnect', function(){
+  //     console.log('user disconnected');
+  //   });
+
+  socket.on('SEND_MESSAGE', function (data) {
+    io.emit('RECEIVE_MESSAGE', data);
+  })
 });
 
 
