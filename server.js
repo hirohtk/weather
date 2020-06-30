@@ -43,10 +43,24 @@ app.use(routes);
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-io.on('connection', () => io.on('connection', client => {
-  client.on('event', data => { /* … */ });
-  client.on('disconnect', () => { /* … */ });
-}));
+
+// io.on('connection', () => io.on('connection', client => {
+//   client.on('event', data => { /* … */ });
+//   client.on('disconnect', () => { /* … */ });
+// }));
+
+io.on('connection', function(socket){
+  console.log(`a user connected, ${socket.id}`);
+  socket.on('chat message', function(msg){
+      io.emit('chat message', msg);
+      console.log('message: ' + msg);
+    });
+  socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+});
+
+
 server.listen(PORT, function () {
   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);
 });

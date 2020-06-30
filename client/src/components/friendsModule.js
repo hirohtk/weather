@@ -1,6 +1,7 @@
 import React from 'react';
 import "./friendsmodule.css";
 import axios from "axios";
+import ChatModule from "./chatModule";
 
 class Friends extends React.Component {
 
@@ -15,6 +16,7 @@ class Friends extends React.Component {
             chattingWith: "",
             chattingWithID: ""
         }
+        
     }
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
@@ -94,13 +96,12 @@ class Friends extends React.Component {
             <>
                 {props.loggedIn === true ? <div className="friendsOverlord">
                     {this.state.chat ? 
-                    <div className="chatBox">
-                        <h5>Chatting with {this.state.chattingWith}</h5>
-                        <div id="messageArea"></div>
-                        <textarea id="typeSpace"></textarea>
-                        <span><button onClick={() => console.log("message sent")}>Send</button>
-                        <button onClick={() => this.openFriend("close")}>Close</button></span>
-                    </div> 
+                    <ChatModule
+                    chattingWith={this.state.chattingWith}
+                    closeBox={this.openFriend}
+                    currentUser={this.props.currentUser}
+                    >
+                    </ChatModule>
                     : 
                     <></>}
                     <div className="containerForFriends">
