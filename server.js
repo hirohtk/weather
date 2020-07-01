@@ -44,11 +44,6 @@ app.use(routes);
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-// io.on('connection', () => io.on('connection', client => {
-//   client.on('event', data => { /* … */ });
-//   client.on('disconnect', () => { /* … */ });
-// }));
-
 io.on('connection', function (socket) {
   console.log(`a user connected, ${socket.id}`);
   // socket.on('chat message', function(msg){
@@ -59,11 +54,23 @@ io.on('connection', function (socket) {
   //     console.log('user disconnected');
   //   });
 
-  socket.on('SEND_MESSAGE', function (data) {
-    io.emit('RECEIVE_MESSAGE', data);
-  })
+  // PROOF OF CONCEPT FOR MAKING SOCKET JOIN ROOM 
+  // each person is a socket and they must join a room.
+  // socket.join('room', function () {
+  //   console.log(`${socket.id} has joined some room`);
+  //   socket.on('SEND_MESSAGE', function (data) {
+  //     io.to('room').emit('RECEIVE_MESSAGE', data);
+  //   })
+  // });
+
+  // DEFAULT:
+  // socket.on('SEND_MESSAGE', function (data) {
+  //   io.emit('RECEIVE_MESSAGE', data);
+  // })
 });
 
+// Use this route if someone starts chat, create own chat room
+app.use(require("./socket/sockets.js")(io))
 
 server.listen(PORT, function () {
   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);

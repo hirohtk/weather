@@ -44,7 +44,7 @@ class ChatModule extends React.Component {
                 ))}</div>
                 <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
                 <span><button onClick={this.sendMessage}>Send</button>
-                    <button onClick={() => props.openFriend("close")}>Close</button></span>
+                    <button onClick={() => props.closeBox("close")}>Close</button></span>
             </div>
         )
     }

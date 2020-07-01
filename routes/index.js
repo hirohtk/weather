@@ -118,6 +118,11 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
   res.json("Login Success")
 });
 
+// router.get("/api/testChat/:id", function (req, res) {
+//   console.log(`this route is only accessed for chats, req.params.id is ${req.params.id}`);
+//   res.json("yep")
+// })
+
 router.get("*", function (req, res) {
   console.log("* route hit")
   res.sendFile(path.join(__dirname, "../client/public/index.html"));
