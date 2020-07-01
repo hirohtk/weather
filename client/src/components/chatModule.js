@@ -28,11 +28,14 @@ class ChatModule extends React.Component {
     textInputHandler = (event) => this.setState({ myMessage: event.target.value });
 
     sendMessage = () => {
+        // axios.get(`/api/testchat/${this.props.currentUser[1]}`).then(
+            
+        // );
         this.socket.emit('SEND_MESSAGE', {
-                author: this.props.currentUser[0],
-                message: this.state.myMessage
-            }, () => this.setState({myMessage: ''}));
-    }
+            author: this.props.currentUser[0],
+            message: this.state.myMessage
+        }, () => this.setState({myMessage: ''}))
+    };
 
     render() {
         const props = this.props

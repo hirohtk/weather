@@ -1,18 +1,36 @@
+const db = require("../model/index");
+
 module.exports = function (io) {
 
-    const router2 = require("express").Router();
+    io.on('connection', function (socket) {
 
-    router2.get("/api/testChat", function (req, res) {
-        socket.join('room', function () {
-            console.log(`${socket.id} has joined some room`);
+        console.log(`a user connected, ${socket.id}`);
 
-            socket.on('SEND_MESSAGE', function (data) {
-                io.to('room').emit('RECEIVE_MESSAGE', data);
-            })
+        socket.on("join", async room => {
+            socket.join(room);
+            io.emit("roomJoined", room);
         });
-        console.log(`this route is only accessed for chats, req.params.id is ${req.params.id}`);
-        res.json("yep")
-    })
 
-    return router2;
+        socket.on("message", async data => {
+            const { chatRoomName, author, message } = data;
+
+            // ORM/ODM STUFF.  Finding database that the chatroom is associated with, then posting new message to it in 
+            // as middleware between socket receiving message and emitting it
+            const chatRoom = await db.Chatroom.find({ name: chatRoomName });
+
+            const chatRoomID = chatRoom[0]._id;
+
+            const chatMessage = await db.Message.create({
+                chatRoomID,
+                author,
+                message: message,
+            });
+            io.emit("newMessage", chatMessage);
+        });
+
+        socket.on('disconnect', function () {
+            console.log('user disconnected');
+        });
+    });
+
 };
