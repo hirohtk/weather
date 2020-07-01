@@ -123,6 +123,15 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
 //   res.json("yep")
 // })
 
+// 6/30/2020:  IF CHATROOM DOES NOT EXIST, MAKE ONE IN THE DB.  OTHERWISE IF SO, JUST RETURN THE DB DOCUMENT
+router.put(`/api/getroom/:friendID`, function (req, res) {
+  // NEED SOME KIND OF ALGO TO COMBINE BOTH USER ID'S INTO ONE BIG STRING THAT'S ALPHABETICALLY SORTED.  THIS WAY NO MATTER WHO
+  // JOINS FIRST, THEY ALWAYS GET THE SAME ROOM.  CAN'T JUST CONCATENATE OR WILL HAVE A "WHO INITIATES FIRST"? ISSUE
+  db.Chatroom.findOneAndUpdate({name: `${req.params.friendID + req.body}`}).then(response => {
+    res.json(response);
+  })
+})
+
 router.get("*", function (req, res) {
   console.log("* route hit")
   res.sendFile(path.join(__dirname, "../client/public/index.html"));

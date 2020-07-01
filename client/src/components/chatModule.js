@@ -3,7 +3,6 @@ import "./friendsmodule.css";
 import axios from "axios";
 import io from "socket.io-client";
 
-
 class ChatModule extends React.Component {
 
     constructor(props) {
@@ -14,7 +13,7 @@ class ChatModule extends React.Component {
         }
         this.socket = io('localhost:3001');
 
-        this.socket.on('RECEIVE_MESSAGE', function(data){
+        this.socket.on('newMessage', function(data){
             addMessage(data);
         });
 
@@ -31,11 +30,15 @@ class ChatModule extends React.Component {
         // axios.get(`/api/testchat/${this.props.currentUser[1]}`).then(
             
         // );
-        this.socket.emit('SEND_MESSAGE', {
+        this.socket.emit('message', {
             author: this.props.currentUser[0],
             message: this.state.myMessage
         }, () => this.setState({myMessage: ''}))
     };
+
+    joinChatRoom = () => {
+        this.socket.emit("join", this.props.chatroomID);
+    }
 
     render() {
         const props = this.props
