@@ -127,7 +127,13 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
 router.put(`/api/getroom/:friendID`, function (req, res) {
   // NEED SOME KIND OF ALGO TO COMBINE BOTH USER ID'S INTO ONE BIG STRING THAT'S ALPHABETICALLY SORTED.  THIS WAY NO MATTER WHO
   // JOINS FIRST, THEY ALWAYS GET THE SAME ROOM.  CAN'T JUST CONCATENATE OR WILL HAVE A "WHO INITIATES FIRST"? ISSUE
-  db.Chatroom.findOneAndUpdate({name: `${req.params.friendID + req.body}`}).then(response => {
+  let arr = []
+  let concat = req.params.friendID + req.body.user.length
+  for (let i = 0; i < concat.length; i++) {
+    arr.push(concat[i]);
+  }
+  let sorted = arr.sort();
+  db.Chatroom.findOneAndUpdate({name: `${sorted}`}).then(response => {
     res.json(response);
   })
 })

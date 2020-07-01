@@ -81,7 +81,7 @@ class Friends extends React.Component {
         if (action === "open") {
             this.setState({chat: true, chattingWith: username, chattingWithID: id}, () => {
                 this.props.provideFriendInfo(username, id, () => {
-                    axios.put(`/api/getroom/${id}`, this.props.currentUser[1]).then(response => {
+                    axios.put(`/api/getroom/${id}`, {user: this.props.currentUser[1]}).then(response => {
                         // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                         // are both yours and your friends' ID's which get sorted into a unified string 
                         console.log(response);
