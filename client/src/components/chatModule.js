@@ -48,7 +48,7 @@ class ChatModule extends React.Component {
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
                 <div id="messageArea">{this.state.messages.map((each) => (
-                    <p>{each.author}: {each.message}</p>
+                    <p>{each.author.username}: {each.message}</p>
                 ))}</div>
                 <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
                 <span><button onClick={this.sendMessage}>Send</button>

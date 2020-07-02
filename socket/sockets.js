@@ -7,6 +7,7 @@ module.exports = function (io) {
         console.log(`a user connected, ${socket.id}`);
 
         socket.on("join", async room => {
+            console.log(`room ${room} was joined`)
             socket.join(room);
             io.emit("roomJoined", room);
         });
@@ -25,7 +26,13 @@ module.exports = function (io) {
                 author: author,
                 message: message,
             });
-            io.emit("newMessage", chatMessage);
+
+            const userName = await db.Users.findById(author);
+            chatMessage.author = userName.username;
+
+            const newObj = {message: chatMessage.message, author: userName};
+            console.log(`logging so I can see what returned from message creation in mongo.  Anything I can use for username here?  ${chatMessage}`)
+            io.emit("newMessage", newObj);
         });
 
         socket.on('disconnect', function () {
