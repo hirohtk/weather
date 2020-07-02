@@ -125,15 +125,20 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
 
 // 6/30/2020:  IF CHATROOM DOES NOT EXIST, MAKE ONE IN THE DB.  OTHERWISE IF SO, JUST RETURN THE DB DOCUMENT
 router.put(`/api/getroom/:friendID`, function (req, res) {
+  
   // NEED SOME KIND OF ALGO TO COMBINE BOTH USER ID'S INTO ONE BIG STRING THAT'S ALPHABETICALLY SORTED.  THIS WAY NO MATTER WHO
   // JOINS FIRST, THEY ALWAYS GET THE SAME ROOM.  CAN'T JUST CONCATENATE OR WILL HAVE A "WHO INITIATES FIRST"? ISSUE
   let arr = []
-  let concat = req.params.friendID + req.body.user.length
+  let concat = req.params.friendID + req.body.user
+  console.log(`CREATING NEW CHATROOM WITH THESE TWO USERS ${concat}`)
   for (let i = 0; i < concat.length; i++) {
     arr.push(concat[i]);
   }
-  let sorted = arr.sort();
-  db.Chatroom.findOneAndUpdate({name: `${sorted}`}).then(response => {
+  // have an array with all characters in it sorted by alphabetical, then join back into a string
+  let sorted = arr.sort().join("");
+  // find a chatroom, if it doesn't exist, then make one.  (https://stackoverflow.com/questions/33305623/mongoose-create-document-if-not-exists-otherwise-update-return-document-in/33401897#33401897)
+  db.Chatroom.findOneAndUpdate({name: sorted}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
+    if (err) return
     res.json(response);
   })
 })

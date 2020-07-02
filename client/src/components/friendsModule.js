@@ -17,7 +17,7 @@ class Friends extends React.Component {
             chattingWithID: "",
             chatroomID: "",
         }
-        
+
     }
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
@@ -55,7 +55,7 @@ class Friends extends React.Component {
     }
 
     addFriend = (id) => {
-        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1]}).then(response => {
+        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1] }).then(response => {
             this.loadFriends();
         });
     };
@@ -70,7 +70,7 @@ class Friends extends React.Component {
 
     componentDidUpdate = () => {
         if (this.props.loggedIn === false && this.state.friendsLoaded === true) {
-            this.setState({friendsLoaded: false});
+            this.setState({ friendsLoaded: false });
         }
         if (this.props.loggedIn === true && this.state.friendsLoaded === false) {
             this.loadFriends();
@@ -79,19 +79,19 @@ class Friends extends React.Component {
 
     openFriend = (action, username, id) => {
         if (action === "open") {
-            this.setState({chat: true, chattingWith: username, chattingWithID: id}, () => {
-                this.props.provideFriendInfo(username, id, () => {
-                    axios.put(`/api/getroom/${id}`, {user: this.props.currentUser[1]}).then(response => {
-                        // response from backend should give a mongo id of the chatroom.  what was fed into this route though
-                        // are both yours and your friends' ID's which get sorted into a unified string 
-                        console.log(response);
-                        this.setState({chatroomID: response._id});
-                    })
-                });
+            this.setState({ chat: true, chattingWith: username, chattingWithID: id }, () => {
+                this.props.provideFriendInfo(username, id);
+                console.log(`we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
+                axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
+                    // response from backend should give a mongo id of the chatroom.  what was fed into this route though
+                    // are both yours and your friends' ID's which get sorted into a unified string 
+                    console.log(response);
+                    this.setState({ chatroomID: response._id });
+                })
             });
         }
         else {
-            this.setState({chat: false, chattingWith: "", chattingWithID: ""}, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "" }, () => {
                 this.props.closeFriend();
             });
         }
@@ -102,30 +102,30 @@ class Friends extends React.Component {
         return (
             <>
                 {props.loggedIn === true ? <div className="friendsOverlord">
-                    {this.state.chat ? 
-                    <ChatModule
-                    chattingWith={this.state.chattingWith}
-                    closeBox={this.openFriend}
-                    currentUser={this.props.currentUser}
-                    chatroomID={this.state.chatroomID}
-                    >
-                    </ChatModule>
-                    : 
-                    <></>}
+                    {this.state.chat ?
+                        <ChatModule
+                            chattingWith={this.state.chattingWith}
+                            closeBox={this.openFriend}
+                            currentUser={this.props.currentUser}
+                            chatroomID={this.state.chatroomID}
+                        >
+                        </ChatModule>
+                        :
+                        <></>}
                     <div className="containerForFriends">
                         <div className="friends-gradient"></div>
                         {/* Will become a .map to list friends here */}
                         <div className="theActualList">
-                        {this.state.friendsList === undefined ? <>Friends list is undefined</> : this.state.friendsList.length === 0 ?
-                            <>
-                                <h5>No friends yet!</h5>
-                            </>
-                            :
-                            <>
-                                {this.state.friendsList.map((each, index) => (
-                                    <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
-                                ))}
-                            </>}
+                            {this.state.friendsList === undefined ? <>Friends list is undefined</> : this.state.friendsList.length === 0 ?
+                                <>
+                                    <h5>No friends yet!</h5>
+                                </>
+                                :
+                                <>
+                                    {this.state.friendsList.map((each, index) => (
+                                        <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                                    ))}
+                                </>}
                         </div>
                         {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
