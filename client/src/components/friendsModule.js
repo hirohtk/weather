@@ -86,7 +86,7 @@ class Friends extends React.Component {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
                     console.log(response);
-                    this.setState({ chatroomID: response._id });
+                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name });
                 })
             });
         }
@@ -108,6 +108,7 @@ class Friends extends React.Component {
                             closeBox={this.openFriend}
                             currentUser={this.props.currentUser}
                             chatroomID={this.state.chatroomID}
+                            chatroomName={this.state.chatroomName}
                         >
                         </ChatModule>
                         :

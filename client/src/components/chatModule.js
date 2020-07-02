@@ -13,27 +13,29 @@ class ChatModule extends React.Component {
         }
         this.socket = io('localhost:3001');
 
-        this.socket.on('newMessage', function(data){
+        this.socket.on('newMessage', function (data) {
             addMessage(data);
         });
 
         const addMessage = data => {
             console.log(data);
-            this.setState({messages: [...this.state.messages, data]});
+            this.setState({ messages: [...this.state.messages, data] });
         };
+    }
 
+    componentDidMount() {
+        this.joinChatRoom();
     }
 
     textInputHandler = (event) => this.setState({ myMessage: event.target.value });
 
     sendMessage = () => {
-        // axios.get(`/api/testchat/${this.props.currentUser[1]}`).then(
-            
-        // );
+        // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
         this.socket.emit('message', {
-            author: this.props.currentUser[0],
+            chatroomName: this.props.chatroomName,
+            author: this.props.currentUser[1],
             message: this.state.myMessage
-        }, () => this.setState({myMessage: ''}))
+        }, () => this.setState({ myMessage: '' }))
     };
 
     joinChatRoom = () => {

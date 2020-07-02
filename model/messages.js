@@ -5,11 +5,13 @@ const Schema = mongoose.Schema;
 const MessagesSchema = new Schema({
 
     chatRoomID: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "Chatrooms",
+        required: true
     },
     author: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Users",
         required: true,
     },
     message: {

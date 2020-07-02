@@ -143,6 +143,12 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   })
 })
 
+
+// TAKEN CARE OF BY SOCKET
+// router.post(`api/sendmessage/:id`, function (req, res) {
+//   db.Message.create({message: req.body.message, author: req.body.author, chatroomID: req.body.chatroomID})
+// })
+
 router.get("*", function (req, res) {
   console.log("* route hit")
   res.sendFile(path.join(__dirname, "../client/public/index.html"));
