@@ -139,6 +139,7 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   // find a chatroom, if it doesn't exist, then make one.  (https://stackoverflow.com/questions/33305623/mongoose-create-document-if-not-exists-otherwise-update-return-document-in/33401897#33401897)
   db.Chatroom.findOneAndUpdate({name: sorted}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
     if (err) return
+    console.log(`RESPONSE FROM CREATING NEW CHATROOM OR FINDING OLD ONE IS ${response}`);
     res.json(response);
   })
 })

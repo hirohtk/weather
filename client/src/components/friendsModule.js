@@ -45,9 +45,9 @@ class Friends extends React.Component {
                 return;
             }
             else {
-                console.log(`querying for friends returns ${response.data[0].friends}`);
+                // console.log(`querying for friends returns ${response.data[0].friends}`);
                 this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
-                    console.log(`friendslist in state is ${this.state.friendsList}`)
+                    // console.log(`friendslist in state is ${this.state.friendsList}`)
                     this.clearResults()
                 });
             }
@@ -81,17 +81,17 @@ class Friends extends React.Component {
         if (action === "open") {
             this.setState({ chat: true, chattingWith: username, chattingWithID: id }, () => {
                 this.props.provideFriendInfo(username, id);
-                console.log(`we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
+                console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
                 axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
-                    console.log(`*** the chatroom response is ${response}, the id is ${response.data._id}`);
+                    console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
                     this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true });
                 })
             });
         }
         else {
-            this.setState({ chat: false, chattingWith: "", chattingWithID: "" }, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:""}, () => {
                 this.props.closeFriend();
             });
         }

@@ -24,7 +24,14 @@ class ChatModule extends React.Component {
         };
     }
 
-    componentDidMount() {
+    // componentDidMount() {
+    //     console.log(`*** CHAT COMPONENT MOUNTED, PROPS.chattingwith is ${this.props.chattingWith}`);
+    //     // setTimeout(() => {
+            
+    //     // }, 1000);
+    // }
+
+    UNSAFE_componentWillReceiveProps() {
         this.joinChatRoom();
     }
 
@@ -45,10 +52,10 @@ class ChatModule extends React.Component {
 
     joinChatRoom = () => {
         this.socket.emit("join", this.props.chatroomID);
-        console.log(`***GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
+        console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
         axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
-            console.log(`chatroom history response is ${JSON.stringify(response.data.messages)}`);
-            this.setState({messages: response.data.messages, joined: true}, () => console.log(`*** here's what's in state ${JSON.stringify(this.state.messages)}`));
+            console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);
+            this.setState({messages: response.data.messages}, () => console.log(`*** here's what's in state ${JSON.stringify(this.state.messages)}`));
         });
     }
 
@@ -57,7 +64,7 @@ class ChatModule extends React.Component {
         return (
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
-                <div id="messageArea">{this.state.joined ? this.state.messages.map((each, index) => (
+                <div id="messageArea">{this.state.messages != undefined ? this.state.messages.map((each, index) => (
                     <p>Message {index}, {each.author}: {each.message}</p>
                 )) : <></>}</div>
                 <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
