@@ -40,6 +40,8 @@ class ChatModule extends React.Component {
 
     joinChatRoom = () => {
         this.socket.emit("join", this.props.chatroomID);
+        console.log(`***GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
+        axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => console.log(`chatroom history response is ${response.data}`));
     }
 
     render() {

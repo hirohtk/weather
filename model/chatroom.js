@@ -8,10 +8,10 @@ const ChatroomSchema = new Schema({
         type: String,
         required: true,
     },
-    messages: {
+    messages: [{
         type: Schema.Types.ObjectId,
         ref: "Messages",
-    }
+    }]
 });
 
 var Chatrooms = mongoose.model("Chatrooms", ChatroomSchema);

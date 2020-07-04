@@ -143,6 +143,9 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   })
 })
 
+router.get(`/api/chathistory/:id`, function (req, res) {
+  db.Chatroom.findById(req.params.id).populate("messages").then(response => res.json(response));
+})
 
 // TAKEN CARE OF BY SOCKET
 // router.post(`api/sendmessage/:id`, function (req, res) {

@@ -26,11 +26,13 @@ module.exports = function (io) {
                 author: author,
                 message: message,
             });
-
+            // COULD DO POPULATE HERE INSTEAD I THINK TO GET USERNAME FROM author
             const userName = await db.Users.findById(author);
             chatMessage.author = userName.username;
 
-            const newObj = {message: chatMessage.message, author: userName};
+            db.Chatroom.findByIdAndUpdate(chatRoomID, { $push: { messages: chatMessage._id } }).then(response => console.log(`*** IF THERE IS A RESPONSE 
+            FROM CHATROOM PUSH QUERY THEN IT'S ${response}`));
+            const newObj = { message: chatMessage.message, author: userName };
             console.log(`logging so I can see what returned from message creation in mongo.  Anything I can use for username here?  ${chatMessage}`)
             io.emit("newMessage", newObj);
         });

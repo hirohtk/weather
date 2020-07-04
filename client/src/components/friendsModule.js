@@ -85,8 +85,8 @@ class Friends extends React.Component {
                 axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
-                    console.log(response);
-                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name });
+                    console.log(`*** the chatroom response is ${response}, the id is ${response.data._id}`);
+                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true });
                 })
             });
         }
@@ -102,7 +102,7 @@ class Friends extends React.Component {
         return (
             <>
                 {props.loggedIn === true ? <div className="friendsOverlord">
-                    {this.state.chat ?
+                    {this.state.chat && this.state.chatReady ?
                         <ChatModule
                             chattingWith={this.state.chattingWith}
                             closeBox={this.openFriend}
