@@ -10,6 +10,7 @@ class ChatModule extends React.Component {
         this.state = {
             myMessage: "",
             messages: [],
+            joined: false,
         }
         this.socket = io('localhost:3001');
 
@@ -27,6 +28,10 @@ class ChatModule extends React.Component {
         this.joinChatRoom();
     }
 
+    componentWillUnmount() {
+        this.setState({messages: []});
+    }
+
     textInputHandler = (event) => this.setState({ myMessage: event.target.value });
 
     sendMessage = () => {
@@ -41,7 +46,10 @@ class ChatModule extends React.Component {
     joinChatRoom = () => {
         this.socket.emit("join", this.props.chatroomID);
         console.log(`***GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
-        axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => console.log(`chatroom history response is ${response.data}`));
+        axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
+            console.log(`chatroom history response is ${JSON.stringify(response.data.messages)}`);
+            this.setState({messages: response.data.messages, joined: true}, () => console.log(`*** here's what's in state ${JSON.stringify(this.state.messages)}`));
+        });
     }
 
     render() {
@@ -49,15 +57,14 @@ class ChatModule extends React.Component {
         return (
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
-                <div id="messageArea">{this.state.messages.map((each) => (
-                    <p>{each.author.username}: {each.message}</p>
-                ))}</div>
+                <div id="messageArea">{this.state.joined ? this.state.messages.map((each, index) => (
+                    <p>Message {index}, {each.author}: {each.message}</p>
+                )) : <></>}</div>
                 <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
                 <span><button onClick={this.sendMessage}>Send</button>
                     <button onClick={() => props.closeBox("close")}>Close</button></span>
             </div>
         )
     }
-
 }
 export default ChatModule;
