@@ -52,10 +52,10 @@ class ChatModule extends React.Component {
 
     joinChatRoom = () => {
         this.socket.emit("join", this.props.chatroomID);
-        console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
+        // console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
         axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
-            console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);
-            this.setState({messages: response.data.messages}, () => console.log(`*** here's what's in state ${JSON.stringify(this.state.messages)}`));
+            // console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);
+            this.setState({messages: response.data.messages});
         });
     }
 
@@ -65,8 +65,10 @@ class ChatModule extends React.Component {
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
                 <div id="messageArea">{this.state.messages != undefined ? this.state.messages.map((each, index) => (
-                    <p>Message {index}, {each.author}: {each.message}</p>
-                )) : <></>}</div>
+                    <p>{each.author.username}: {each.message}</p>
+                )) 
+                : 
+                <></>}</div>
                 <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
                 <span><button onClick={this.sendMessage}>Send</button>
                     <button onClick={() => props.closeBox("close")}>Close</button></span>

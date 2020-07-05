@@ -29,11 +29,11 @@ module.exports = function (io) {
             // COULD DO POPULATE HERE INSTEAD I THINK TO GET USERNAME FROM author
             const userName = await db.Users.findById(author);
             chatMessage.author = userName.username;
-
             db.Chatroom.findByIdAndUpdate(chatRoomID, { $push: { messages: chatMessage._id } }).then(response => console.log(`*** IF THERE IS A RESPONSE 
             FROM CHATROOM PUSH QUERY THEN IT'S ${response}`));
-            const newObj = { message: chatMessage.message, author: chatMessage.author };
-            console.log(`logging so I can see what returned from message creation in mongo.  Anything I can use for username here?  ${chatMessage}`)
+            // adding username key to author because the db response convention is as such, so for continuity in the .map, I am doing this
+            const newObj = { message: chatMessage.message, author: {username: userName.username} };
+            // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
             io.emit("newMessage", newObj);
         });
 
