@@ -47,15 +47,15 @@ class App extends React.Component {
     let geolocationFunction = () => {
 
       let geoSuccess = (position) => {
-        console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
-        console.log("Geoposition gives " + position.coords.longitude + " for longitude");
+        // console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
+        // console.log("Geoposition gives " + position.coords.longitude + " for longitude");
         if (forWho === "self") {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
           this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
         }
         else {
-          console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
+          // console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
           latitude = this.state.friendCoordinates[0];
           longitude = this.state.friendCoordinates[1];
           googleAPI(latitude, longitude);
@@ -69,7 +69,7 @@ class App extends React.Component {
       console.log(latitude, longitude)
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
-          console.log(response);
+          // console.log(response);
           let ind;
           for (let i = 0; i < response.data.results[0].address_components.length; i++) {
             if (response.data.results[0].address_components[i].types[0] === "locality") {
@@ -78,11 +78,11 @@ class App extends React.Component {
           }
           let longformLoc = response.data.plus_code.compound_code.slice(8).split(",");
           let loc = response.data.results[0].address_components[ind].long_name + ", " + response.data.results[0].address_components[ind + 2].long_name;
-          console.log(`new LOC is ${loc}`);
+          // console.log(`new LOC is$ {loc}`);
           Axios.get(`/api/googleplaces/${loc}`).then(response => {
-            console.log(`google place API response from BACKEND is ${response.data}`)
+            // console.log(`google place API response from BACKEND is ${response.data}`)
             let image = response.data;
-            console.log(image);
+            // console.log(image);
             if (forWho === "self") {
               this.setState({ location: longformLoc, locationImage: image }, () => this.callAPI(latitude, longitude, "self"));
             }
@@ -97,7 +97,7 @@ class App extends React.Component {
 
   callAPI = (lat, lng, forWho) => {
     let apiKey = process.env.REACT_APP_NEW_WEATHER_API_KEY;
-    console.log(`calling new weather API`);
+    // console.log(`calling new weather API`);
     Axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lng}&days=5`)
       .then(response => {
         console.log(response);
@@ -171,11 +171,10 @@ class App extends React.Component {
 
   setLastKnownCoords = () => {
     // 6/22/20:  IF USER LOGS IN BEFORE THE COMPONENT MOUNTS (i.e. handleLogin fires before component mounts and runs, currentUser[1] will be null)
-    console.log(`just to make sure, these are my coordinates ${this.state.coordinates}`);
+    // console.log(`just to make sure, these are my coordinates ${this.state.coordinates}`);
     Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, {coordinates: this.state.coordinates}).then(response => {
-      console.log(`your last known coordinates were updated in the db`);
-      console.log(response)
-      this.getWeatherData("friend");
+      // console.log(`your last known coordinates were updated in the db`);
+      // console.log(response)
     })
   }
 
@@ -192,10 +191,10 @@ class App extends React.Component {
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
   getFriendInfo = (username, friendID) => {
-    console.log(`should be resetting friendCoordinates`)
+    // console.log(`should be resetting friendCoordinates`)
     this.setState({showFriendWeather: true, friendUsername: username, friendCoordinates: []}, () => {
       Axios.get(`/api/getfriendcoords/${friendID}`).then(response => {
-        console.log(`your friend, ${username} has coordinates of ${JSON.stringify(response)}`);
+        // console.log(`your friend, ${username} has coordinates of ${JSON.stringify(response)}`);
         this.setState({friendCoordinates: response.data.coordinates}, () => this.getWeatherData("friend"));
       })
     })

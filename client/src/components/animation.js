@@ -6,7 +6,7 @@ import PartlyCloudy from './partlyCloudy'
 // import { animationFunction } from "./components/logic/animationLogic";
 
 function Animation(props) {
-    console.log(`is this loading out of order? ${props.weather[1]}`)
+    // console.log(`is this loading out of order? ${props.weather[1]}`)
     return (
         <div className="Scott">
 
