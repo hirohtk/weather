@@ -2,6 +2,7 @@ import React from 'react';
 import "./friendsmodule.css";
 import axios from "axios";
 import io from "socket.io-client";
+import "./chatModule.css";
 
 class ChatModule extends React.Component {
 
@@ -39,15 +40,21 @@ class ChatModule extends React.Component {
         this.setState({messages: []});
     }
 
-    textInputHandler = (event) => this.setState({ myMessage: event.target.value });
+    textInputHandler = (event) => {
+        event.preventDefault();
+        this.setState({ myMessage: event.target.value })
+    };
 
-    sendMessage = () => {
+    sendMessage = (event) => {
         // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
-        this.socket.emit('message', {
-            chatroomName: this.props.chatroomName,
-            author: this.props.currentUser[1],
-            message: this.state.myMessage
-        }, () => this.setState({ myMessage: '' }))
+        if (event.type === "click" || event.keyCode === 13) {
+            this.socket.emit('message', {
+                chatroomName: this.props.chatroomName,
+                author: this.props.currentUser[1],
+                message: this.state.myMessage
+            });
+            this.setState({ myMessage: '' })
+        }
     };
 
     joinChatRoom = () => {
@@ -69,8 +76,8 @@ class ChatModule extends React.Component {
                 )) 
                 : 
                 <></>}</div>
-                <textarea id="typeSpace" onChange={this.textInputHandler}></textarea>
-                <span><button onClick={this.sendMessage}>Send</button>
+                <textarea id="typeSpace" value={this.state.myMessage} onChange={this.textInputHandler}></textarea>
+                <span><button onClick={this.sendMessage} type="submit" onKeyUp={this.sendMessage}>Send</button>
                     <button onClick={() => props.closeBox("close")}>Close</button></span>
             </div>
         )

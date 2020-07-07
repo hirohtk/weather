@@ -28,7 +28,7 @@ mongoose.connect(
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client"));
+  app.use(express.static("client/build"));
 }
 
 // Define middleware here
@@ -45,53 +45,6 @@ app.use(routes);
 // Start the server
 
 chat(io);
-
-// io.on('connection', function (socket) {
-  // console.log(`a user connected, ${socket.id}`);
-  
-  // socket.on("join", async room => {
-  //   socket.join(room);
-  //   io.emit("roomJoined", room);
-  // });
-
-  // socket.on("message", async data => {
-  //   const { chatRoomName, author, message } = data;
-
-  //   // ORM/ODM STUFF
-  //   const chatRoom = await models.ChatRoom.findAll({
-  //     where: { name: chatRoomName },
-  //   });
-  //   const chatRoomId = chatRoom[0].id;
-
-  //   const chatMessage = await models.ChatMessage.create({
-  //     chatRoomId,
-  //     author,
-  //     message: message,
-  //   });
-  //   io.emit("newMessage", chatMessage);
-  // });
-
-  // socket.on('disconnect', function(){
-  //     console.log('user disconnected');
-  //   });
-  
-  // PROOF OF CONCEPT FOR MAKING SOCKET JOIN ROOM 
-  // each person is a socket and they must join a room.
-  // socket.join('room', function () {
-  //   console.log(`${socket.id} has joined some room`);
-  //   socket.on('SEND_MESSAGE', function (data) {
-  //     io.to('room').emit('RECEIVE_MESSAGE', data);
-  //   })
-  // });
-
-  // DEFAULT:
-  // socket.on('SEND_MESSAGE', function (data) {
-  //   io.emit('RECEIVE_MESSAGE', data);
-  // })
-// });
-
-// Use this route if someone starts chat, create own chat room
-
 
 server.listen(PORT, function () {
   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);
