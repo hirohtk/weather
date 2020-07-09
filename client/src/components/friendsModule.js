@@ -23,16 +23,21 @@ class Friends extends React.Component {
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
 
     searchHandler = () => {
-        axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
-            console.log(response.data);
-            if (response.data.length === 0) {
-                this.setState({ friendResults: [] });
-            }
-            else {
-                this.setState({ friendResults: [{ username: response.data[0].username, id: response.data[0]._id }] });
-            }
-            this.setState({ searching: true, searchTerm: "" });
-        })
+        if (this.state.searchTerm.length === 0) {
+            this.setState({friendResults: [{username: "No results- input is blank.", id: null}]})
+        }
+        else {
+            axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
+                console.log(response.data);
+                if (response.data.length === 0) {
+                    this.setState({ friendResults: [] });
+                }
+                else {
+                    this.setState({ friendResults: [{ username: response.data[0].username, id: response.data[0]._id }] });
+                }
+                this.setState({ searching: true, searchTerm: "" });
+            })
+        }
     }
 
     clearResults = () => this.setState({ friendResults: [], searching: false });
@@ -147,7 +152,7 @@ class Friends extends React.Component {
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
                                             // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                            <p className="whiteText">{each.username}<button onClick={() => this.addFriend(each.id)}>Add</button></p>)}
+                                        <p className="whiteText">{each.username}{each.username != "No results- input is blank." ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}
