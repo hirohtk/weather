@@ -98,7 +98,7 @@ class App extends React.Component {
   callAPI = (lat, lng, forWho) => {
     let apiKey = process.env.REACT_APP_NEW_WEATHER_API_KEY;
     // console.log(`calling new weather API`);
-    Axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lng}&days=5`)
+    Axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lng}&days=5`)
       .then(response => {
         console.log(response);
         let tempInF = response.data.current.temp_f;
