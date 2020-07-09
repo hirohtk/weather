@@ -78,7 +78,7 @@ class Friends extends React.Component {
     }
 
     openFriend = (action, username, id) => {
-        if (action === "open") {
+        if (action === "open" && !this.state.chat) {
             this.setState({ chat: true, chattingWith: username, chattingWithID: id }, () => {
                 this.props.provideFriendInfo(username, id);
                 console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
@@ -88,6 +88,11 @@ class Friends extends React.Component {
                     console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
                     this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true });
                 })
+            });
+        }
+        else if (action === "open" && this.state.chat) {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:""}, () => {
+                this.openFriend("open", username, id)
             });
         }
         else {

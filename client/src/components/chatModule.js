@@ -11,7 +11,6 @@ class ChatModule extends React.Component {
         this.state = {
             myMessage: "",
             messages: [],
-            joined: false,
         }
         this.socket = io('localhost:3001');
 
@@ -26,13 +25,6 @@ class ChatModule extends React.Component {
             this.setState({ messages: [...this.state.messages, data] });
         };
     }
-
-    // componentDidMount() {
-    //     console.log(`*** CHAT COMPONENT MOUNTED, PROPS.chattingwith is ${this.props.chattingWith}`);
-    //     // setTimeout(() => {
-
-    //     // }, 1000);
-    // }
 
     UNSAFE_componentWillReceiveProps() {
         this.joinChatRoom();
