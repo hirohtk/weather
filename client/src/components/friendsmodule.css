@@ -57,7 +57,8 @@
     color:white;
     text-align: left;
     margin-left: 1rem;
-    z-index: 3
+    z-index: 3;
+    cursor: pointer
 }
 
 .theActualList {
@@ -67,6 +68,9 @@
 .tinyFriendPic {
     height: 20px;
     width: 20px;
+    position: relative;
+    float: right;
+    right: 10px;
 }
 
 .whiteText {
