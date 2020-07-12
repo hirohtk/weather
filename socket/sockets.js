@@ -4,9 +4,12 @@ module.exports = function (io) {
 
     io.on('connection', function (socket) {
 
+        let roomid;
+
         console.log(`a user connected, ${socket.id}`);
 
         socket.on("join", async room => {
+            roomid = room;
             console.log(`room ${room} was joined`)
             socket.join(room);
             io.emit("roomJoined", room);
@@ -34,7 +37,7 @@ module.exports = function (io) {
             // adding username key to author because the db response convention is as such, so for continuity in the .map, I am doing this
             const newObj = { message: chatMessage.message, author: {username: userName.username} };
             // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
-            io.emit("newMessage", newObj);
+            io.to(roomid).emit("newMessage", newObj);
         });
 
         socket.on('disconnect', function () {

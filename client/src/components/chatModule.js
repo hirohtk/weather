@@ -12,7 +12,7 @@ class ChatModule extends React.Component {
             myMessage: "",
             messages: [],
         }
-        this.socket = io('https://immense-cove-75264.herokuapp.com/');
+        this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
         this.socket.on('newMessage', function (data) {
             addMessage(data);
