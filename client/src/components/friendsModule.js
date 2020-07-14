@@ -17,7 +17,8 @@ class Friends extends React.Component {
             chattingWith: "",
             chattingWithID: "",
             chatroomID: "",
-            notification: false
+            notification: false,
+            unread: []
         }
         this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
@@ -26,10 +27,14 @@ class Friends extends React.Component {
             doNotify(data);
         });
 
-        const doNotify = () => {
+        const doNotify = (data) => {
             if (!this.state.chat) {
                 console.log(`You're not chatting with anyone but you got a new message`)
-                this.setState({notification: true});
+                this.setState({notification: true, unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
+                    console.log(`if returns true on "test", then good.  RETURNS: ${this.state.unread.filter((name) => name.author === "test").some((each) => each.author === "test")}`);
+                    ;
+                });
+                console.log(`unread messages in state are ${JSON.stringify(this.state.unread)}`);
             }
             else {
                 console.log(`You are chatting with someone and got a new message`)
@@ -167,9 +172,14 @@ class Friends extends React.Component {
                                 </>
                                 :
                                 <>
-                                    {this.state.notification ? <><i class="material-icons" style={{color: "white"}}>message</i></> : <></>}
+                                    
                                     {this.state.friendsList.map((each, index) => (
-                                        <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
+                                        <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
+                                            <i class="material-icons offline">lens</i>{each.username}
+                                            {/* unread is an array, filter it down to an array where author names are present.
+                                            if this array includes username, and if this array includes username, render message icon */}
+                                            {this.state.notification && this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{color: "white"}}>message</i> : <></>}
+                                            <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                                     ))}
                                 </>}
                         </div>

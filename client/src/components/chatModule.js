@@ -24,7 +24,7 @@ class ChatModule extends React.Component {
 
         const addMessage = data => {
             console.log(data);
-            this.setState({ messages: [...this.state.messages, data], unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
+            this.setState({ messages: [...this.state.messages, data]}, () => {
                 // console.log(`THIS IS PROPS.isChatting ${props.isChatting}`)
                 // if (!props.isChatting) {
                 //     console.log("NOT CHATTING RIGHT NOW");
