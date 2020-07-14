@@ -11,10 +11,12 @@ class ChatModule extends React.Component {
         this.state = {
             myMessage: "",
             messages: [],
+            unread: [],
         }
-        this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
+        // this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
-        this.socket.on('newMessage', function (data) {
+        props.socket.on('newMessage', function (data) {
+            console.log(`got a new message - this is from ChatModule`)
             addMessage(data);
         });
 
@@ -22,7 +24,14 @@ class ChatModule extends React.Component {
 
         const addMessage = data => {
             console.log(data);
-            this.setState({ messages: [...this.state.messages, data] });
+            this.setState({ messages: [...this.state.messages, data], unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
+                // console.log(`THIS IS PROPS.isChatting ${props.isChatting}`)
+                // if (!props.isChatting) {
+                //     console.log("NOT CHATTING RIGHT NOW");
+                //     console.log(`trying to see if this is how to call props within constructor (this is a function --> ${props.chatNotification()}`)
+                //     props.chatNotification(true);
+                // }
+            });
         };
     }
 
@@ -46,7 +55,7 @@ class ChatModule extends React.Component {
     sendMessage = (event) => {
         // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
         event.preventDefault();
-        this.socket.emit('message', {
+        this.props.socket.emit('message', {
             chatroomName: this.props.chatroomName,
             author: this.props.currentUser[1],
             message: this.state.myMessage
@@ -55,7 +64,7 @@ class ChatModule extends React.Component {
     };
 
     joinChatRoom = () => {
-        this.socket.emit("join", this.props.chatroomID);
+        this.props.socket.emit("join", this.props.chatroomID);
         // console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
         axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
             // console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);

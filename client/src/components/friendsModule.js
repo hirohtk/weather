@@ -2,6 +2,7 @@ import React from 'react';
 import "./friendsmodule.css";
 import axios from "axios";
 import ChatModule from "./chatModule";
+import io from "socket.io-client";
 
 class Friends extends React.Component {
 
@@ -16,9 +17,27 @@ class Friends extends React.Component {
             chattingWith: "",
             chattingWithID: "",
             chatroomID: "",
+            notification: false
         }
+        this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
+        this.socket.on('newMessage', function (data) {
+            console.log(`got a new message - this is from FriendsModule`)
+            doNotify(data);
+        });
+
+        const doNotify = () => {
+            if (!this.state.chat) {
+                console.log(`You're not chatting with anyone but you got a new message`)
+                this.setState({notification: true});
+            }
+            else {
+                console.log(`You are chatting with someone and got a new message`)
+            }
+        }
     }
+
+    test = () => {}
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
 
@@ -92,6 +111,7 @@ class Friends extends React.Component {
                     // are both yours and your friends' ID's which get sorted into a unified string 
                     console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
                     this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true });
+                    this.chatNotification(false);
                 })
             });
         }
@@ -107,6 +127,17 @@ class Friends extends React.Component {
         }
     }
 
+    chatNotification = (unread) => {
+        if (unread) {
+            console.log("HAVE UNREAD MESSAGES, SETTING NOTIFICATION TO TRUE")
+            this.setState({notification: true});
+        }
+        else {
+            console.log("UNREAD MESSAGES ARE READ, SETTING NOTIFICATION TO FALSE")
+            this.setState({notification: false});
+        }
+    }
+
     render() {
         const props = this.props
         return (
@@ -119,6 +150,9 @@ class Friends extends React.Component {
                             currentUser={this.props.currentUser}
                             chatroomID={this.state.chatroomID}
                             chatroomName={this.state.chatroomName}
+                            chatNotification={this.chatNotification}
+                            isChatting={this.state.chat}
+                            socket={this.socket}
                         >
                         </ChatModule>
                         :
@@ -133,6 +167,7 @@ class Friends extends React.Component {
                                 </>
                                 :
                                 <>
+                                    {this.state.notification ? <><i class="material-icons" style={{color: "white"}}>message</i></> : <></>}
                                     {this.state.friendsList.map((each, index) => (
                                         <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}><i class="material-icons offline">lens</i>{each.username}<img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img> </p>
                                     ))}
