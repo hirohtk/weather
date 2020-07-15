@@ -42,7 +42,19 @@ class Friends extends React.Component {
         }
     }
 
-    test = () => {}
+    joinRoomsForSocket = () => {
+        // THIS FUNCTION IS NECESSARY SUCH THAT USERS CAN START TO RECEIVE NOTIFICATIONS FROM ALL OF THEIR FRIENDS EVEN IF THEY HAVEN'T STARTED 
+        // CHATTING WITH THEM.  JOINING THE ROOM ALLOWS FOR THE NOTIFCATIONS via this.socket.on('newMessage), etc.
+        console.log("**finding existing chatrooms with your friends and having sockets join them");
+
+        for (let i = 0; i < this.state.friendsList.length; i++) {
+            // FOR EACH OF YOUR FRIENDS, RUN THIS ROUTE WHICH RETURNS THE ID OF THE CHATROOM BETWEEN YOU AND YOUR FRIEND
+            axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
+                // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
+                this.socket.emit("join", response.data._id);
+            })
+        }
+    }
 
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
 
@@ -77,7 +89,8 @@ class Friends extends React.Component {
                 // console.log(`querying for friends returns ${response.data[0].friends}`);
                 this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
                     // console.log(`friendslist in state is ${this.state.friendsList}`)
-                    this.clearResults()
+                    this.clearResults();
+                    this.joinRoomsForSocket();
                 });
             }
         })
@@ -111,6 +124,7 @@ class Friends extends React.Component {
             this.setState({ chat: true, chattingWith: username, chattingWithID: id }, () => {
                 this.props.provideFriendInfo(username, id);
                 console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
+                // 7/14/2020 with implementation of joinRoomsForSocket, may not need to call api again but use data locally if I decide to store it.
                 axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
@@ -139,7 +153,7 @@ class Friends extends React.Component {
         }
         else {
             console.log("UNREAD MESSAGES ARE READ, SETTING NOTIFICATION TO FALSE")
-            this.setState({notification: false});
+            this.setState({notification: false, unread: []});
         }
     }
 
