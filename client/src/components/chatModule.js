@@ -10,37 +10,28 @@ class ChatModule extends React.Component {
         super(props);
         this.state = {
             myMessage: "",
-            messages: [],
-            unread: [],
         }
         // this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
-        props.socket.on('newMessage', function (data) {
-            console.log(`got a new message - this is from ChatModule`)
-            addMessage(data);
-        });
+        // props.socket.on('newMessage', function (data) {
+        //     console.log(`got a new message - this is from ChatModule`)
+        //     addMessage(data);
+        // });
 
         this.reference = React.createRef();
 
-        const addMessage = data => {
-            console.log(data);
-            this.setState({ messages: [...this.state.messages, data]}, () => {
-                // console.log(`THIS IS PROPS.isChatting ${props.isChatting}`)
-                // if (!props.isChatting) {
-                //     console.log("NOT CHATTING RIGHT NOW");
-                //     console.log(`trying to see if this is how to call props within constructor (this is a function --> ${props.chatNotification()}`)
-                //     props.chatNotification(true);
-                // }
-            });
-        };
+        // const addMessage = data => {
+        //     console.log(data);
+        //     this.setState({ messages: [...this.state.messages, data]});
+        // };
     }
 
     UNSAFE_componentWillReceiveProps() {
-        this.joinChatRoom();
+
     }
 
     componentWillUnmount() {
-        this.setState({ messages: [] });
+        // this.setState({ messages: [] });
     }
 
     componentDidUpdate() {
@@ -63,21 +54,12 @@ class ChatModule extends React.Component {
         this.setState({ myMessage: '' })
     };
 
-    joinChatRoom = () => {
-        this.props.socket.emit("join", this.props.chatroomID);
-        // console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
-        axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
-            // console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);
-            this.setState({ messages: response.data.messages });
-        });
-    }
-
     render() {
         const props = this.props
         return (
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
-                <div id="messageArea" >{this.state.messages != undefined ? this.state.messages.map((each, index) => (
+                <div id="messageArea" >{this.props.messages != undefined ? this.props.messages.map((each, index) => (
                     <p>{each.author.username}: {each.message}</p>
                 ))
                     :

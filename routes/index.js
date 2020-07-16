@@ -90,8 +90,8 @@ router.get("/api/allusers/:user", function (req, res) {
 });
 
 router.put("/api/addusers/:id", function (req, res) {
-  console.log(`adding user by userid ${req.params.id}`);
-  console.log(`you are ${req.body.userID}`);
+  // console.log(`adding user by userid ${req.params.id}`);
+  // console.log(`you are ${req.body.userID}`);
   db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
     console.log(response)
     res.json(response);
@@ -99,7 +99,7 @@ router.put("/api/addusers/:id", function (req, res) {
 });
 
 router.put("/api/updatecoords/:id", function (req, res) {
-  console.log(`pushing your coords, which are ${req.body.coordinates}`);
+  // console.log(`pushing your coords, which are ${req.body.coordinates}`);
   db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coordinates}}).then((response) => {
     console.log(response);
     // response not necessary to send, 
@@ -109,7 +109,7 @@ router.put("/api/updatecoords/:id", function (req, res) {
 
 router.get("/api/getfriendcoords/:id", function (req, res) {
   db.Users.findById(req.params.id).then(response => {
-    console.log(`trying to find coordinates in here:  ${response}`);
+    // console.log(`trying to find coordinates in here:  ${response}`);
     res.json(response);
   })
 })
@@ -130,7 +130,6 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   // JOINS FIRST, THEY ALWAYS GET THE SAME ROOM.  CAN'T JUST CONCATENATE OR WILL HAVE A "WHO INITIATES FIRST"? ISSUE
   let arr = []
   let concat = req.params.friendID + req.body.user
-  console.log(`CREATING NEW CHATROOM WITH THESE TWO USERS ${concat}`)
   for (let i = 0; i < concat.length; i++) {
     arr.push(concat[i]);
   }
@@ -139,7 +138,7 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   // find a chatroom, if it doesn't exist, then make one.  (https://stackoverflow.com/questions/33305623/mongoose-create-document-if-not-exists-otherwise-update-return-document-in/33401897#33401897)
   db.Chatroom.findOneAndUpdate({name: sorted}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
     if (err) return
-    console.log(`RESPONSE FROM CREATING NEW CHATROOM OR FINDING OLD ONE IS ${response}`);
+    // console.log(`RESPONSE FROM CREATING NEW CHATROOM OR FINDING OLD ONE IS ${response}`);
     res.json(response);
   })
 })

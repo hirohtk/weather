@@ -17,28 +17,33 @@ class Friends extends React.Component {
             chattingWith: "",
             chattingWithID: "",
             chatroomID: "",
-            notification: false,
-            unread: []
+            unread: [],
+            messages: []
         }
         this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
         this.socket.on('newMessage', function (data) {
-            console.log(`got a new message - this is from FriendsModule`)
-            doNotify(data);
+            // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages
+            if (this.state.chattingWith === data.author.username) {
+                addMessage(data)
+            }
+            else {
+                doNotify(data);
+            }
         });
 
         const doNotify = (data) => {
             if (!this.state.chat) {
-                console.log(`You're not chatting with anyone but you got a new message`)
+                // You're not chatting with anyone but you got a new message
                 this.setState({unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
-                    
                 });
-                console.log(`unread messages in state are ${JSON.stringify(this.state.unread)}`);
-            }
-            else {
-                console.log(`You are chatting with someone and got a new message`)
             }
         }
+
+        const addMessage = data => {
+            console.log(data);
+            this.setState({ messages: [...this.state.messages, data]});
+        };
     }
 
     joinRoomsForSocket = () => {
@@ -118,44 +123,42 @@ class Friends extends React.Component {
         }
     }
 
+    loadChatHistory = (chatroom) => {
+        axios.get(`/api/chathistory/${chatroom}`).then(response => {
+            this.setState({ messages: response.data.messages });
+        });
+    }
+
     openFriend = (action, username, id) => {
         if (action === "open" && !this.state.chat) {
-            this.setState({ chat: true, chattingWith: username, chattingWithID: id }, () => {
+            this.setState({ chat: true, chattingWith: username, chattingWithID: id, messages: [] }, () => {
                 this.props.provideFriendInfo(username, id);
-                console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
+                console.log(`I am now chatting with ${this.state.chattingWith}`);
+                // console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
                 // 7/14/2020 with implementation of joinRoomsForSocket, may not need to call api again but use data locally if I decide to store it.
                 axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
-                    console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
-                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true});
+                    // console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
+                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true}, () => {
+                        this.loadChatHistory(response.data._id);
+                    });
                     // this filters the unread array and returns an array with other people who you haven't read yet.
                     this.setState(state => ({unread: state.unread.filter(each => each.author != username)}))
                 })
             });
         }
         else if (action === "open" && this.state.chat) {
-            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:""}, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:"", messages: []}, () => {
                 this.openFriend("open", username, id)
             });
         }
         else {
-            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:""}, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:"", messages: []}, () => {
                 this.props.closeFriend();
             });
         }
     }
-
-    // chatNotification = (unread) => {
-    //     if (unread) {
-    //         console.log("HAVE UNREAD MESSAGES, SETTING NOTIFICATION TO TRUE")
-    //         this.setState({notification: true});
-    //     }
-    //     else {
-    //         console.log("UNREAD MESSAGES ARE READ, SETTING NOTIFICATION TO FALSE")
-    //         this.setState({notification: false, unread: []});
-    //     }
-    // }
 
     render() {
         const props = this.props
@@ -169,9 +172,8 @@ class Friends extends React.Component {
                             currentUser={this.props.currentUser}
                             chatroomID={this.state.chatroomID}
                             chatroomName={this.state.chatroomName}
-                            chatNotification={this.chatNotification}
-                            isChatting={this.state.chat}
                             socket={this.socket}
+                            messages={this.state.messages}
                         >
                         </ChatModule>
                         :
