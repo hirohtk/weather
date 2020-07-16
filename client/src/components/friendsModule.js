@@ -30,9 +30,8 @@ class Friends extends React.Component {
         const doNotify = (data) => {
             if (!this.state.chat) {
                 console.log(`You're not chatting with anyone but you got a new message`)
-                this.setState({notification: true, unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
-                    console.log(`if returns true on "test", then good.  RETURNS: ${this.state.unread.filter((name) => name.author === "test").some((each) => each.author === "test")}`);
-                    ;
+                this.setState({unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
+                    
                 });
                 console.log(`unread messages in state are ${JSON.stringify(this.state.unread)}`);
             }
@@ -129,8 +128,9 @@ class Friends extends React.Component {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
                     console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
-                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true });
-                    this.chatNotification(false);
+                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true});
+                    // this filters the unread array and returns an array with other people who you haven't read yet.
+                    this.setState(state => ({unread: state.unread.filter(each => each.author != username)}))
                 })
             });
         }
@@ -146,16 +146,16 @@ class Friends extends React.Component {
         }
     }
 
-    chatNotification = (unread) => {
-        if (unread) {
-            console.log("HAVE UNREAD MESSAGES, SETTING NOTIFICATION TO TRUE")
-            this.setState({notification: true});
-        }
-        else {
-            console.log("UNREAD MESSAGES ARE READ, SETTING NOTIFICATION TO FALSE")
-            this.setState({notification: false, unread: []});
-        }
-    }
+    // chatNotification = (unread) => {
+    //     if (unread) {
+    //         console.log("HAVE UNREAD MESSAGES, SETTING NOTIFICATION TO TRUE")
+    //         this.setState({notification: true});
+    //     }
+    //     else {
+    //         console.log("UNREAD MESSAGES ARE READ, SETTING NOTIFICATION TO FALSE")
+    //         this.setState({notification: false, unread: []});
+    //     }
+    // }
 
     render() {
         const props = this.props
@@ -192,7 +192,7 @@ class Friends extends React.Component {
                                             <i class="material-icons offline">lens</i>{each.username}
                                             {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
-                                            {this.state.notification && this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{color: "white"}}>message</i> : <></>}
+                                            {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{color: "white"}}>message</i> : <></>}
                                             <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                                     ))}
                                 </>}
