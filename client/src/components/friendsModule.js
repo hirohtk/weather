@@ -24,7 +24,7 @@ class Friends extends React.Component {
 
         this.socket.on('newMessage', function (data) {
             // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages
-            console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
+            // console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
             notifyOrAdd(data)
         });
 
@@ -44,12 +44,11 @@ class Friends extends React.Component {
         }
 
         const doNotify = (data) => {
-            if (!this.state.chat) {
-                // You're not chatting with anyone but you got a new message
-                this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
-                    console.log(`unread messages are ${this.state.unread}`)
-                });
-            }
+            // You're not chatting with anyone but you got a new message
+            this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
+                console.log(`unread messages are ${this.state.unread}`)
+            });
+
         }
 
         const addMessage = data => {
@@ -61,7 +60,7 @@ class Friends extends React.Component {
     joinRoomsForSocket = () => {
         // THIS FUNCTION IS NECESSARY SUCH THAT USERS CAN START TO RECEIVE NOTIFICATIONS FROM ALL OF THEIR FRIENDS EVEN IF THEY HAVEN'T STARTED 
         // CHATTING WITH THEM.  JOINING THE ROOM ALLOWS FOR THE NOTIFCATIONS via this.socket.on('newMessage), etc.
-        console.log("**finding existing chatrooms with your friends and having sockets join them");
+        // console.log("**finding existing chatrooms with your friends and having sockets join them");
 
         for (let i = 0; i < this.state.friendsList.length; i++) {
             // FOR EACH OF YOUR FRIENDS, RUN THIS ROUTE WHICH RETURNS THE ID OF THE CHATROOM BETWEEN YOU AND YOUR FRIEND
@@ -149,9 +148,6 @@ class Friends extends React.Component {
 
     loadChatHistory = (chatroom) => {
         axios.get(`/api/chathistory/${chatroom}`).then(response => {
-            console.log(`GETTING CHAT HISTORY.  RESPONSE IS ${response.data.messages}`)
-            console.log(`GETTING CHAT HISTORY.  LEVEL UP RESPONSE IS ${response.data}`)
-            console.log(`GETTING CHAT HISTORY.  JSON LEVEL UP RESPONSE IS ${JSON.stringify(response.data)}`)
             this.setState({ messages: response.data.messages });
         });
     }
