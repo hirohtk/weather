@@ -49,7 +49,8 @@ class ChatModule extends React.Component {
         this.props.socket.emit('message', {
             chatroomName: this.props.chatroomName,
             author: this.props.currentUser[1],
-            message: this.state.myMessage
+            message: this.state.myMessage,
+            chatroomID: this.props.chatroomID
         });
         this.setState({ myMessage: '' })
     };

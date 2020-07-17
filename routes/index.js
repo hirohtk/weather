@@ -144,9 +144,9 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
 })
 
 router.get(`/api/chathistory/:id`, function (req, res) {
+  console.log(`FINDING CHATROOM BY ID ${req.params.id}`)
   db.Chatroom.findById(req.params.id).populate({path: "messages", model: "Messages", populate: {path: "author", model: "Users"}}).then(response => {
-  //  console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
-  //  console.log(`author is ${response.messages[0].author}`);
+   console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
     res.json(response)});
 })
 

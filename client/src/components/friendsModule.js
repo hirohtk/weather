@@ -24,6 +24,7 @@ class Friends extends React.Component {
 
         this.socket.on('newMessage', function (data) {
             // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages
+            console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
             notifyOrAdd(data)
         });
 
@@ -36,7 +37,7 @@ class Friends extends React.Component {
                 addMessage(data)
             }
             else {
-            // otherwise, add it to unread messages
+                // otherwise, add it to unread messages
                 console.log(`Adding to unread messages`)
                 doNotify(data);
             }
@@ -45,7 +46,7 @@ class Friends extends React.Component {
         const doNotify = (data) => {
             if (!this.state.chat) {
                 // You're not chatting with anyone but you got a new message
-                this.setState({unread: [...this.state.unread, {author: data.author.username, message: data.message}]}, () => {
+                this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
                     console.log(`unread messages are ${this.state.unread}`)
                 });
             }
@@ -53,7 +54,7 @@ class Friends extends React.Component {
 
         const addMessage = data => {
             console.log(data);
-            this.setState({ messages: [...this.state.messages, data]});
+            this.setState({ messages: [...this.state.messages, data] });
         };
     }
 
@@ -65,6 +66,18 @@ class Friends extends React.Component {
         for (let i = 0; i < this.state.friendsList.length; i++) {
             // FOR EACH OF YOUR FRIENDS, RUN THIS ROUTE WHICH RETURNS THE ID OF THE CHATROOM BETWEEN YOU AND YOUR FRIEND
             axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
+
+                // // 1. Make a shallow copy of the items
+                // let friends = [...this.state.friendsList];
+                // // 2. Make a shallow copy of the item you want to mutate
+                // let friend = { ...friends[1] };
+                // // 3. Replace the property you're intested in
+                // friend.roomID = response.data._id;
+                // // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
+                // friends[1] = friend;
+                // // 5. Set the state to our new copy
+                // this.setState({ friendsList: friends });
+
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
                 this.socket.emit("join", response.data._id);
             })
@@ -75,7 +88,7 @@ class Friends extends React.Component {
 
     searchHandler = () => {
         if (this.state.searchTerm.length === 0) {
-            this.setState({friendResults: [{username: "No results- input is blank.", id: null}]})
+            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null }] })
         }
         else {
             axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
@@ -136,6 +149,9 @@ class Friends extends React.Component {
 
     loadChatHistory = (chatroom) => {
         axios.get(`/api/chathistory/${chatroom}`).then(response => {
+            console.log(`GETTING CHAT HISTORY.  RESPONSE IS ${response.data.messages}`)
+            console.log(`GETTING CHAT HISTORY.  LEVEL UP RESPONSE IS ${response.data}`)
+            console.log(`GETTING CHAT HISTORY.  JSON LEVEL UP RESPONSE IS ${JSON.stringify(response.data)}`)
             this.setState({ messages: response.data.messages });
         });
     }
@@ -151,21 +167,21 @@ class Friends extends React.Component {
                     // response from backend should give a mongo id of the chatroom.  what was fed into this route though
                     // are both yours and your friends' ID's which get sorted into a unified string 
                     // console.log(`*** friendsModule.js: the chatroom response is ${response}, the id is ${response.data._id}`);
-                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true}, () => {
+                    this.setState({ chatroomID: response.data._id, chatroomName: response.data.name, chatReady: true }, () => {
                         this.loadChatHistory(response.data._id);
                     });
                     // this filters the unread array and returns an array with other people who you haven't read yet.
-                    this.setState(state => ({unread: state.unread.filter(each => each.author != username)}))
+                    this.setState(state => ({ unread: state.unread.filter(each => each.author != username) }))
                 })
             });
         }
         else if (action === "open" && this.state.chat) {
-            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:"", messages: []}, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID: "", messages: [] }, () => {
                 this.openFriend("open", username, id)
             });
         }
         else {
-            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID:"", messages: []}, () => {
+            this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID: "", messages: [] }, () => {
                 this.props.closeFriend();
             });
         }
@@ -199,13 +215,13 @@ class Friends extends React.Component {
                                 </>
                                 :
                                 <>
-                                    
+
                                     {this.state.friendsList.map((each, index) => (
                                         <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
                                             <i class="material-icons offline">lens</i>{each.username}
                                             {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
-                                            {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{color: "white"}}>message</i> : <></>}
+                                            {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
                                             <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                                     ))}
                                 </>}
@@ -224,7 +240,7 @@ class Friends extends React.Component {
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
                                             // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                        <p className="whiteText">{each.username}{each.username != "No results- input is blank." ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
+                                            <p className="whiteText">{each.username}{each.username != "No results- input is blank." ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}
