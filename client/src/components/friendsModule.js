@@ -86,8 +86,17 @@ class Friends extends React.Component {
     searchInputHandler = (event) => this.setState({ searchTerm: event.target.value })
 
     searchHandler = () => {
+
         if (this.state.searchTerm.length === 0) {
-            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null }] })
+            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null}], searching: true  })
+        }
+        else if (this.state.searchTerm === this.props.currentUser[0]) {
+            console.log(`this.state.searchTerm is my username`)
+            this.setState({ friendResults: [{ username: "Can't add yourself.", id: null}], searching: true  })
+        }
+        else if (this.state.friendsList.filter((each) => each.username === this.state.searchTerm).some(each => each.username === this.state.searchTerm)) {
+            console.log(`this.state.searchTerm contains a username that we already have`)
+            this.setState({ friendResults: [{ username: "Friend already added!", id: null}], searching: true  })
         }
         else {
             axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {
@@ -139,7 +148,7 @@ class Friends extends React.Component {
 
     componentDidUpdate = () => {
         if (this.props.loggedIn === false && this.state.friendsLoaded === true) {
-            this.setState({ friendsLoaded: false });
+            this.setState({ friendsLoaded: false, chat: false });
         }
         if (this.props.loggedIn === true && this.state.friendsLoaded === false) {
             this.loadFriends();
@@ -236,7 +245,7 @@ class Friends extends React.Component {
                                     <> <h5 className="whiteText">Search Results</h5>
                                         {this.state.friendResults.map((each, index) =>
                                             // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                            <p className="whiteText">{each.username}{each.username != "No results- input is blank." ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
+                                            <p className="whiteText">{each.username}{each.id != null ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
                                         <button onClick={this.clearResults}>Clear</button>
                                     </>}
                                 </> : <></>}
