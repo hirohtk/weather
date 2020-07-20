@@ -28,6 +28,10 @@ class Friends extends React.Component {
             notifyOrAdd(data)
         });
 
+        this.socket.on('roomJoined', function (data) {
+            console.log(`${data.who} joined room which is: ${data.room}`)
+        })
+
         const notifyOrAdd = (data) => {
             console.log(`FORK INITIATED`)
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
@@ -60,25 +64,13 @@ class Friends extends React.Component {
     joinRoomsForSocket = () => {
         // THIS FUNCTION IS NECESSARY SUCH THAT USERS CAN START TO RECEIVE NOTIFICATIONS FROM ALL OF THEIR FRIENDS EVEN IF THEY HAVEN'T STARTED 
         // CHATTING WITH THEM.  JOINING THE ROOM ALLOWS FOR THE NOTIFCATIONS via this.socket.on('newMessage), etc.
-        // console.log("**finding existing chatrooms with your friends and having sockets join them");
 
         for (let i = 0; i < this.state.friendsList.length; i++) {
             // FOR EACH OF YOUR FRIENDS, RUN THIS ROUTE WHICH RETURNS THE ID OF THE CHATROOM BETWEEN YOU AND YOUR FRIEND
             axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
-
-                // // 1. Make a shallow copy of the items
-                // let friends = [...this.state.friendsList];
-                // // 2. Make a shallow copy of the item you want to mutate
-                // let friend = { ...friends[1] };
-                // // 3. Replace the property you're intested in
-                // friend.roomID = response.data._id;
-                // // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
-                // friends[1] = friend;
-                // // 5. Set the state to our new copy
-                // this.setState({ friendsList: friends });
-
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
-                this.socket.emit("join", response.data._id);
+                let test = {id: this.props.currentUser[1]}
+                this.socket.emit("join", response.data._id, test);
             })
         }
     }
@@ -88,15 +80,13 @@ class Friends extends React.Component {
     searchHandler = () => {
 
         if (this.state.searchTerm.length === 0) {
-            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null}], searching: true  })
+            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null}], searching: true, searchTerm: ""  })
         }
         else if (this.state.searchTerm === this.props.currentUser[0]) {
-            console.log(`this.state.searchTerm is my username`)
-            this.setState({ friendResults: [{ username: "Can't add yourself.", id: null}], searching: true  })
+            this.setState({ friendResults: [{ username: "Can't add yourself.", id: null}], searching: true, searchTerm: ""  })
         }
         else if (this.state.friendsList.filter((each) => each.username === this.state.searchTerm).some(each => each.username === this.state.searchTerm)) {
-            console.log(`this.state.searchTerm contains a username that we already have`)
-            this.setState({ friendResults: [{ username: "Friend already added!", id: null}], searching: true  })
+            this.setState({ friendResults: [{ username: "Friend already added!", id: null}], searching: true, searchTerm: ""  })
         }
         else {
             axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {

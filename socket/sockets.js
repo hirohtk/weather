@@ -8,11 +8,12 @@ module.exports = function (io) {
 
         console.log(`a user connected, ${socket.id}`);
 
-        socket.on("join", async room => {
+        socket.on("join", async (room, test) => {
             // roomid = room;
-            console.log(`THIS IS SOCKET ${socket.id} WHO IS NOW JOINING ROOM ${room}`)
+            console.log(`THIS IS SOCKET ${socket.id} WHO IS NOW JOINING ROOM ${room}, and has a mongoID of ${test.id}`)
             socket.join(room);
-            io.emit("roomJoined", room);
+            let obj = {room: room, who: test.id, username: socket.id}
+            io.emit("roomJoined", obj);
         });
 
         socket.on("message", async data => {
