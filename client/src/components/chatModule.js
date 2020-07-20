@@ -10,28 +10,28 @@ class ChatModule extends React.Component {
         super(props);
         this.state = {
             myMessage: "",
-            messages: [],
         }
-        this.socket = io('https://immense-cove-75264.herokuapp.com/');
+        // this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
-        this.socket.on('newMessage', function (data) {
-            addMessage(data);
-        });
+        // props.socket.on('newMessage', function (data) {
+        //     console.log(`got a new message - this is from ChatModule`)
+        //     addMessage(data);
+        // });
 
         this.reference = React.createRef();
 
-        const addMessage = data => {
-            console.log(data);
-            this.setState({ messages: [...this.state.messages, data] });
-        };
+        // const addMessage = data => {
+        //     console.log(data);
+        //     this.setState({ messages: [...this.state.messages, data]});
+        // };
     }
 
     UNSAFE_componentWillReceiveProps() {
-        this.joinChatRoom();
+
     }
 
     componentWillUnmount() {
-        this.setState({ messages: [] });
+        // this.setState({ messages: [] });
     }
 
     componentDidUpdate() {
@@ -46,29 +46,21 @@ class ChatModule extends React.Component {
     sendMessage = (event) => {
         // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
         event.preventDefault();
-        this.socket.emit('message', {
+        this.props.socket.emit('message', {
             chatroomName: this.props.chatroomName,
             author: this.props.currentUser[1],
-            message: this.state.myMessage
+            message: this.state.myMessage,
+            chatroomID: this.props.chatroomID
         });
         this.setState({ myMessage: '' })
     };
-
-    joinChatRoom = () => {
-        this.socket.emit("join", this.props.chatroomID);
-        // console.log(`***chatModule.js:  GETTING HISTORY FOR chatroom ${this.props.chatroomID}...`)
-        axios.get(`/api/chathistory/${this.props.chatroomID}`).then(response => {
-            // console.log(`***chatModule.js:  chatroom history response is ${JSON.stringify(response.data.messages)}`);
-            this.setState({ messages: response.data.messages });
-        });
-    }
 
     render() {
         const props = this.props
         return (
             <div className="chatBox">
                 <h5>{props.currentUser[0]} chatting with {props.chattingWith}</h5>
-                <div id="messageArea" >{this.state.messages != undefined ? this.state.messages.map((each, index) => (
+                <div id="messageArea" >{this.props.messages != undefined ? this.props.messages.map((each, index) => (
                     <p>{each.author.username}: {each.message}</p>
                 ))
                     :

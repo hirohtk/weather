@@ -55,7 +55,7 @@ class App extends React.Component {
           this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
         }
         else {
-          // console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
+          console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
           latitude = this.state.friendCoordinates[0];
           longitude = this.state.friendCoordinates[1];
           googleAPI(latitude, longitude);
