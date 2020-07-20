@@ -33,16 +33,15 @@ class Friends extends React.Component {
         })
 
         const notifyOrAdd = (data) => {
-            console.log(`FORK INITIATED`)
+            // console.log(`FORK INITIATED`)
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
             // therefore if the author was you or I, add to ongoing messages.  
             if (this.state.chattingWith === data.author.username || this.props.currentUser[0] === data.author.username) {
-                console.log(`ADDING NEW MESSAGE, I AM CHATTING WITH ${this.state.chattingWith} and  new message data is from ${data.author.username}`)
                 addMessage(data)
             }
             else {
                 // otherwise, add it to unread messages
-                console.log(`Adding to unread messages`)
+                // console.log(`Adding to unread messages`)
                 doNotify(data);
             }
         }
@@ -50,7 +49,7 @@ class Friends extends React.Component {
         const doNotify = (data) => {
             // You're not chatting with anyone but you got a new message
             this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
-                console.log(`unread messages are ${this.state.unread}`)
+                // console.log(`unread messages are ${this.state.unread}`)
             });
 
         }
@@ -105,7 +104,7 @@ class Friends extends React.Component {
     clearResults = () => this.setState({ friendResults: [], searching: false });
 
     loadFriends = () => {
-        console.log(`loading friends for: ${this.props.currentUser[1]}`);
+        // console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
             // if a new user, the response.data array will have zero length, preventing access of data.  conditional below handles that
             if (response.data.length === 0) {
