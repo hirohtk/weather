@@ -18,7 +18,8 @@ class Friends extends React.Component {
             chattingWithID: "",
             chatroomID: "",
             unread: [],
-            messages: []
+            messages: [],
+            loggedInFriends: [],
         }
         this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
@@ -29,7 +30,8 @@ class Friends extends React.Component {
         });
 
         this.socket.on('roomJoined', function (data) {
-            console.log(`${data.who} joined room which is: ${data.room}`)
+            console.log(`${data.who} joined room which is: ${data.room}`);
+            console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
         })
 
         const notifyOrAdd = (data) => {
