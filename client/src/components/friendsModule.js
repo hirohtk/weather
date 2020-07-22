@@ -30,11 +30,11 @@ class Friends extends React.Component {
         });
 
         this.socket.on('roomJoined', function (data) {
-            console.log(`${data.who} joined room which is: ${data.room}`);
-            console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
+            // console.log(`${data.who} joined room which is: ${data.room}`);
+            // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
             // from https://stackoverflow.com/questions/5223/length-of-a-javascript-object, this is similar .length for arrays, but for objects
             let numConnected = Object.keys(data.connected).length;
-            console.log(`the number of people in this room are ${numConnected}`)
+            // console.log(`the number of people in this room are ${numConnected}`)
             // if there is more than one person connected to this room
             if (numConnected > 1) {
                 if (data.who != defineProps()) {
@@ -44,11 +44,25 @@ class Friends extends React.Component {
                     friendLoginManager(data.who)
                 }
                 else {
-                    console.log(`the person who joined the room is not you, finding out who else is part of this room`)
+                    console.log(`the person who joined the room is you, finding out who else is part of this room`)
                     // If you are the one that connected, but your friend is already connected...  
                     // (NOT SO SLEEK, BUT THIS IS DOING THE TRICK FOR NOW - ACCESS DB TO FIND OUT WHO THE OTHER PERSON IS THAT IS NOT YOU:
                     axios.get(`/api/peopleinroom/${data.room}`).then(response => {
-                        let who = response.data.friends.slice(response.data.friends.indexOf(defineProps()), 1).toString();
+                        console.log(`response containing people is ${response.data.people}`);
+                        console.log(`you are props, ${defineProps()}`);
+                        let index;
+                        for (let i = 0; i < response.data.people.length; i++) {
+                            if (response.data.people[i]._id === defineProps()) {
+                                if (i == 0) {
+                                    index = 1;
+                                }
+                                else {
+                                    index = 0;
+                                }
+                            }
+                        }
+                        console.log(`index of you is ${index}`);
+                        let who = response.data.people[index]._id;
                         console.log(`who is ${who}.  this is supposed to be the friend`);
                         friendLoginManager(who);
                     })
