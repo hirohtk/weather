@@ -40,10 +40,22 @@ class Friends extends React.Component {
                 // make sure the user who connected to this room isn't you
                 if (data.who != props.currentUser[1]) {
                     // add this person's ID to those who are loggedIn
-                    this.setState({loggedInFriends: [...this.state.loggedInFriends, data.who]});
+                    friendLoginManager(data.who)
+                }
+                else {
+                    // data.who is you, which triggers this whole route, but your friend connected.  
+                    // (NOT SO SLEEK, BUT THIS IS DOING THE TRICK FOR NOW - ACCESS DB TO FIND OUT WHO THE OTHER PERSON IS THAT IS NOT YOU:
+                    axios.get(`/api/peopleinroom/${data.room}`).then(response => {
+                        let who = response.data.friends.slice(response.data.friends.indexOf(props.currentUser[1]), 1).toString();
+                        friendLoginManager(who);
+                    })
                 }
             }
         })
+
+        const friendLoginManager = (who) => {
+            this.setState({loggedInFriends: [...this.state.loggedInFriends, who]});
+        }
 
         const notifyOrAdd = (data) => {
             // console.log(`FORK INITIATED`)

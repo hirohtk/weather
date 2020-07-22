@@ -133,10 +133,21 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   for (let i = 0; i < concat.length; i++) {
     arr.push(concat[i]);
   }
+  let a;
+  let b;
+  // comparing both strings alphabetically - apparently JS can evaluate strings this way
+  if (req.params.friendID > req.body.user) {
+    a = req.params.friendID;
+    b = req.body.user;
+  }
+  else {
+    a = req.body.user;
+    b = req.params.friendID;
+  }
   // have an array with all characters in it sorted by alphabetical, then join back into a string
   let sorted = arr.sort().join("");
   // find a chatroom, if it doesn't exist, then make one.  (https://stackoverflow.com/questions/33305623/mongoose-create-document-if-not-exists-otherwise-update-return-document-in/33401897#33401897)
-  db.Chatroom.findOneAndUpdate({name: sorted}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
+  db.Chatroom.findOneAndUpdate({name: sorted, people: [a, b]}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
     if (err) return
     // console.log(`RESPONSE FROM CREATING NEW CHATROOM OR FINDING OLD ONE IS ${response}`);
     res.json(response);
@@ -148,6 +159,12 @@ router.get(`/api/chathistory/:id`, function (req, res) {
   db.Chatroom.findById(req.params.id).populate({path: "messages", model: "Messages", populate: {path: "author", model: "Users"}}).then(response => {
    console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
     res.json(response)});
+})
+
+router.get(`/api/peopleinroom/:id`, function (req, res) {
+  db.Chatroom.findById(req.params.id).populate("people").then(response => {
+    res.json(response);
+  })
 })
 
 // TAKEN CARE OF BY SOCKET
