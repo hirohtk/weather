@@ -32,6 +32,17 @@ class Friends extends React.Component {
         this.socket.on('roomJoined', function (data) {
             console.log(`${data.who} joined room which is: ${data.room}`);
             console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
+            // from https://stackoverflow.com/questions/5223/length-of-a-javascript-object, this is similar .length for arrays, but for objects
+            let numConnected = Object.keys(data.connected).length;
+            console.log(`the number of people in this room are ${numConnected}`)
+            // if there is more than one person connected to this room
+            if (numConnected > 1) {
+                // make sure the user who connected to this room isn't you
+                if (data.who != props.currentUser[1]) {
+                    // add this person's ID to those who are loggedIn
+                    this.setState({loggedInFriends: [...this.state.loggedInFriends, data.who]});
+                }
+            }
         })
 
         const notifyOrAdd = (data) => {
@@ -214,7 +225,7 @@ class Friends extends React.Component {
 
                                     {this.state.friendsList.map((each, index) => (
                                         <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
-                                            <i class="material-icons offline">lens</i>{each.username}
+                                            <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
                                             {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
                                             {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
