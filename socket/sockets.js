@@ -12,6 +12,7 @@ module.exports = function (io) {
             // roomid = room;
             console.log(`THIS IS SOCKET ${socket.id} WHO IS NOW JOINING ROOM ${room}, and has a mongoID of ${test.id}`)
             socket.join(room);
+            // from https://stackoverflow.com/questions/50045613/how-to-find-all-sockets-in-room-using-the-latest-version-of-socket-io
             let connecteds = io.sockets.adapter.rooms[room].sockets;
             console.log(`connecteds are ${JSON.stringify(connecteds)}. *** These are the people who are connected to the same room, ${room}.`)
             let obj = {room: room, who: test.id, username: socket.id, connected: connecteds};
