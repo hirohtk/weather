@@ -39,17 +39,13 @@ class Friends extends React.Component {
             if (numConnected > 1) {
                 if (data.who != defineProps()) {
                 // If someone connected while you're online, make sure the user who connected to this room isn't you
-                    console.log(`the person is ${data.who} and props.currentUser[1] is ${defineProps()}`)
                     // then add this person's ID to those who are loggedIn
                     friendLoginManager(data.who)
                 }
                 else {
-                    console.log(`the person who joined the room is you, finding out who else is part of this room`)
                     // If you are the one that connected, but your friend is already connected...  
                     // (NOT SO SLEEK, BUT THIS IS DOING THE TRICK FOR NOW - ACCESS DB TO FIND OUT WHO THE OTHER PERSON IS THAT IS NOT YOU:
                     axios.get(`/api/peopleinroom/${data.room}`).then(response => {
-                        console.log(`response containing people is ${response.data.people}`);
-                        console.log(`you are props, ${defineProps()}`);
                         let index;
                         for (let i = 0; i < response.data.people.length; i++) {
                             if (response.data.people[i]._id === defineProps()) {
@@ -61,9 +57,7 @@ class Friends extends React.Component {
                                 }
                             }
                         }
-                        console.log(`index of you is ${index}`);
                         let who = response.data.people[index]._id;
-                        console.log(`who is ${who}.  this is supposed to be the friend`);
                         friendLoginManager(who);
                     })
                 }
