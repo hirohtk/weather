@@ -37,21 +37,28 @@ class Friends extends React.Component {
             console.log(`the number of people in this room are ${numConnected}`)
             // if there is more than one person connected to this room
             if (numConnected > 1) {
-                // make sure the user who connected to this room isn't you
-                if (data.who != props.currentUser[1]) {
-                    // add this person's ID to those who are loggedIn
+                if (data.who != defineProps()) {
+                // If someone connected while you're online, make sure the user who connected to this room isn't you
+                    console.log(`the person is ${data.who} and props.currentUser[1] is ${defineProps()}`)
+                    // then add this person's ID to those who are loggedIn
                     friendLoginManager(data.who)
                 }
                 else {
-                    // data.who is you, which triggers this whole route, but your friend connected.  
+                    console.log(`the person who joined the room is not you, finding out who else is part of this room`)
+                    // If you are the one that connected, but your friend is already connected...  
                     // (NOT SO SLEEK, BUT THIS IS DOING THE TRICK FOR NOW - ACCESS DB TO FIND OUT WHO THE OTHER PERSON IS THAT IS NOT YOU:
                     axios.get(`/api/peopleinroom/${data.room}`).then(response => {
-                        let who = response.data.friends.slice(response.data.friends.indexOf(props.currentUser[1]), 1).toString();
+                        let who = response.data.friends.slice(response.data.friends.indexOf(defineProps()), 1).toString();
+                        console.log(`who is ${who}.  this is supposed to be the friend`);
                         friendLoginManager(who);
                     })
                 }
             }
         })
+
+        const defineProps = () => {
+            return this.props.currentUser[1]
+        }
 
         const friendLoginManager = (who) => {
             this.setState({loggedInFriends: [...this.state.loggedInFriends, who]});

@@ -162,6 +162,7 @@ router.get(`/api/chathistory/:id`, function (req, res) {
 })
 
 router.get(`/api/peopleinroom/:id`, function (req, res) {
+  console.log(`*** GETTIG PEOPLE IN THIS CHAT ROOM BY THEIR ID's`)
   db.Chatroom.findById(req.params.id).populate("people").then(response => {
     res.json(response);
   })
