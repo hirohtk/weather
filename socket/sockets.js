@@ -53,8 +53,10 @@ module.exports = function (io) {
             io.emit(`leftRoom`, data);
         })
 
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
+        socket.on('disconnect', function (data) {
+            io.emit(`leftRoom`, data);
+            // https://stackoverflow.com/questions/39084924/componentwillunmount-not-being-called-when-refreshing-the-current-page
+            console.log(`user disconnected but leaveRoom is handled by beforeUnload`);
         });
     });
 

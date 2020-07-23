@@ -123,7 +123,7 @@ class ExtendedForecast extends React.Component {
       }
 
     componentDidMount() {
-        this.getPointCoords("extended");
+        // console.log(`extended forecast component loaded`)
     }
 
     render() {

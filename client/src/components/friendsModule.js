@@ -192,6 +192,7 @@ class Friends extends React.Component {
         if (this.props.loggedIn) {
             this.loadFriends();
         }
+        window.addEventListener('beforeunload', this.hardDisconnect());
     }
 
     componentDidUpdate = () => {
@@ -205,8 +206,13 @@ class Friends extends React.Component {
     }
 
     componentWillUnmount = () => {
-
+        // basically, componentWillUnmount functions as I expect it to only when the stackoverflow post is followed
+        this.hardDisconnect();
+        // https://stackoverflow.com/questions/39084924/componentwillunmount-not-being-called-when-refreshing-the-current-page
+        window.removeEventListener('beforeunload', this.hardDisconnect())
     }
+
+    hardDisconnect = () => this.props.socket.emit(`leaveRoom`, this.props.currentUser[1])
 
     loadChatHistory = (chatroom) => {
         axios.get(`/api/chathistory/${chatroom}`).then(response => {
