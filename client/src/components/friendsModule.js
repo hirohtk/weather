@@ -18,31 +18,89 @@ class Friends extends React.Component {
             chattingWithID: "",
             chatroomID: "",
             unread: [],
-            messages: []
+            messages: [],
+            loggedInFriends: [],
         }
-        this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
+        
+        // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
-        this.socket.on('newMessage', function (data) {
+        props.socket.on('newMessage', function (data) {
             // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages
             // console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
             notifyOrAdd(data)
         });
 
-        this.socket.on('roomJoined', function (data) {
-            console.log(`${data.who} joined room which is: ${data.room}`)
+        props.socket.on('roomJoined', function (data) {
+            // console.log(`${data.who} joined room which is: ${data.room}`);
+            // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
+            // from https://stackoverflow.com/questions/5223/length-of-a-javascript-object, this is similar .length for arrays, but for objects
+            let numConnected = Object.keys(data.connected).length;
+            // console.log(`the number of people in this room are ${numConnected}`)
+            // if there is more than one person connected to this room
+            if (numConnected > 1) {
+                if (data.who != defineProps()) {
+                // If someone connected while you're online, make sure the user who connected to this room isn't you
+                    // then add this person's ID to those who are loggedIn
+                    friendLoginManager(data.who, true)
+                }
+                else {
+                    // If you are the one that connected, but your friend is already connected...  
+                    // (NOT SO SLEEK, BUT THIS IS DOING THE TRICK FOR NOW - ACCESS DB TO FIND OUT WHO THE OTHER PERSON IS THAT IS NOT YOU:
+                    axios.get(`/api/peopleinroom/${data.room}`).then(response => {
+                        let index;
+                        for (let i = 0; i < response.data.people.length; i++) {
+                            if (response.data.people[i]._id === defineProps()) {
+                                if (i == 0) {
+                                    index = 1;
+                                }
+                                else {
+                                    index = 0;
+                                }
+                            }
+                        }
+                        let who = response.data.people[index]._id;
+                        friendLoginManager(who, true);
+                    })
+                }
+            }
         })
 
+        props.socket.on('leftRoom', function (data) {
+            console.log(`someone disconnected, and their id is ${data}`);
+            friendLoginManager(data, false)
+        })
+
+        const defineProps = () => {
+            return this.props.currentUser[1]
+        }
+
+        const friendLoginManager = (who, login) => {
+            if (login) {
+                this.setState({loggedInFriends: [...this.state.loggedInFriends, who]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
+            }
+            else {
+                // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
+                let clone = this.state.loggedInFriends;
+                let ind = clone.indexOf(who);
+                clone.splice(ind, 1);
+                console.log(`now the people who are left are ${clone}`);
+                // console.log(`before, clone of logged in friends is ${clone}`)
+                // console.log(`after, it's this filtered array:  ${clone.filter(each => each != who)}`)
+                // clone.filter(each => each != who);
+                this.setState({loggedInFriends: clone}, () => console.log(`state updated, loggedInfriends are now ${this.state.loggedInFriends}`));
+            }
+        }
+
         const notifyOrAdd = (data) => {
-            console.log(`FORK INITIATED`)
+            // console.log(`FORK INITIATED`)
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
             // therefore if the author was you or I, add to ongoing messages.  
             if (this.state.chattingWith === data.author.username || this.props.currentUser[0] === data.author.username) {
-                console.log(`ADDING NEW MESSAGE, I AM CHATTING WITH ${this.state.chattingWith} and  new message data is from ${data.author.username}`)
                 addMessage(data)
             }
             else {
                 // otherwise, add it to unread messages
-                console.log(`Adding to unread messages`)
+                // console.log(`Adding to unread messages`)
                 doNotify(data);
             }
         }
@@ -50,7 +108,7 @@ class Friends extends React.Component {
         const doNotify = (data) => {
             // You're not chatting with anyone but you got a new message
             this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
-                console.log(`unread messages are ${this.state.unread}`)
+                // console.log(`unread messages are ${this.state.unread}`)
             });
 
         }
@@ -70,7 +128,7 @@ class Friends extends React.Component {
             axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
                 let test = {id: this.props.currentUser[1]}
-                this.socket.emit("join", response.data._id, test);
+                this.props.socket.emit("join", response.data._id, test);
             })
         }
     }
@@ -105,7 +163,7 @@ class Friends extends React.Component {
     clearResults = () => this.setState({ friendResults: [], searching: false });
 
     loadFriends = () => {
-        console.log(`loading friends for: ${this.props.currentUser[1]}`);
+        // console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
             // if a new user, the response.data array will have zero length, preventing access of data.  conditional below handles that
             if (response.data.length === 0) {
@@ -134,16 +192,27 @@ class Friends extends React.Component {
         if (this.props.loggedIn) {
             this.loadFriends();
         }
+        window.addEventListener('beforeunload', this.hardDisconnect());
     }
 
     componentDidUpdate = () => {
         if (this.props.loggedIn === false && this.state.friendsLoaded === true) {
-            this.setState({ friendsLoaded: false, chat: false });
+            this.setState({ friendsLoaded: false, chat: false }, () => {
+            });
         }
         if (this.props.loggedIn === true && this.state.friendsLoaded === false) {
             this.loadFriends();
         }
     }
+
+    componentWillUnmount = () => {
+        // basically, componentWillUnmount functions as I expect it to only when the stackoverflow post is followed
+        this.hardDisconnect();
+        // https://stackoverflow.com/questions/39084924/componentwillunmount-not-being-called-when-refreshing-the-current-page
+        window.removeEventListener('beforeunload', this.hardDisconnect())
+    }
+
+    hardDisconnect = () => this.props.socket.emit(`leaveRoom`, this.props.currentUser[1])
 
     loadChatHistory = (chatroom) => {
         axios.get(`/api/chathistory/${chatroom}`).then(response => {
@@ -194,7 +263,7 @@ class Friends extends React.Component {
                             currentUser={this.props.currentUser}
                             chatroomID={this.state.chatroomID}
                             chatroomName={this.state.chatroomName}
-                            socket={this.socket}
+                            socket={this.props.socket}
                             messages={this.state.messages}
                         >
                         </ChatModule>
@@ -213,7 +282,7 @@ class Friends extends React.Component {
 
                                     {this.state.friendsList.map((each, index) => (
                                         <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
-                                            <i class="material-icons offline">lens</i>{each.username}
+                                            <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
                                             {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
                                             {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}

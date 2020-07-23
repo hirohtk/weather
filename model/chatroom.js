@@ -8,6 +8,10 @@ const ChatroomSchema = new Schema({
         type: String,
         required: true,
     },
+    people : [{
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+    }],
     messages: [{
         type: Schema.Types.ObjectId,
         ref: "Messages",

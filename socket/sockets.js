@@ -4,15 +4,16 @@ module.exports = function (io) {
 
     io.on('connection', function (socket) {
 
-        // let roomid;
-
         console.log(`a user connected, ${socket.id}`);
 
         socket.on("join", async (room, test) => {
             // roomid = room;
             console.log(`THIS IS SOCKET ${socket.id} WHO IS NOW JOINING ROOM ${room}, and has a mongoID of ${test.id}`)
             socket.join(room);
-            let obj = {room: room, who: test.id, username: socket.id}
+            // from https://stackoverflow.com/questions/50045613/how-to-find-all-sockets-in-room-using-the-latest-version-of-socket-io
+            let connecteds = io.sockets.adapter.rooms[room].sockets;
+            console.log(`connecteds are ${JSON.stringify(connecteds)}. *** These are the people who are connected to the same room, ${room}.`)
+            let obj = {room: room, who: test.id, username: socket.id, connected: connecteds};
             io.emit("roomJoined", obj);
         });
 
@@ -47,8 +48,15 @@ module.exports = function (io) {
             io.to(chatRoomID).emit("newMessage", newObj);
         });
 
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
+        socket.on(`leaveRoom`, function (data) {
+            console.log(`someone left room- they are ${data}`);
+            io.emit(`leftRoom`, data);
+        })
+
+        socket.on('disconnect', function (data) {
+            io.emit(`leftRoom`, data);
+            // https://stackoverflow.com/questions/39084924/componentwillunmount-not-being-called-when-refreshing-the-current-page
+            console.log(`user disconnected but leaveRoom is handled by beforeUnload`);
         });
     });
 
