@@ -37,7 +37,7 @@ class App extends React.Component {
       friendCurrentWeather: [],
     }
 
-    this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
+    this.socket = io('https://immense-cove-75264.herokuapp.com/' || 'localhost:3001');
 
   }
 
