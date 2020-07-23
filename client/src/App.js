@@ -10,29 +10,37 @@ import './App.css';
 import Axios from 'axios';
 import _ from 'underscore'
 import moment from "moment";
+import io from "socket.io-client";
 
 class App extends React.Component {
 
-  state = {
-    location: [],
-    today: "",
-    currentWeather: [],
-    hourlyForecast: [],
-    fiveDayForecast: [],
-    howManyForecastedDays: "",
-    hourIncrement: 6,
-    locationImage: "",
-    loggedIn: false,
-    currentUser: [],
-    coordinates: [],
-    showFriendWeather: false,
+  constructor() {
+    super();
+    this.state = {
+      location: [],
+      today: "",
+      currentWeather: [],
+      hourlyForecast: [],
+      fiveDayForecast: [],
+      howManyForecastedDays: "",
+      hourIncrement: 6,
+      locationImage: "",
+      loggedIn: false,
+      currentUser: [],
+      coordinates: [],
+      showFriendWeather: false,
+  
+      friendUsername: "",
+      friendCoordinates: [],
+      friendLocation: [],
+      friendImage: [],
+      friendCurrentWeather: [],
+    }
 
-    friendUsername: "",
-    friendCoordinates: [],
-    friendLocation: [],
-    friendImage: [],
-    friendCurrentWeather: [],
+    this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
+
   }
+
 
   componentDidMount() {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
@@ -186,7 +194,9 @@ class App extends React.Component {
       })
     }
     else {
-      this.setState({ currentUser: [], loggedIn: false })
+      console.log(`logging out, emitting socket for leaveRoom`);
+      this.socket.emit("leaveRoom", this.state.currentUser[1]);
+      this.setState({ currentUser: [], loggedIn: false });
     }
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
@@ -218,6 +228,7 @@ class App extends React.Component {
           friendsList={this.state.friendsList}
           provideFriendInfo={this.getFriendInfo}
           closeFriend={this.closeFriend}
+          socket={this.socket}
         ></FriendsModule>
         <div className="container">
           <img src={this.state.locationImage} id="backgroundImage"></img>

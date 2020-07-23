@@ -4,8 +4,6 @@ module.exports = function (io) {
 
     io.on('connection', function (socket) {
 
-        // let roomid;
-
         console.log(`a user connected, ${socket.id}`);
 
         socket.on("join", async (room, test) => {
@@ -49,6 +47,11 @@ module.exports = function (io) {
             // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
             io.to(chatRoomID).emit("newMessage", newObj);
         });
+
+        socket.on(`leaveRoom`, function (data) {
+            console.log(`someone left room- they are ${data.id}`);
+            io.emit(`leftRoom`, data.id);
+        })
 
         socket.on('disconnect', function () {
             console.log('user disconnected');

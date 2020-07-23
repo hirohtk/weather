@@ -21,15 +21,16 @@ class Friends extends React.Component {
             messages: [],
             loggedInFriends: [],
         }
-        this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
+        
+        // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
-        this.socket.on('newMessage', function (data) {
+        props.socket.on('newMessage', function (data) {
             // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages
             // console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
             notifyOrAdd(data)
         });
 
-        this.socket.on('roomJoined', function (data) {
+        props.socket.on('roomJoined', function (data) {
             // console.log(`${data.who} joined room which is: ${data.room}`);
             // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
             // from https://stackoverflow.com/questions/5223/length-of-a-javascript-object, this is similar .length for arrays, but for objects
@@ -62,6 +63,10 @@ class Friends extends React.Component {
                     })
                 }
             }
+        })
+
+        props.socket.on('leftRoom', function (data) {
+            console.log(`someone disconnected, and their id is ${data}`);
         })
 
         const defineProps = () => {
@@ -109,7 +114,7 @@ class Friends extends React.Component {
             axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
                 let test = {id: this.props.currentUser[1]}
-                this.socket.emit("join", response.data._id, test);
+                this.props.socket.emit("join", response.data._id, test);
             })
         }
     }
@@ -177,11 +182,16 @@ class Friends extends React.Component {
 
     componentDidUpdate = () => {
         if (this.props.loggedIn === false && this.state.friendsLoaded === true) {
-            this.setState({ friendsLoaded: false, chat: false });
+            this.setState({ friendsLoaded: false, chat: false }, () => {
+            });
         }
         if (this.props.loggedIn === true && this.state.friendsLoaded === false) {
             this.loadFriends();
         }
+    }
+
+    componentWillUnmount = () => {
+
     }
 
     loadChatHistory = (chatroom) => {
@@ -233,7 +243,7 @@ class Friends extends React.Component {
                             currentUser={this.props.currentUser}
                             chatroomID={this.state.chatroomID}
                             chatroomName={this.state.chatroomName}
-                            socket={this.socket}
+                            socket={this.props.socket}
                             messages={this.state.messages}
                         >
                         </ChatModule>
