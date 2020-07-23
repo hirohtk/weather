@@ -49,8 +49,8 @@ module.exports = function (io) {
         });
 
         socket.on(`leaveRoom`, function (data) {
-            console.log(`someone left room- they are ${data.id}`);
-            io.emit(`leftRoom`, data.id);
+            console.log(`someone left room- they are ${data}`);
+            io.emit(`leftRoom`, data);
         })
 
         socket.on('disconnect', function () {

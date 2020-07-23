@@ -41,7 +41,7 @@ class Friends extends React.Component {
                 if (data.who != defineProps()) {
                 // If someone connected while you're online, make sure the user who connected to this room isn't you
                     // then add this person's ID to those who are loggedIn
-                    friendLoginManager(data.who)
+                    friendLoginManager(data.who, true)
                 }
                 else {
                     // If you are the one that connected, but your friend is already connected...  
@@ -59,7 +59,7 @@ class Friends extends React.Component {
                             }
                         }
                         let who = response.data.people[index]._id;
-                        friendLoginManager(who);
+                        friendLoginManager(who, true);
                     })
                 }
             }
@@ -67,14 +67,28 @@ class Friends extends React.Component {
 
         props.socket.on('leftRoom', function (data) {
             console.log(`someone disconnected, and their id is ${data}`);
+            friendLoginManager(data, false)
         })
 
         const defineProps = () => {
             return this.props.currentUser[1]
         }
 
-        const friendLoginManager = (who) => {
-            this.setState({loggedInFriends: [...this.state.loggedInFriends, who]});
+        const friendLoginManager = (who, login) => {
+            if (login) {
+                this.setState({loggedInFriends: [...this.state.loggedInFriends, who]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
+            }
+            else {
+                // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
+                let clone = this.state.loggedInFriends;
+                let ind = clone.indexOf(who);
+                clone.splice(ind, 1);
+                console.log(`now the people who are left are ${clone}`);
+                // console.log(`before, clone of logged in friends is ${clone}`)
+                // console.log(`after, it's this filtered array:  ${clone.filter(each => each != who)}`)
+                // clone.filter(each => each != who);
+                this.setState({loggedInFriends: clone}, () => console.log(`state updated, loggedInfriends are now ${this.state.loggedInFriends}`));
+            }
         }
 
         const notifyOrAdd = (data) => {

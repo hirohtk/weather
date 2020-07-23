@@ -194,7 +194,7 @@ class App extends React.Component {
       })
     }
     else {
-      console.log(`logging out, emitting socket for leaveRoom`);
+      console.log(`logging out, emitting socket for leaveRoom, current userID is ${this.state.currentUser[1]}`);
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
       this.setState({ currentUser: [], loggedIn: false });
     }
