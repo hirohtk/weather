@@ -36,7 +36,7 @@ class App extends React.Component {
       friendImage: [],
       friendCurrentWeather: [],
     }
-
+    console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
   }
@@ -45,6 +45,7 @@ class App extends React.Component {
   componentDidMount() {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
+    console.log(`app.js loaded`)
   }
 
   getWeatherData = (forWho) => {
