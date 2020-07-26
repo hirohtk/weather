@@ -28,7 +28,7 @@ function CurrentWeather(props) {
                     </div>
 
                     <div className="tooltip">
-                        <span class="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind speed</span> is a fundamental atmospheric quantity caused by air moving from high to low pressure, usually due to changes in temperature.
+                        <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind speed</span> is a fundamental atmospheric quantity caused by air moving from high to low pressure, usually due to changes in temperature.
                         </span></span>
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">Wind Speed: </span> {props.weather[3]}mph</p>
                     </div>
