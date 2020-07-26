@@ -23,7 +23,7 @@ function CurrentWeather(props) {
                 <div className="weather-gradient"></div>
                 {/* <a class="btn tooltipped" data-position="bottom" data-tooltip="I am a tooltip">Hover me!</a> */}
                     <div className="tooltip">
-                        <span class="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Humidity</span> is the concentration of water vapour present in the air!</span></span>
+                        <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Humidity</span> is the concentration of water vapour present in the air!</span></span>
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">Humidity: </span> {props.weather[2]}%</p>
                     </div>
 

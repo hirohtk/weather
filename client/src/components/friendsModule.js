@@ -2,7 +2,7 @@ import React from 'react';
 import "./friendsmodule.css";
 import axios from "axios";
 import ChatModule from "./chatModule";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 class Friends extends React.Component {
 
@@ -20,6 +20,7 @@ class Friends extends React.Component {
             unread: [],
             messages: [],
             loggedInFriends: [],
+            searching: false,
         }
         
         // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
@@ -66,7 +67,7 @@ class Friends extends React.Component {
         })
 
         props.socket.on('leftRoom', function (data) {
-            console.log(`someone disconnected, and their id is ${data}`);
+            // console.log(`someone disconnected, and their id is ${data}`);
             friendLoginManager(data, false)
         })
 
@@ -83,11 +84,11 @@ class Friends extends React.Component {
                 let clone = this.state.loggedInFriends;
                 let ind = clone.indexOf(who);
                 clone.splice(ind, 1);
-                console.log(`now the people who are left are ${clone}`);
+                // console.log(`now the people who are left are ${clone}`);
                 // console.log(`before, clone of logged in friends is ${clone}`)
                 // console.log(`after, it's this filtered array:  ${clone.filter(each => each != who)}`)
                 // clone.filter(each => each != who);
-                this.setState({loggedInFriends: clone}, () => console.log(`state updated, loggedInfriends are now ${this.state.loggedInFriends}`));
+                this.setState({loggedInFriends: clone});
             }
         }
 
@@ -224,7 +225,7 @@ class Friends extends React.Component {
         if (action === "open" && !this.state.chat) {
             this.setState({ chat: true, chattingWith: username, chattingWithID: id, messages: [] }, () => {
                 this.props.provideFriendInfo(username, id);
-                console.log(`I am now chatting with ${this.state.chattingWith}`);
+                // console.log(`I am now chatting with ${this.state.chattingWith}`);
                 // console.log(`friendsModule.js: we are trying to make a new chatroom and your friend's id is ${id}, *** AND I AM ${this.props.currentUser[1]}`)
                 // 7/14/2020 with implementation of joinRoomsForSocket, may not need to call api again but use data locally if I decide to store it.
                 axios.put(`/api/getroom/${id}`, { user: this.props.currentUser[1] }).then(response => {
@@ -247,6 +248,8 @@ class Friends extends React.Component {
         else {
             this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID: "", messages: [] }, () => {
                 this.props.closeFriend();
+                // this below should refresh so the next person who logs in is not the same socket as the previous one, if this works.
+                this.props.socket.close();
             });
         }
     }

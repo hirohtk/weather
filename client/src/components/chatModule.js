@@ -1,7 +1,7 @@
 import React from 'react';
 import "./friendsmodule.css";
-import axios from "axios";
-import io from "socket.io-client";
+// import axios from "axios";
+// import io from "socket.io-client";
 import "./chatModule.css";
 
 class ChatModule extends React.Component {
