@@ -1,7 +1,7 @@
 import React from 'react';
 import "./extendedForecast.css"
 // import { PromiseProvider } from 'mongoose';
-import { colorLogic } from "./logic/colorLogic";
+// import { colorLogic } from "./logic/colorLogic";
 import { iconLogic } from "./logic/iconLogic";
 
 // Component is stateful yet receives props from App.js  
@@ -161,7 +161,7 @@ class ExtendedForecast extends React.Component {
                                 onMouseLeave={this.onMouseLeave}
                             >
                                 {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
-                                <svg id="svg" viewbox="0 0 2000 1000">
+                                <svg id="svg" viewBox="0 0 2000 1000">
     
                                     {/* SETUP TERNARY WITHIN SVG FOR Lines.  If either linedata is not there yet (getPointCoords hasn't had a chance
                                     to run), then don't render the lines.*/}
@@ -193,9 +193,9 @@ class ExtendedForecast extends React.Component {
                                     ))
                                     : this.state.forecastChosen === "extended" ?
                                         props.forecastResults.map((each, index) => (
-                                            <div className="col l3 forecastDayExtended">
+                                            <div className="col l3 forecastDayExtended" key={index}>
                                                 <h5 className="pClassNewFont">{each.dayOfWeek}</h5>
-                                                <h5 ClassName="pClassNewFont">{each.date}</h5>
+                                                <h5 className="pClassNewFont">{each.date}</h5>
                                                 <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
                                                 <p className="pNewFontSize">{each.condition}</p>
                                                 <span>{iconLogic(each.condition)}</span>

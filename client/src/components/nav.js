@@ -1,9 +1,9 @@
 import React from 'react';
 import "./nav.css"
-import $ from 'jquery'
+// import $ from 'jquery'
 // import Dropdown from 'react-dropdown';
 // import 'react-dropdown/style.css';
-import { PromiseProvider } from 'mongoose';
+// import { PromiseProvider } from 'mongoose';
 import Sidebar from "react-sidebar";
 import axios from "axios"
 import { ToastContainer, toast } from 'react-toastify';
@@ -113,11 +113,13 @@ class Nav extends React.Component {
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}
-          styles={{ sidebar: { background: "gray", width: "20rem", position: "fixed" } }}
+          styles={{ sidebar: { background: "gray", width: "20rem", position: "fixed" } }
+        }
+        children=""
         >
         </Sidebar>
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
-          <i class="material-icons">menu</i>
+          <i className="material-icons">menu</i>
         </button>
         {props.currentUser.length === 0 ? <></> :
           <span className="welcome">Welcome, {props.currentUser[0]}!</span>

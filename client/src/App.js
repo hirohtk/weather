@@ -8,7 +8,7 @@ import FriendsModule from "./components/friendsModule"
 import FriendWeather from "./components/friendWeather"
 import './App.css';
 import Axios from 'axios';
-import _ from 'underscore'
+// import _ from 'underscore'
 import moment from "moment";
 import io from "socket.io-client";
 
@@ -36,8 +36,8 @@ class App extends React.Component {
       friendImage: [],
       friendCurrentWeather: [],
     }
-
-    this.socket = io('https://immense-cove-75264.herokuapp.com/' || 'localhost:3001');
+    // console.log(`console logging inside the constructor of App.js`);
+    this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
   }
 
@@ -45,6 +45,7 @@ class App extends React.Component {
   componentDidMount() {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
+    // console.log(`app.js loaded`)
   }
 
   getWeatherData = (forWho) => {
@@ -63,7 +64,7 @@ class App extends React.Component {
           this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
         }
         else {
-          console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
+          // console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
           latitude = this.state.friendCoordinates[0];
           longitude = this.state.friendCoordinates[1];
           googleAPI(latitude, longitude);
@@ -194,8 +195,10 @@ class App extends React.Component {
       })
     }
     else {
-      console.log(`logging out, emitting socket for leaveRoom, current userID is ${this.state.currentUser[1]}`);
+      // console.log(`logging out, emitting socket for leaveRoom, current userID is ${this.state.currentUser[1]}`);
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
+      // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
+      this.props.socket.close();
       this.setState({ currentUser: [], loggedIn: false });
     }
   }
