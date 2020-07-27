@@ -161,7 +161,7 @@ class ExtendedForecast extends React.Component {
                                 onMouseLeave={this.onMouseLeave}
                             >
                                 {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
-                                <svg id="svg" viewBox="0 0 2000 1000">
+                                <svg id="svg" viewbox="0 0 2000 1000">
     
                                     {/* SETUP TERNARY WITHIN SVG FOR Lines.  If either linedata is not there yet (getPointCoords hasn't had a chance
                                     to run), then don't render the lines.*/}
