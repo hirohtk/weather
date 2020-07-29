@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   coordinates: {
     type: Array,
     required: true,
-  }
+  },
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

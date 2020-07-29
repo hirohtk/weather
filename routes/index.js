@@ -166,6 +166,10 @@ router.get(`/api/peopleinroom/:id`, function (req, res) {
   })
 })
 
+// router.put(`/api/hasunread/:id`, function (req, res) {
+//   db.Users.findByIdAndUpdate(req.params.id, {hasUnread: req.body.action}).then(response => res.json(response));
+// })
+
 // TAKEN CARE OF BY SOCKET
 // router.post(`api/sendmessage/:id`, function (req, res) {
 //   db.Message.create({message: req.body.message, author: req.body.author, chatroomID: req.body.chatroomID})

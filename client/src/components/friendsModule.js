@@ -18,6 +18,7 @@ class Friends extends React.Component {
             chattingWithID: "",
             chatroomID: "",
             unread: [],
+            offlineUnread: [],
             messages: [],
             loggedInFriends: [],
             searching: false,
@@ -96,7 +97,7 @@ class Friends extends React.Component {
             // console.log(`FORK INITIATED`)
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
             // therefore if the author was you or I, add to ongoing messages.  
-            if (this.state.chattingWith === data.author.username || this.props.currentUser[0] === data.author.username) {
+            if (this.state.chattingWith === data.author.id || this.props.currentUser[0] === data.author.id) {
                 addMessage(data)
             }
             else {
@@ -108,8 +109,16 @@ class Friends extends React.Component {
 
         const doNotify = (data) => {
             // You're not chatting with anyone but you got a new message
-            this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
+            this.setState({ unread: [...this.state.unread, { author: data.author.id, message: data.message}] }, () => {
                 // console.log(`unread messages are ${this.state.unread}`)
+
+                // X - If the socket is offline, this won't even run
+                // If the user is offline, set database field to unread
+                    // Even if they are online, still do this
+                // When the user comes back online and clicks on you, dismiss the unread 
+                // axios.put(`/api/hasunread/${data.author.id}`, {unreadFrom: data.author.id}).then(response => console.log(response))
+
+                // Maybe handle from the socket side?  If sending to a room where there aren't two sockets?
             });
 
         }
