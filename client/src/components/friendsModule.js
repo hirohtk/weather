@@ -213,8 +213,10 @@ class Friends extends React.Component {
         window.removeEventListener('beforeunload', this.hardDisconnect())
     }
 
-    hardDisconnect = () => this.props.socket.emit(`leaveRoom`, this.props.currentUser[1])
-
+    hardDisconnect = () => {
+        this.props.socket.emit(`leaveRoom`, this.props.currentUser[1])
+        // do not need hard disconnect (socket.disconnect) here- already have it in app.js
+    }
     loadChatHistory = (chatroom) => {
         axios.get(`/api/chathistory/${chatroom}`).then(response => {
             this.setState({ messages: response.data.messages });
@@ -248,8 +250,6 @@ class Friends extends React.Component {
         else {
             this.setState({ chat: false, chattingWith: "", chattingWithID: "", chatroomID: "", messages: [] }, () => {
                 this.props.closeFriend();
-                // this below should refresh so the next person who logs in is not the same socket as the previous one, if this works.
-                this.props.socket.close();
             });
         }
     }

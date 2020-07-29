@@ -18,7 +18,6 @@ const connectEnsureLogin = require("connect-ensure-login");
 
 router.post("/api/login", (req, res, next) => {
   /* PASSPORT LOCAL AUTHENTICATION */
-  console.log(`trying to login`)
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       return next(err);
@@ -26,7 +25,7 @@ router.post("/api/login", (req, res, next) => {
 
     // authentication failure:
     if (!user) {
-      console.log("failure")
+      console.log("login failure")
       return res.json("Failure")
       // return res.redirect('/login?info=' + info);
     }
@@ -35,7 +34,6 @@ router.post("/api/login", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      console.log("success!")
       return res.json({username: user.username, id: user._id})
       // return res.redirect('/');
     });
@@ -44,7 +42,6 @@ router.post("/api/login", (req, res, next) => {
 });
 
 router.post("/api/register", function (req, res) {
-  console.log("register route")
   console.log(req.body);
   console.log(req.body.username)
   db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
@@ -61,7 +58,7 @@ router.post("/api/register", function (req, res) {
 
 router.get("/api/googleplaces/:place", function (req, res) {
   let loc = req.params.place
-  console.log(`serverside loc is ${loc}`)
+  // console.log(`serverside loc is ${loc}`)
   axios.get(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${loc}&inputtype=textquery&fields=photos&key=${apiKey}`).then(response => {
     // console.log(response.data);
     let photoRef = response.data.candidates[0].photos[0].photo_reference;
@@ -73,16 +70,16 @@ router.get("/api/googleplaces/:place", function (req, res) {
 })
 
 router.get("/api/loadfriends/:id", function (req, res) {
-  console.log(`req.params.id is ${req.params.id} which should be me`)
+  // console.log(`req.params.id is ${req.params.id} which should be me`)
   db.FriendsList.find({userID: req.params.id}).populate("friends").then(response => {
-  console.log(`friends for this person are ${response}`);
+  // console.log(`friends for this person are ${response}`);
   // response.friends is an array
     res.json(response);
   })
 })
 
 router.get("/api/allusers/:user", function (req, res) {
-  console.log(`finding user by username ${req.params.user}`);
+  // console.log(`finding user by username ${req.params.user}`);
   db.Users.find({username: req.params.user}).then(response => {
     console.log(response)
     res.json(response);
@@ -155,16 +152,16 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
 })
 
 router.get(`/api/chathistory/:id`, function (req, res) {
-  console.log(`FINDING CHATROOM BY ID ${req.params.id}`)
+  // console.log(`FINDING CHATROOM BY ID ${req.params.id}`)
   db.Chatroom.findById(req.params.id).populate({path: "messages", model: "Messages", populate: {path: "author", model: "Users"}}).then(response => {
-   console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
+  //  console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
     res.json(response)});
 })
 
 router.get(`/api/peopleinroom/:id`, function (req, res) {
-  console.log(`*** GETTIG PEOPLE IN THIS CHAT ROOM BY THEIR ID's`)
+  // console.log(`*** GETTIG PEOPLE IN THIS CHAT ROOM BY THEIR ID's`)
   db.Chatroom.findById(req.params.id).populate("people").then(response => {
-    console.log(`response from this is ${response}`)
+    // console.log(`response from this is ${response}`)
     res.json(response);
   })
 })
