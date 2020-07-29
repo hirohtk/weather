@@ -199,6 +199,7 @@ class App extends React.Component {
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
       this.socket.close();
+      this.socket.open();
       this.setState({ currentUser: [], loggedIn: false });
     }
   }
