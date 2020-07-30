@@ -18,9 +18,9 @@ class Friends extends React.Component {
             chattingWithID: "",
             chatroomID: "",
             unread: [],
-            offlineUnread: [],
             messages: [],
             loggedInFriends: [],
+            loggedinRooms: [],
             searching: false,
         }
         
@@ -33,6 +33,7 @@ class Friends extends React.Component {
         });
 
         props.socket.on('roomJoined', function (data) {
+            let room = data.room;
             // console.log(`${data.who} joined room which is: ${data.room}`);
             // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
             // from https://stackoverflow.com/questions/5223/length-of-a-javascript-object, this is similar .length for arrays, but for objects
@@ -43,7 +44,7 @@ class Friends extends React.Component {
                 if (data.who != defineProps()) {
                 // If someone connected while you're online, make sure the user who connected to this room isn't you
                     // then add this person's ID to those who are loggedIn
-                    friendLoginManager(data.who, true)
+                    friendLoginManager(data.who, true, room)
                 }
                 else {
                     // If you are the one that connected, but your friend is already connected...  
@@ -61,7 +62,7 @@ class Friends extends React.Component {
                             }
                         }
                         let who = response.data.people[index]._id;
-                        friendLoginManager(who, true);
+                        friendLoginManager(who, true, room);
                     })
                 }
             }
@@ -76,20 +77,32 @@ class Friends extends React.Component {
             return this.props.currentUser[1]
         }
 
-        const friendLoginManager = (who, login) => {
+        const friendLoginManager = (who, login, room) => {
             if (login) {
-                this.setState({loggedInFriends: [...this.state.loggedInFriends, who]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
+                // Log in this friend in your view
+                this.setState(
+                    {loggedInFriends: [...this.state.loggedInFriends, who]},
+                    // association of which room belongs to who is here
+                    {loggedInRooms: [...this.state.loggedInRooms, {room: room, who: who}]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
             }
             else {
+                // Log out this friend in your view
+
                 // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
-                let clone = this.state.loggedInFriends;
+                let cloneForLoggedInFriends = this.state.loggedInFriends;
                 let ind = clone.indexOf(who);
-                clone.splice(ind, 1);
-                // console.log(`now the people who are left are ${clone}`);
-                // console.log(`before, clone of logged in friends is ${clone}`)
-                // console.log(`after, it's this filtered array:  ${clone.filter(each => each != who)}`)
-                // clone.filter(each => each != who);
-                this.setState({loggedInFriends: clone});
+                cloneForLoggedInFriends.splice(ind, 1);
+
+                // since the loggedInRooms has a room number and a "who", make new array just containing the who so I can find where to splice
+                let cloneForLoggedInRooms = this.state.loggedInRooms;
+                let arr = [];
+                for (let i = 0; i < cloneForLoggedInRooms.length; i++) {
+                    arr.push(cloneForLoggedInRooms[i].who);
+                }
+                let ind = arr.indexOf(who);
+                cloneForLoggedInRooms.splice(ind, 1);
+
+                this.setState({loggedInFriends: cloneForLoggedInFriends, loggedInRooms: cloneForLoggedInRooms});
             }
         }
 
@@ -277,6 +290,7 @@ class Friends extends React.Component {
                             chatroomName={this.state.chatroomName}
                             socket={this.props.socket}
                             messages={this.state.messages}
+                            loggedInRooms={this.state.loggedInRooms}
                         >
                         </ChatModule>
                         :
