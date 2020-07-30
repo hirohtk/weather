@@ -20,7 +20,7 @@ class Friends extends React.Component {
             unread: [],
             messages: [],
             loggedInFriends: [],
-            loggedinRooms: [],
+            loggedInRooms: [],
             searching: false,
         }
         
@@ -80,18 +80,18 @@ class Friends extends React.Component {
         const friendLoginManager = (who, login, room) => {
             if (login) {
                 // Log in this friend in your view
+                // association of which room belongs to who is here
                 this.setState(
-                    {loggedInFriends: [...this.state.loggedInFriends, who]},
-                    // association of which room belongs to who is here
-                    {loggedInRooms: [...this.state.loggedInRooms, {room: room, who: who}]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
+                    {loggedInFriends: [...this.state.loggedInFriends, who],
+                    loggedInRooms: [...this.state.loggedInRooms, {room: room, who: who}]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
             }
             else {
                 // Log out this friend in your view
 
                 // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
                 let cloneForLoggedInFriends = this.state.loggedInFriends;
-                let ind = clone.indexOf(who);
-                cloneForLoggedInFriends.splice(ind, 1);
+                let a = cloneForLoggedInFriends.indexOf(who);
+                cloneForLoggedInFriends.splice(a, 1);
 
                 // since the loggedInRooms has a room number and a "who", make new array just containing the who so I can find where to splice
                 let cloneForLoggedInRooms = this.state.loggedInRooms;
@@ -99,18 +99,19 @@ class Friends extends React.Component {
                 for (let i = 0; i < cloneForLoggedInRooms.length; i++) {
                     arr.push(cloneForLoggedInRooms[i].who);
                 }
-                let ind = arr.indexOf(who);
-                cloneForLoggedInRooms.splice(ind, 1);
+                let b = arr.indexOf(who);
+                cloneForLoggedInRooms.splice(b, 1);
 
                 this.setState({loggedInFriends: cloneForLoggedInFriends, loggedInRooms: cloneForLoggedInRooms});
             }
         }
 
         const notifyOrAdd = (data) => {
-            // console.log(`FORK INITIATED`)
+            console.log(`NEW MESSAGE CAME IN from ${data.author.username}, I am chatting with ${this.state.chattingWith}`);
+            console.log(`I am ${this.props.currentUser[0]}`);
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
             // therefore if the author was you or I, add to ongoing messages.  
-            if (this.state.chattingWith === data.author.id || this.props.currentUser[0] === data.author.id) {
+            if (this.state.chattingWith === data.author.username || this.props.currentUser[0] === data.author.username) {
                 addMessage(data)
             }
             else {
@@ -121,8 +122,9 @@ class Friends extends React.Component {
         }
 
         const doNotify = (data) => {
+            console.log(`NOTIFYING MESSAGES ${data}`);
             // You're not chatting with anyone but you got a new message
-            this.setState({ unread: [...this.state.unread, { author: data.author.id, message: data.message}] }, () => {
+            this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message}] }, () => {
                 // console.log(`unread messages are ${this.state.unread}`)
 
                 // X - If the socket is offline, this won't even run
@@ -137,7 +139,7 @@ class Friends extends React.Component {
         }
 
         const addMessage = data => {
-            console.log(data);
+            console.log(`ADDING MESSAGES, JSON STRINGIFYING.  NOTE YOU HAVE TO USE THIS IN CHATMODULE ${JSON.stringify(data)}`);
             this.setState({ messages: [...this.state.messages, data] });
         };
     }
