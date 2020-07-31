@@ -18,6 +18,7 @@ const ChatroomSchema = new Schema({
     }],
     offlineUnread: {
         type: String,
+        default: ""
     }
 });
 

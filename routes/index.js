@@ -166,6 +166,10 @@ router.get(`/api/peopleinroom/:id`, function (req, res) {
   })
 })
 
+router.put(`api/clearofflineunread/:id`), function (req, res) {
+  db.Chatroom.findByIdAndUpdate(req.params.id, {$set: {offlineUnread : ""}}).then(response => res.json(response))
+}
+
 // router.put(`/api/hasunread/:id`, function (req, res) {
 //   db.Users.findByIdAndUpdate(req.params.id, {hasUnread: req.body.action}).then(response => res.json(response));
 // })
