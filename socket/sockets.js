@@ -23,7 +23,20 @@ module.exports = function (io) {
 
             // ORM/ODM STUFF.  Finding database that the chatroom is associated with, then posting new message to it in 
             // as middleware between socket receiving message and emitting it
-            const chatRoom = await db.Chatroom.find({ name: chatroomName });
+
+            if (data.sendingOffline) {
+                let messageIntendedFor;
+                db.Chatroom.findOne({name: chatroomName}).then(response => {
+                    let peopleInRoom = [];
+                    peopleInRoom = response.people;
+                    let ind = peopleInRoom.indexOf(author);
+                    messageIntendedFor = peopleInRoom.splice(ind, 1);
+                })
+                const chatRoom = await db.Chatroom.findOneAndUpdate({ name: chatroomName }, {$set: {offlineUnread: messageIntendedFor}});
+            }
+            else {
+                const chatRoom = await db.Chatroom.find({ name: chatroomName });
+            }
 
             const chatRoomID = chatRoom[0]._id;
 
