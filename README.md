@@ -9,7 +9,7 @@ in a new dynamic by view real-time weather data wherever users are around the wo
 **Main Features**: 
 - Geolocation and Google Places API for user coordinate updating and storage to database
 - Hourly and 4-day forecast weather with graph for rain probability
-- Real-time chat with websockets
+- Real-time friend weather status and chat with websockets
 
 **Major technologies used**:  
 - React JS
