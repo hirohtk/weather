@@ -94,7 +94,7 @@ class Nav extends React.Component {
     return (
       <>
         <Sidebar
-          sidebar={<><b>Settings</b>
+          sidebar={<><b>FriendForecast App - Settings</b>
             <hr></hr>
             <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}}
               onClick={() => {

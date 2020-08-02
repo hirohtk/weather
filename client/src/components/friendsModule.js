@@ -159,9 +159,14 @@ class Friends extends React.Component {
                     let whoSentWhileYouWereOffline;
                     let peopleInRoom = [];
                     peopleInRoom = response.data.people;
+                    console.log(`people in room are ${peopleInRoom}`);
                     let ind = peopleInRoom.indexOf(this.props.currentUser[1]);
-                    whoSentWhileYouWereOffline = peopleInRoom.splice(ind, 1).toString();
-                    this.setState({offlineSenders: [...this.state.offlineSenders, whoSentWhileYouWereOffline]});
+                    peopleInRoom.splice(ind, 1);
+                    whoSentWhileYouWereOffline = peopleInRoom.toString()
+                    console.log(`this is who sent to you while you were offline ${whoSentWhileYouWereOffline}`)
+                    this.setState({offlineSenders: [...this.state.offlineSenders, whoSentWhileYouWereOffline]}, ()=> {
+                        console.log(this.state.friendsList);
+                    });
                 }
             })
         }
@@ -272,7 +277,7 @@ class Friends extends React.Component {
                     });
                     // this filters the unread array and returns an array with other people who you haven't read yet.
                     this.setState(state => ({ unread: state.unread.filter(each => each.author != username) }))
-                    this.setState(state => ({ offlineSenders: state.offlineSenders.filter(each => each != username) }), () => {
+                    this.setState(state => ({ offlineSenders: state.offlineSenders.filter(each => each != id) }), () => {
                         axios.put(`/api/clearofflineunread/${response.data._id}`);
                     })
 
@@ -327,7 +332,7 @@ class Friends extends React.Component {
                                             {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
                                             {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
-                                            {this.state.offlineSenders.filter((who) => who === each.username).some((heh) => heh === each.username) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
+                                            {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
                                             <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                                     ))}
