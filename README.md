@@ -1,4 +1,4 @@
-# Weather App (Working Title) *last readme edit: 7/26/2020*
+FriendForecast *last readme edit: 7/26/2020*
 
 Real-time weather data combines with social media to create deeper connections.  
 See the working application here: https://immense-cove-75264.herokuapp.com/.
