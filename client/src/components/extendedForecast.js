@@ -125,7 +125,7 @@ class ExtendedForecast extends React.Component {
     componentDidMount() {
         setTimeout(() => {
             this.getPointCoords("extended");
-        }, 2000);
+        }, 3000);
     }
 
     render() {

@@ -24,7 +24,7 @@ class Friends extends React.Component {
             searching: false,
             offlineSenders: []
         }
-        
+
         // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
         props.socket.on('newMessage', function (data) {
@@ -43,7 +43,7 @@ class Friends extends React.Component {
             // if there is more than one person connected to this room
             if (numConnected > 1) {
                 if (data.who != defineProps()) {
-                // If someone connected while you're online, make sure the user who connected to this room isn't you
+                    // If someone connected while you're online, make sure the user who connected to this room isn't you
                     // then add this person's ID to those who are loggedIn
                     friendLoginManager(data.who, true, room)
                 }
@@ -83,27 +83,30 @@ class Friends extends React.Component {
                 // Log in this friend in your view
                 // association of which room belongs to who is here
                 this.setState(
-                    {loggedInFriends: [...this.state.loggedInFriends, who],
-                    loggedInRooms: [...this.state.loggedInRooms, {room: room, who: who}]}, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
+                    {
+                        loggedInFriends: [...this.state.loggedInFriends, who],
+                        loggedInRooms: [...this.state.loggedInRooms, { room: room, who: who }]
+                    }, () => console.log(`loggedInfriends are now ${this.state.loggedInFriends}`));
             }
             else {
                 // Log out this friend in your view
+                if (who != null) {
+                    // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
+                    let cloneForLoggedInFriends = this.state.loggedInFriends;
+                    let a = cloneForLoggedInFriends.indexOf(who);
+                    cloneForLoggedInFriends.splice(a, 1);
 
-                // not mutating state directly, but rather creating a clone then filtering out the person who logged out, returning a new array
-                let cloneForLoggedInFriends = this.state.loggedInFriends;
-                let a = cloneForLoggedInFriends.indexOf(who);
-                cloneForLoggedInFriends.splice(a, 1);
+                    // since the loggedInRooms has a room number and a "who", make new array just containing the who so I can find where to splice
+                    let cloneForLoggedInRooms = this.state.loggedInRooms;
+                    let arr = [];
+                    for (let i = 0; i < cloneForLoggedInRooms.length; i++) {
+                        arr.push(cloneForLoggedInRooms[i].who);
+                    }
+                    let b = arr.indexOf(who);
+                    cloneForLoggedInRooms.splice(b, 1);
 
-                // since the loggedInRooms has a room number and a "who", make new array just containing the who so I can find where to splice
-                let cloneForLoggedInRooms = this.state.loggedInRooms;
-                let arr = [];
-                for (let i = 0; i < cloneForLoggedInRooms.length; i++) {
-                    arr.push(cloneForLoggedInRooms[i].who);
+                    this.setState({ loggedInFriends: cloneForLoggedInFriends, loggedInRooms: cloneForLoggedInRooms });
                 }
-                let b = arr.indexOf(who);
-                cloneForLoggedInRooms.splice(b, 1);
-
-                this.setState({loggedInFriends: cloneForLoggedInFriends, loggedInRooms: cloneForLoggedInRooms});
             }
         }
 
@@ -125,12 +128,12 @@ class Friends extends React.Component {
         const doNotify = (data) => {
             // console.log(`NOTIFYING MESSAGES ${data}`);
             // You're not chatting with anyone but you got a new message
-            this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message}] }, () => {
+            this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message }] }, () => {
                 // console.log(`unread messages are ${this.state.unread}`)
 
                 // X - If the socket is offline, this won't even run
                 // If the user is offline, set database field to unread
-                    // Even if they are online, still do this
+                // Even if they are online, still do this
                 // When the user comes back online and clicks on you, dismiss the unread 
                 // axios.put(`/api/hasunread/${data.author.id}`, {unreadFrom: data.author.id}).then(response => console.log(response))
 
@@ -153,7 +156,7 @@ class Friends extends React.Component {
             // FOR EACH OF YOUR FRIENDS, RUN THIS ROUTE WHICH RETURNS THE ID OF THE CHATROOM BETWEEN YOU AND YOUR FRIEND
             axios.put(`/api/getroom/${this.state.friendsList[i]._id}`, { user: this.props.currentUser[1] }).then(response => {
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
-                let test = {id: this.props.currentUser[1]}
+                let test = { id: this.props.currentUser[1] }
                 this.props.socket.emit("join", response.data._id, test);
                 // console.log(`you are ${this.props.currentUser[1]}. response here should include offlineUnread (and you) ${JSON.stringify(response.data)}`)
                 if (response.data.offlineUnread.includes(this.props.currentUser[1])) {
@@ -166,7 +169,7 @@ class Friends extends React.Component {
                     peopleInRoom.splice(ind, 1);
                     whoSentWhileYouWereOffline = peopleInRoom.toString()
                     // console.log(`this is who sent to you while you were offline ${whoSentWhileYouWereOffline}`)
-                    this.setState({offlineSenders: [...this.state.offlineSenders, whoSentWhileYouWereOffline]}, ()=> {
+                    this.setState({ offlineSenders: [...this.state.offlineSenders, whoSentWhileYouWereOffline] }, () => {
                         console.log(this.state.friendsList);
                     });
                 }
@@ -179,13 +182,13 @@ class Friends extends React.Component {
     searchHandler = () => {
 
         if (this.state.searchTerm.length === 0) {
-            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null}], searching: true, searchTerm: ""  })
+            this.setState({ friendResults: [{ username: "No results- input is blank.", id: null }], searching: true, searchTerm: "" })
         }
         else if (this.state.searchTerm === this.props.currentUser[0]) {
-            this.setState({ friendResults: [{ username: "Can't add yourself.", id: null}], searching: true, searchTerm: ""  })
+            this.setState({ friendResults: [{ username: "Can't add yourself.", id: null }], searching: true, searchTerm: "" })
         }
         else if (this.state.friendsList.filter((each) => each.username === this.state.searchTerm).some(each => each.username === this.state.searchTerm)) {
-            this.setState({ friendResults: [{ username: "Friend already added!", id: null}], searching: true, searchTerm: ""  })
+            this.setState({ friendResults: [{ username: "Friend already added!", id: null }], searching: true, searchTerm: "" })
         }
         else {
             axios.get(`/api/allusers/${this.state.searchTerm}`).then(response => {

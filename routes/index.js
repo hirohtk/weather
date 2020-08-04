@@ -50,7 +50,7 @@ router.post("/api/register", function (req, res) {
       res.json(err);
     }
     else {
-      console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
+      // console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
       db.FriendsList.create({userID: response._id}).then(() => res.json({name: response.username}));
     }
   });
@@ -167,9 +167,7 @@ router.get(`/api/peopleinroom/:id`, function (req, res) {
 })
 
 router.put(`/api/clearofflineunread/:id`, function (req, res) {
-  console.log(`clearning offlineUnread from chatroom ${req.params.id}`);
   db.Chatroom.findByIdAndUpdate(req.params.id, {$set: {offlineUnread : ""}}).then(response => {
-    console.log(`response from setting offlineUnread in this chatroom is ${response}`)
     res.json(response)
   })
 });
