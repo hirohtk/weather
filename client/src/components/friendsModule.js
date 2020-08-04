@@ -155,17 +155,17 @@ class Friends extends React.Component {
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
                 let test = {id: this.props.currentUser[1]}
                 this.props.socket.emit("join", response.data._id, test);
-                console.log(`you are ${this.props.currentUser[1]}. response here should include offlineUnread (and you) ${JSON.stringify(response.data)}`)
+                // console.log(`you are ${this.props.currentUser[1]}. response here should include offlineUnread (and you) ${JSON.stringify(response.data)}`)
                 if (response.data.offlineUnread.includes(this.props.currentUser[1])) {
-                    console.log(`response.data.offlineUnread includes this person`)
+                    // console.log(`response.data.offlineUnread includes this person`)
                     let whoSentWhileYouWereOffline;
                     let peopleInRoom = [];
                     peopleInRoom = response.data.people;
-                    console.log(`people in room are ${peopleInRoom}`);
+                    // console.log(`people in room are ${peopleInRoom}`);
                     let ind = peopleInRoom.indexOf(this.props.currentUser[1]);
                     peopleInRoom.splice(ind, 1);
                     whoSentWhileYouWereOffline = peopleInRoom.toString()
-                    console.log(`this is who sent to you while you were offline ${whoSentWhileYouWereOffline}`)
+                    // console.log(`this is who sent to you while you were offline ${whoSentWhileYouWereOffline}`)
                     this.setState({offlineSenders: [...this.state.offlineSenders, whoSentWhileYouWereOffline]}, ()=> {
                         console.log(this.state.friendsList);
                     });
@@ -280,9 +280,10 @@ class Friends extends React.Component {
                     // this filters the unread array and returns an array with other people who you haven't read yet.
                     this.setState(state => ({ unread: state.unread.filter(each => each.author != username) }))
                     if (this.state.offlineSenders.includes(id)) {
+                        console.log(`route for clearing the offline unread triggered`)
                         this.setState(state => ({ offlineSenders: state.offlineSenders.filter(each => each != id) }), () => {
                             // no req.body below because I'm simply clearing the offlineSender in the route
-                            axios.put(`/api/clearofflineunread/${response.data._id}`);
+                            axios.put(`/api/clearofflineunread/${response.data._id}`).then(response => console.log(response.data));
                         })
                     }
                 })
