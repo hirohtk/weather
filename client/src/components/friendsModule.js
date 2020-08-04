@@ -108,8 +108,8 @@ class Friends extends React.Component {
         }
 
         const notifyOrAdd = (data) => {
-            console.log(`NEW MESSAGE CAME IN from ${data.author.username}, I am chatting with ${this.state.chattingWith}`);
-            console.log(`I am ${this.props.currentUser[0]}`);
+            // console.log(`NEW MESSAGE CAME IN from ${data.author.username}, I am chatting with ${this.state.chattingWith}`);
+            // console.log(`I am ${this.props.currentUser[0]}`);
             // We're in the same room, and whether or not you or I send a message, socket broadcasts it.  
             // therefore if the author was you or I, add to ongoing messages.  
             if (this.state.chattingWith === data.author.username || this.props.currentUser[0] === data.author.username) {
@@ -123,7 +123,7 @@ class Friends extends React.Component {
         }
 
         const doNotify = (data) => {
-            console.log(`NOTIFYING MESSAGES ${data}`);
+            // console.log(`NOTIFYING MESSAGES ${data}`);
             // You're not chatting with anyone but you got a new message
             this.setState({ unread: [...this.state.unread, { author: data.author.username, message: data.message}] }, () => {
                 // console.log(`unread messages are ${this.state.unread}`)
@@ -140,7 +140,7 @@ class Friends extends React.Component {
         }
 
         const addMessage = data => {
-            console.log(`ADDING MESSAGES, JSON STRINGIFYING.  NOTE YOU HAVE TO USE THIS IN CHATMODULE ${JSON.stringify(data)}`);
+            // console.log(`ADDING MESSAGES, JSON STRINGIFYING.  NOTE YOU HAVE TO USE THIS IN CHATMODULE ${JSON.stringify(data)}`);
             this.setState({ messages: [...this.state.messages, data] });
         };
     }
@@ -155,7 +155,9 @@ class Friends extends React.Component {
                 // THEN JOIN EACH CHAT ROOM SO YOU CAN RECEIVE MESSAGES RIGHT OFF THE BAT
                 let test = {id: this.props.currentUser[1]}
                 this.props.socket.emit("join", response.data._id, test);
+                console.log(`you are ${this.props.currentUser[1]}. response here should include offlineUnread (and you) ${JSON.stringify(response.data)}`)
                 if (response.data.offlineUnread.includes(this.props.currentUser[1])) {
+                    console.log(`response.data.offlineUnread includes this person`)
                     let whoSentWhileYouWereOffline;
                     let peopleInRoom = [];
                     peopleInRoom = response.data.people;
@@ -277,10 +279,12 @@ class Friends extends React.Component {
                     });
                     // this filters the unread array and returns an array with other people who you haven't read yet.
                     this.setState(state => ({ unread: state.unread.filter(each => each.author != username) }))
-                    this.setState(state => ({ offlineSenders: state.offlineSenders.filter(each => each != id) }), () => {
-                        axios.put(`/api/clearofflineunread/${response.data._id}`);
-                    })
-
+                    if (this.state.offlineSenders.includes(id)) {
+                        this.setState(state => ({ offlineSenders: state.offlineSenders.filter(each => each != id) }), () => {
+                            // no req.body below because I'm simply clearing the offlineSender in the route
+                            axios.put(`/api/clearofflineunread/${response.data._id}`);
+                        })
+                    }
                 })
             });
         }

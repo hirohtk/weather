@@ -21,24 +21,10 @@ module.exports = function (io) {
             console.log(`IS THIS PERSON SENDING A MESSAGE TO AN OFFLINE PERSON? ====> ${data.sendingOffline}`);
             const { chatroomName, author, message } = data;
 
+            console.log(`***author of the message is ${author}`)
+
             // ORM/ODM STUFF.  Finding database that the chatroom is associated with, then posting new message to it in 
             // as middleware between socket receiving message and emitting it
-
-            let messageIntendedFor;
-            if (data.sendingOffline) {
-                db.Chatroom.findOne({name: chatroomName}).then(response => {
-                    let peopleInRoom = [];
-                    peopleInRoom = response.people;
-                    let ind = peopleInRoom.indexOf(author);
-                    messageIntendedFor = peopleInRoom.splice(ind, 1).toString();
-                    doTheRest(messageIntendedFor);
-                })
-            }
-            else {
-                messageIntendedFor = "";
-                doTheRest(messageIntendedFor);
-            }
-
             let doTheRest = async (messageIntendedFor) => {
                 const chatRoom = await db.Chatroom.findOneAndUpdate({ name: chatroomName }, {$set: {offlineUnread: messageIntendedFor}});
                 console.log(`THIS IS CHATROOM RESPONSE ${chatRoom}`);
@@ -68,6 +54,25 @@ module.exports = function (io) {
                 const newObj = { message: chatMessage.message, author: {username: userName.username}, chatroomID: chatRoomID };
                 // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
                 io.to(chatRoomID).emit("newMessage", newObj);
+            }
+
+            let messageIntendedFor;
+            if (data.sendingOffline) {
+                db.Chatroom.findOne({name: chatroomName}).then(response => {
+                    let peopleInRoom = [];
+                    peopleInRoom = response.people;
+                    console.log(`people in room are ${peopleInRoom}`)
+                    let ind = peopleInRoom.indexOf(author);
+                    console.log(`index has found that you are index ${ind} `);
+                    // remember, SPLICE changes the original array.  If you set another variable to the splice operation, you get what's taken out
+                    peopleInRoom.splice(ind, 1);
+                    let messageIntendedFor = peopleInRoom.toString()
+                    doTheRest(messageIntendedFor);
+                })
+            }
+            else {
+                messageIntendedFor = "";
+                doTheRest(messageIntendedFor);
             }
         });
 
