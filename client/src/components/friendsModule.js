@@ -225,7 +225,10 @@ class Friends extends React.Component {
     }
 
     addFriend = (id) => {
+        console.log(`*** BUG SHOULD BE HERE- ADDING FRIEND with ID of ${id}`);
+        console.log(`*** right here, it seems that this.props.currentUser[1] is my password ${this.props.currentUser[1]}`)
         axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1] }).then(response => {
+            console.log(`*** ROUTE WORKED, ADDED USER, RESPONSE IS ${JSON.stringify(response)}`);
             this.loadFriends();
         });
     };

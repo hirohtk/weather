@@ -80,7 +80,7 @@ class Nav extends React.Component {
             toast.info(`${credentials.username} is now registered!`);
             setTimeout(() => {
               toast.success(`Logged you in...!`);
-              this.props.handleLogin({ username: credentials.username, id: credentials.password }, "login", () => this.setState({ registering: false, username: "", password: "", enteringCredentials: false }));
+              this.props.handleLogin({ username: credentials.username, id: response.data.id }, "login", () => this.setState({ registering: false, username: "", password: "", enteringCredentials: false }));
             }, 1000);
             // GRAB USER DETAILS -- response.data is the username
           }
