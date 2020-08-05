@@ -37,8 +37,7 @@ class App extends React.Component {
       friendCurrentWeather: [],
     }
     // console.log(`console logging inside the constructor of App.js`);
-    this.socket = io('localhost:3001' || 'https://immense-cove-75264.herokuapp.com/');
-
+    this.socket = io('https://immense-cove-75264.herokuapp.com/');
   }
 
 
