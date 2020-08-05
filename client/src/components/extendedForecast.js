@@ -65,11 +65,11 @@ class ExtendedForecast extends React.Component {
             this.setState({ forecastChosen: "hourly", lineData: [] }, () => {
                 // console.log(`changing forecast to hourly, I should see some refs here because that's what pointcoords is using ${this.locationRefsHourly}`);
                 this.getPointCoords("hourly");
-        });
-            
+            });
+
         }
         else if (event.target.dataset.name === "fiveDay") {
-            this.setState({ forecastChosen: "extended", lineData: []}, () => {
+            this.setState({ forecastChosen: "extended", lineData: [] }, () => {
                 this.getPointCoords("extended");
                 // console.log(`changing forecast to extended, I should see some refs here because that's what pointcoords is using ${this.locationRefsExtended}`)
             });
@@ -102,28 +102,30 @@ class ExtendedForecast extends React.Component {
             let rect = references[i].getBoundingClientRect();
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
             console.log(rect.top, rect.right, rect.bottom, rect.left);
-            let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left + 2};
+            let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left + 2 };
             coordinateArray.push(obj);
         }
         console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
-        this.setState({lineData: coordinateArray});
+        this.setState({ lineData: coordinateArray });
     }
 
     handleHover = (event) => {
         if (this.state.forecastButtonHovered != undefined) {
-          this.setState({ forecastButtonHovered: undefined });
+            this.setState({ forecastButtonHovered: undefined });
         }
         else if (event.target.dataset.name === "hourly") {
-          this.setState({ forecastButtonHovered: "hourly" });
+            this.setState({ forecastButtonHovered: "hourly" });
         }
         else if (event.target.dataset.name === "fiveDay") {
-          this.setState({ forecastButtonHovered: "fiveDay" });
+            this.setState({ forecastButtonHovered: "fiveDay" });
         }
         return;
-      }
+    }
 
     componentDidMount() {
-        // console.log(`extended forecast component loaded`)
+        setTimeout(() => {
+            this.getPointCoords("extended");
+        }, 3000);
     }
 
     render() {
@@ -134,84 +136,84 @@ class ExtendedForecast extends React.Component {
                     <h5 className="pClassNewFont">Extended Forecast</h5>
                     {/* <div className="forecastBox"> */}
                     <div className="weather-gradient"></div>
-                        <div className="row">
-                            <div id="forecastOptions" className="whiteText">
-                                <div className="col l6">
-                                    <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
-                                        onMouseEnter={props.handleHover}
-                                        onMouseLeave={props.handleHover}>
-                                        Hourly
-                                </div>
-                                </div>
-                                <div className="col l6">
-                                    <div className={this.state.forecastButtonHovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
-                                        onMouseEnter={props.handleHover}
-                                        onMouseLeave={props.handleHover}>
-                                        4 Day
-                                </div>
+                    <div className="row">
+                        <div id="forecastOptions" className="whiteText">
+                            <div className="col l6">
+                                <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
+                                    onMouseEnter={props.handleHover}
+                                    onMouseLeave={props.handleHover}>
+                                    Hourly
                                 </div>
                             </div>
-                        </div>
-                        <div className="row" ref={this.parentRef} id="test">
-                            <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
-                                ref={this.ref}
-                                onMouseDown={this.onMouseDown}
-                                onMouseUp={this.onMouseUp}
-                                onMouseMove={this.onMouseMove}
-                                onMouseLeave={this.onMouseLeave}
-                            >
-                                {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
-                                <svg id="svg" viewbox="0 0 2000 1000">
-    
-                                    {/* SETUP TERNARY WITHIN SVG FOR Lines.  If either linedata is not there yet (getPointCoords hasn't had a chance
-                                    to run), then don't render the lines.*/}
-                                    {this.state.lineData.length === 0 ? <></> : this.state.forecastChosen === "hourly" ?  props.hourlyResults.map((each, index) => (
-                                            index < props.hourlyResults.length - 1 ?
-                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
-                                                : <></>
-                                        )) : props.forecastResults.map((each, index) => (
-                                            index < props.forecastResults.length - 1 ?
-                                                <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
-                                                : <></>
-                                        
-                                        ))}
-                                </svg>
-                                {this.state.forecastChosen === "hourly" ?
-                                    props.hourlyResults.map((each, index) => (
-                                        <div className="forecastDayHourly">
-                                            <h5 className="pClassNewFont">{each.dayOfWeek}, {each.time}</h5>
-                                            <p className="pNewFontSize">{each.date}</p>
-                                            <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
-                                            <p className="pNewFontSize">{each.condition}</p>
-                                            <span>{iconLogic(each.condition)}</span>
-                                            <div className="tempGraphBox">
-                                                <div className="temperatureDot" style={this.styles(each.rainProbability)}
-                                                    ref={ref => this.locationRefsHourly[index] = ref}>'</div>
-                                            </div>
-                                            <p>Rain: {each.rainProbability}%</p>
-                                        </div>
-                                    ))
-                                    : this.state.forecastChosen === "extended" ?
-                                        props.forecastResults.map((each, index) => (
-                                            <div className="col l3 forecastDayExtended" key={index}>
-                                                <h5 className="pClassNewFont">{each.dayOfWeek}</h5>
-                                                <h5 className="pClassNewFont">{each.date}</h5>
-                                                <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
-                                                <p className="pNewFontSize">{each.condition}</p>
-                                                <span>{iconLogic(each.condition)}</span>
-
-                                                <div className="tempGraphBox">
-                                                    <div className="temperatureDot" style={this.styles(each.rainProbability)}
-                                                        ref={ref => this.locationRefsExtended[index] = ref}>'</div>
-                                                </div>
-                                                <p>Rain: {each.rainProbability}%</p>
-                                            </div>
-                                        )) : ""
-                                }
+                            <div className="col l6">
+                                <div className={this.state.forecastButtonHovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
+                                    onMouseEnter={props.handleHover}
+                                    onMouseLeave={props.handleHover}>
+                                    4 Day
+                                </div>
                             </div>
                         </div>
                     </div>
-                
+                    <div className="row" ref={this.parentRef} id="test">
+                        <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
+                            ref={this.ref}
+                            onMouseDown={this.onMouseDown}
+                            onMouseUp={this.onMouseUp}
+                            onMouseMove={this.onMouseMove}
+                            onMouseLeave={this.onMouseLeave}
+                        >
+                            {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
+                            <svg id="svg" viewbox="0 0 2000 1000">
+
+                                {/* SETUP TERNARY WITHIN SVG FOR Lines.  If either linedata is not there yet (getPointCoords hasn't had a chance
+                                    to run), then don't render the lines.*/}
+                                {this.state.lineData.length === 0 ? <></> : this.state.forecastChosen === "hourly" ? props.hourlyResults.map((each, index) => (
+                                    index < props.hourlyResults.length - 1 ?
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
+                                        : <></>
+                                )) : props.forecastResults.map((each, index) => (
+                                    index < props.forecastResults.length - 1 ?
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
+                                        : <></>
+
+                                ))}
+                            </svg>
+                            {this.state.forecastChosen === "hourly" ?
+                                props.hourlyResults.map((each, index) => (
+                                    <div className="forecastDayHourly">
+                                        <h5 className="pClassNewFont">{each.dayOfWeek}, {each.time}</h5>
+                                        <p className="pNewFontSize">{each.date}</p>
+                                        <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
+                                        <p className="pNewFontSize">{each.condition}</p>
+                                        <span>{iconLogic(each.condition)}</span>
+                                        <div className="tempGraphBox">
+                                            <div className="temperatureDot" style={this.styles(each.rainProbability)}
+                                                ref={ref => this.locationRefsHourly[index] = ref}>'</div>
+                                        </div>
+                                        <p>Rain: {each.rainProbability}%</p>
+                                    </div>
+                                ))
+                                : this.state.forecastChosen === "extended" ?
+                                    props.forecastResults.map((each, index) => (
+                                        <div className="col l3 forecastDayExtended" key={index}>
+                                            <h5 className="pClassNewFont">{each.dayOfWeek}</h5>
+                                            <h5 className="pClassNewFont">{each.date}</h5>
+                                            <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{each.condition}</p>
+                                            <span>{iconLogic(each.condition)}</span>
+
+                                            <div className="tempGraphBox">
+                                                <div className="temperatureDot" style={this.styles(each.rainProbability)}
+                                                    ref={ref => this.locationRefsExtended[index] = ref}>'</div>
+                                            </div>
+                                            <p>Rain: {each.rainProbability}%</p>
+                                        </div>
+                                    )) : ""
+                            }
+                        </div>
+                    </div>
+                </div>
+
             </>
         )
     }

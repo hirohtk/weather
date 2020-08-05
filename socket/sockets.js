@@ -18,34 +18,62 @@ module.exports = function (io) {
         });
 
         socket.on("message", async data => {
+            // console.log(`IS THIS PERSON SENDING A MESSAGE TO AN OFFLINE PERSON? ====> ${data.sendingOffline}`);
             const { chatroomName, author, message } = data;
+
+            // console.log(`***author of the message is ${author}`)
 
             // ORM/ODM STUFF.  Finding database that the chatroom is associated with, then posting new message to it in 
             // as middleware between socket receiving message and emitting it
-            const chatRoom = await db.Chatroom.find({ name: chatroomName });
+            let doTheRest = async (messageIntendedFor) => {
+                const chatRoom = await db.Chatroom.findOneAndUpdate({ name: chatroomName }, {$set: {offlineUnread: messageIntendedFor}});
+                // console.log(`THIS IS CHATROOM RESPONSE ${chatRoom}`);
 
-            const chatRoomID = chatRoom[0]._id;
+                const chatRoomID = chatRoom._id;
+    
+                const chatMessage = await db.Message.create({
+                    chatRoomID: chatRoomID,
+                    author: author,
+                    message: message,
+                });
+                // COULD DO POPULATE HERE INSTEAD I THINK TO GET USERNAME FROM author
+                const userName = await db.Users.findById(author);
+                // userName.username is an ID and not an actual name
 
-            const chatMessage = await db.Message.create({
-                chatRoomID: chatRoomID,
-                author: author,
-                message: message,
-            });
-            // COULD DO POPULATE HERE INSTEAD I THINK TO GET USERNAME FROM author
-            const userName = await db.Users.findById(author);
-            chatMessage.author = userName.username;
-            // console.log(`Updating chatroom ${chatRoomID}, pushing message with id of ${chatMessage._id}`)
-            db.Chatroom.findByIdAndUpdate(chatRoomID, { $push: { messages: chatMessage._id } }).then(response => {
-                console.log(`response from adding message to chatroom is ${response}.`)
-                // console.log(`JSON.stringifying is ${JSON.stringify(response)}.`)
-            })
-            
-            // console.log(`pushed message to chatroom ID ${chatRoomID}, message id is ${chatMessage._id}, author is ${chatMessage.author}, message is ${message}`)
+                chatMessage.author = userName.username;
 
-            // adding username key to author because the db response convention is as such, so for continuity in the .map, I am doing this
-            const newObj = { message: chatMessage.message, author: {username: userName.username}, chatroomID: chatRoomID };
-            // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
-            io.to(chatRoomID).emit("newMessage", newObj);
+                // console.log(`Updating chatroom ${chatRoomID}, pushing message with id of ${chatMessage._id}`)
+                db.Chatroom.findByIdAndUpdate(chatRoomID, { $push: { messages: chatMessage._id } }).then(response => {
+                    // console.log(`response from adding message to chatroom is ${response}.`)
+                    // console.log(`JSON.stringifying is ${JSON.stringify(response)}.`)
+                })
+                
+                // console.log(`pushed message to chatroom ID ${chatRoomID}, message id is ${chatMessage._id}, author is ${chatMessage.author}, message is ${message}`)
+    
+                // adding username key to author because the db response convention is as such, so for continuity in the .map, I am doing this
+                const newObj = { message: chatMessage.message, author: {username: userName.username}, chatroomID: chatRoomID };
+                // console.log(`newObj being sent to front end is ${JSON.stringify(newObj)}`);
+                io.to(chatRoomID).emit("newMessage", newObj);
+            }
+
+            let messageIntendedFor;
+            if (data.sendingOffline) {
+                db.Chatroom.findOne({name: chatroomName}).then(response => {
+                    let peopleInRoom = [];
+                    peopleInRoom = response.people;
+                    // console.log(`people in room are ${peopleInRoom}`)
+                    let ind = peopleInRoom.indexOf(author);
+                    // console.log(`index has found that you are index ${ind} `);
+                    // remember, SPLICE changes the original array.  If you set another variable to the splice operation, you get what's taken out
+                    peopleInRoom.splice(ind, 1);
+                    let messageIntendedFor = peopleInRoom.toString()
+                    doTheRest(messageIntendedFor);
+                })
+            }
+            else {
+                messageIntendedFor = "";
+                doTheRest(messageIntendedFor);
+            }
         });
 
         socket.on(`leaveRoom`, function (data) {

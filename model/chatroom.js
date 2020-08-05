@@ -15,7 +15,11 @@ const ChatroomSchema = new Schema({
     messages: [{
         type: Schema.Types.ObjectId,
         ref: "Messages",
-    }]
+    }],
+    offlineUnread: {
+        type: String,
+        default: ""
+    }
 });
 
 var Chatrooms = mongoose.model("Chatrooms", ChatroomSchema);

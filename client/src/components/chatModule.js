@@ -45,12 +45,28 @@ class ChatModule extends React.Component {
 
     sendMessage = (event) => {
         // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
+
+        // conditional determining if the chatroom is "filled", where two people exist (handled by people logging in and out)
+        // if the chatroom is not filled, emit message should have a notification that the other user is offline (hasOffLineMessages)
+        let sendingOffline;
+        let loggedInRoomsIDsOnly = [];
+        for (let i = 0; i < this.props.loggedInRooms.length; i++) {
+            loggedInRoomsIDsOnly.push(this.props.loggedInRooms[i].room);
+        }
+        if (loggedInRoomsIDsOnly.includes(this.props.chatroomID)) {
+            sendingOffline = false;
+        }
+        else {
+            sendingOffline = true;
+        }
+
         event.preventDefault();
         this.props.socket.emit('message', {
             chatroomName: this.props.chatroomName,
             author: this.props.currentUser[1],
             message: this.state.myMessage,
-            chatroomID: this.props.chatroomID
+            chatroomID: this.props.chatroomID,
+            sendingOffline: sendingOffline
         });
         this.setState({ myMessage: '' })
     };

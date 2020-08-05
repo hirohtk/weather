@@ -44,14 +44,16 @@ router.post("/api/login", (req, res, next) => {
 router.post("/api/register", function (req, res) {
   console.log(req.body);
   console.log(req.body.username)
-  db.Users.register({ username: req.body.username }, req.body.password, (err, response) => {
+  db.Users.register({ username: req.body.username}, req.body.password, (err, response) => {
     if (err) {
       console.log("error", err);
       res.json(err);
     }
     else {
-      console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
-      db.FriendsList.create({userID: response._id}).then(() => res.json({name: response.username}));
+      // console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
+      // this res.json(response._id is from the earlier registration query, not the friendlist create query.    
+      // this route is used in
+      db.FriendsList.create({userID: response._id}).then(() => res.json({name: req.body.username, id: response._id}));
     }
   });
 });
@@ -89,8 +91,10 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   // console.log(`adding user by userid ${req.params.id}`);
   // console.log(`you are ${req.body.userID}`);
+  console.log(`finding chatroom by ${req.body.userID}`);
+  console.log(`adding to friendslist this person ${req.params.id}`);
   db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
-    console.log(response)
+    console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
     res.json(response);
   })
 });
@@ -165,6 +169,16 @@ router.get(`/api/peopleinroom/:id`, function (req, res) {
     res.json(response);
   })
 })
+
+router.put(`/api/clearofflineunread/:id`, function (req, res) {
+  db.Chatroom.findByIdAndUpdate(req.params.id, {$set: {offlineUnread : ""}}).then(response => {
+    res.json(response)
+  })
+});
+
+// router.put(`/api/hasunread/:id`, function (req, res) {
+//   db.Users.findByIdAndUpdate(req.params.id, {hasUnread: req.body.action}).then(response => res.json(response));
+// })
 
 // TAKEN CARE OF BY SOCKET
 // router.post(`api/sendmessage/:id`, function (req, res) {

@@ -37,7 +37,7 @@ class App extends React.Component {
       friendCurrentWeather: [],
     }
     // console.log(`console logging inside the constructor of App.js`);
-    this.socket = io('localhost:3001');
+    this.socket = io('localhost:3001' || 'https://immense-cove-75264.herokuapp.com/');
 
   }
 
@@ -199,6 +199,7 @@ class App extends React.Component {
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
       this.socket.close();
+      this.socket.open();
       this.setState({ currentUser: [], loggedIn: false });
     }
   }
