@@ -1,4 +1,4 @@
-FriendForecast *last readme edit: 7/26/2020*
+## FriendForecast *last readme edit: 7/26/2020*
 
 Real-time weather data combines with social media to create deeper connections.  
 See the working application here: https://immense-cove-75264.herokuapp.com/.
@@ -20,3 +20,4 @@ in a new dynamic by view real-time weather data wherever users are around the wo
 **Next steps**:
 - Incorporation of "warning" weather icons for inclement weather situations
 - Suggested products based on user's trending weather conditions (i.e. warm clothing for users in winter conditions)
+- Mobile Responsiveness
