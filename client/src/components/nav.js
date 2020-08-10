@@ -110,6 +110,7 @@ class Nav extends React.Component {
                 <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
+
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}
@@ -121,6 +122,7 @@ class Nav extends React.Component {
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
           <i className="material-icons">menu</i>
         </button>
+        {props.loggedIn ? <></> : <p id="loginTooltip"><i>Login to add friends, chat, and view their current weather conditions!</i></p>}
         {props.currentUser.length === 0 ? <></> :
           <span className="welcome">Welcome, {props.currentUser[0]}!</span>
         }

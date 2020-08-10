@@ -73,3 +73,11 @@ nav, .brand-logo {
     opacity: 0;
     animation: fade 4s
 }
+
+#loginTooltip {
+    color: white;
+    position: fixed;
+    left: 0px;
+    top: 60px;
+    width: 10%;
+}
