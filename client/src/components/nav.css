@@ -42,7 +42,9 @@ nav, .brand-logo {
     border-radius: 2px;
     border: 1px solid white;
     position:fixed;
-    left: 0px;
+    top: 2px;
+    left: 2px;
+    z-index: 1
 }
 
 .menuOptions {

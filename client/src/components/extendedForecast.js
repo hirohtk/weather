@@ -26,7 +26,9 @@ class ExtendedForecast extends React.Component {
             forecastChosen: "extended",
             lineData: [],
             forecastButtonHovered: undefined,
+            windowWidth: "",
         }
+        this.handleResize = this.handleResize.bind(this);
     }
 
     onMouseDown = e => {
@@ -88,24 +90,24 @@ class ExtendedForecast extends React.Component {
         // Q? What is the ref param in the function actually representing?  
         // 2.. next step use the ref to identify each element so I can do this https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element-relative-to-the-browser-window
         // 3.  last, with the coordinates of each element, map some lines using this https://stackoverflow.com/questions/19382872/how-to-connect-html-divs-with-lines
-        console.log(`this.locationrefs is ${references}`)
-        console.log(references.length);
-        console.log(`this should be a loop giving me a bunch of coordinates`)
+        // console.log(`this.locationrefs is ${references}`)
+        // console.log(references.length);
+        // console.log(`this should be a loop giving me a bunch of coordinates`)
         let parentRefCoords = this.parentRef.current.getBoundingClientRect();
         // let test = document.getElementById("test");
         // let a = test.getBoundingClientRect();
         // console.log(`****, ${a.top, a.right, a.bottom, a.left}`);
-        console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
+        // console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
         let coordinateArray = [];
         for (let i = 0; i < references.length; i++) {
-            console.log(`i is ${i}`);
+            // console.log(`i is ${i}`);
             let rect = references[i].getBoundingClientRect();
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
-            console.log(rect.top, rect.right, rect.bottom, rect.left);
+            // console.log(rect.top, rect.right, rect.bottom, rect.left);
             let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left + 2 };
             coordinateArray.push(obj);
         }
-        console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
+        // console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
         this.setState({ lineData: coordinateArray });
     }
 
@@ -122,12 +124,19 @@ class ExtendedForecast extends React.Component {
         return;
     }
 
-    componentDidMount() {
+    handleResize = () => {
+        console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+        this.setState({windowWidth: window.innerWidth});
+        this.getPointCoords(this.state.forecastChosen);
+    }
+
+    componentDidMount = () => {
         setTimeout(() => {
             this.getPointCoords("extended");
         }, 3000);
+        window.addEventListener("resize", this.handleResize);
     }
-
+        
     render() {
         const props = this.props;
         return (
