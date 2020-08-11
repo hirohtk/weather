@@ -8,6 +8,8 @@ import Sidebar from "react-sidebar";
 import axios from "axios"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Clock from "./clock"
+
 // import moment from "moment";
 
 class Nav extends React.Component {
@@ -115,17 +117,19 @@ class Nav extends React.Component {
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}
           styles={{ sidebar: { background: "gray", width: "20rem", position: "fixed" } }
-        }
-        children=""
+          }
+          children=""
         >
         </Sidebar>
         <button className="sidebarButton" onClick={() => this.onSetSidebarOpen(true)}>
           <i className="material-icons">menu</i>
         </button>
-        {props.loggedIn ? <></> : <p id="loginTooltip"><i>Login to add friends, chat, and view their current weather conditions!</i></p>}
-        {props.currentUser.length === 0 ? <></> :
-          <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+        {props.loggedIn ? <></> : <>
+          <p id="loginArrow"><i className="material-icons">keyboard_backspace</i></p>
+          <p id="loginTooltip"><i>Login to add friends, chat, and view their current weather conditions!</i></p>
+        </>
         }
+        <Clock></Clock>
         <ToastContainer
           position="bottom-left"
           autoClose={5000}

@@ -311,66 +311,71 @@ class Friends extends React.Component {
         const props = this.props
         return (
             <>
-                {props.loggedIn === true ? <div className="friendsOverlord">
-                    {this.state.chat && this.state.chatReady ?
-                        <ChatModule
-                            chattingWith={this.state.chattingWith}
-                            closeBox={this.openFriend}
-                            currentUser={this.props.currentUser}
-                            chatroomID={this.state.chatroomID}
-                            chatroomName={this.state.chatroomName}
-                            socket={this.props.socket}
-                            messages={this.state.messages}
-                            loggedInRooms={this.state.loggedInRooms}
-                        >
-                        </ChatModule>
-                        :
-                        <></>}
-                    <div className="containerForFriends">
-                        <div className="friends-gradient"></div>
-                        {/* Will become a .map to list friends here */}
-                        <div className="theActualList">
-                            {this.state.friendsList === undefined ? <>Friends list is undefined</> : this.state.friendsList.length === 0 ?
-                                <>
-                                    <h5>No friends yet!</h5>
-                                </>
+                {props.loggedIn === true ?
+                    <>
+                        <div className="friendsOverlord">
+                            {props.currentUser.length === 0 ? <></> :
+                                <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+                            }
+                            {this.state.chat && this.state.chatReady ?
+                                <ChatModule
+                                    chattingWith={this.state.chattingWith}
+                                    closeBox={this.openFriend}
+                                    currentUser={this.props.currentUser}
+                                    chatroomID={this.state.chatroomID}
+                                    chatroomName={this.state.chatroomName}
+                                    socket={this.props.socket}
+                                    messages={this.state.messages}
+                                    loggedInRooms={this.state.loggedInRooms}
+                                >
+                                </ChatModule>
                                 :
-                                <>
+                                <></>}
+                            <div className="containerForFriends">
+                                <div className="friends-gradient"></div>
+                                {/* Will become a .map to list friends here */}
+                                <div className="theActualList">
+                                    {this.state.friendsList === undefined ? <>Friends list is undefined</> : this.state.friendsList.length === 0 ?
+                                        <>
+                                            <h5>No friends yet!</h5>
+                                        </>
+                                        :
+                                        <>
 
-                                    {this.state.friendsList.map((each, index) => (
-                                        <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
-                                            <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
-                                            {/* unread is an array, filter it down to an array where author names are present.
+                                            {this.state.friendsList.map((each, index) => (
+                                                <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
+                                                    <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
+                                                    {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
-                                            {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
-                                            {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
+                                                    {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
+                                                    {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
-                                            <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
-                                    ))}
-                                </>}
-                        </div>
-                        {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
+                                                    <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
+                                            ))}
+                                        </>}
+                                </div>
+                                {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
                         <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p> */}
-                        <div className="searchForFriends">
-                            <input placeholder="Search for a user!" name="searchTerm" value={this.state.searchTerm} maxLength="16" onChange={this.searchInputHandler} className="whiteText"></input>
-                            <button id="loginSubmit" onClick={this.searchHandler}>Go!</button>
-                            {this.state.searching ?
-                                <>{this.state.friendResults.length === 0 ?
-                                    <><h5 className="whiteText">Search Results</h5>
-                                        <p className="whiteText">None, try again!</p>
-                                    </> :
-                                    <> <h5 className="whiteText">Search Results</h5>
-                                        {this.state.friendResults.map((each, index) =>
-                                            // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                            <p className="whiteText">{each.username}{each.id != null ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
-                                        <button onClick={this.clearResults}>Clear</button>
-                                    </>}
-                                </> : <></>}
-                        </div>
-                    </div>
+                                <div className="searchForFriends">
+                                    <input placeholder="Search for a user!" name="searchTerm" value={this.state.searchTerm} maxLength="16" onChange={this.searchInputHandler} className="whiteText"></input>
+                                    <button id="loginSubmit" onClick={this.searchHandler}>Go!</button>
+                                    {this.state.searching ?
+                                        <>{this.state.friendResults.length === 0 ?
+                                            <><h5 className="whiteText">Search Results</h5>
+                                                <p className="whiteText">None, try again!</p>
+                                            </> :
+                                            <> <h5 className="whiteText">Search Results</h5>
+                                                {this.state.friendResults.map((each, index) =>
+                                                    // NEED ARROW FUNCTION TO INVOKE this.addFriend()
+                                                    <p className="whiteText">{each.username}{each.id != null ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
+                                                <button onClick={this.clearResults}>Clear</button>
+                                            </>}
+                                        </> : <></>}
+                                </div>
+                            </div>
 
-                </div> : <></>}
+                        </div></> : <></>}
             </>
         )
     }
