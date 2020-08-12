@@ -128,16 +128,22 @@ line {
 
 #forecastResults {
     overflow-x: scroll;
-    /* width: 8000px; */
     width: 7200px;
-    /* position: absolute; */
     overflow-y: hidden;
-    /* right: 500px; */
     height: 45rem;
     white-space: nowrap;
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* #forecastResults {
+    width: 100%;
+    overflow-y: hidden;
+    height: 45rem;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+} */
 
 #forecastResultsExtended {
     width: 100%;

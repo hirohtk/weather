@@ -36,23 +36,32 @@ class ExtendedForecast extends React.Component {
             ...this.state, isScrolling: true,
             clientX: e.clientX
         });
+        console.log(`onMouseDown`)
     };
 
     onMouseUp = () => {
         this.setState({ ...this.state, isScrolling: false });
+        console.log(`onMouseUp`)
+
     };
 
     onMouseMove = e => {
         const { clientX, scrollX } = this.state;
         if (this.state.isScrolling) {
-            this.ref.current.scrollLeft = scrollX - e.clientX + clientX;
+        console.log(`scrollX is ${scrollX} - event.clientX is ${e.clientX} + client ${clientX} `)
+            this.parentRef.current.scrollLeft = scrollX - e.clientX + clientX;
+            console.log(`= this.ref.current.scrollLeft ${this.parentRef.current.scrollLeft}`)
             this.state.scrollX = scrollX - e.clientX + clientX;
             this.state.clientX = e.clientX;
         }
+        // console.log(`onMouseMove, clientX is ${clientX}, scrollX is ${scrollX}, this.ref.current.scrollLeft = ${this.ref.current.scrollLeft}`);
+
     };
 
     onMouseLeave = e => {
         this.setState({ ...this.state, isScrolling: false });
+        console.log(`onMouseLeave`)
+
     }
 
     styles = (probability) => {
@@ -139,6 +148,7 @@ class ExtendedForecast extends React.Component {
         
     render() {
         const props = this.props;
+        // const ref = this.ref
         return (
             <>
                 <div className="outerForecastBox">
@@ -163,13 +173,13 @@ class ExtendedForecast extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="row" ref={this.parentRef} id="test">
-                        <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
-                            ref={this.ref}
+                    <div className="row" ref={this.parentRef} id="test" 
                             onMouseDown={this.onMouseDown}
                             onMouseUp={this.onMouseUp}
                             onMouseMove={this.onMouseMove}
-                            onMouseLeave={this.onMouseLeave}
+                            onMouseLeave={this.onMouseLeave}>
+                        <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
+                            
                         >
                             {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
                             <svg id="svg" viewbox="0 0 2000 1000">
