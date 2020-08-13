@@ -147,3 +147,22 @@
   .tooltip:hover .tooltiptext {
     visibility: visible;
   }
+
+  @media only screen and (max-width: 360px) {
+    .whiteTextInfo {
+        text-align: center;
+        color: white;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+        font-size: 10px;
+    }
+
+    .whiteTextInfo2 {
+        text-align: center;
+        color: white;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 200%;
+    }
+  }
