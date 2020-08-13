@@ -198,3 +198,57 @@ line {
     z-index: -1;
 }
 
+
+@media only screen and (max-width: 360px) {
+    #forecastResults {
+        /* overflow-x: scroll; */
+        width: 2300px;
+        overflow-y: hidden;
+        height: 45rem;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .forecastDayHourly {
+        border-right: 1px solid white;
+        /* border-radius: 2px; */
+        height: 38rem;
+        position: relative;
+        width: 8rem;
+        display: block;
+        /* right: 6500px; */
+        /* transform: translate(-6500px, 0px); */
+        bottom: 600px;
+        float: left;
+        margin-bottom: 20px;
+    }
+
+    .pClassNewFont {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: white;
+        font-size: 12px;
+    }
+
+    .pNewFontSize {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+        font-size: 8px;
+    }
+
+    .forecastButton {
+        border: 1px solid rgb(195, 195, 195);
+        border-radius: 2px;
+        width: 100%;
+        position: relative;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        /* font-weight: 300; */
+        font-size: 15px;
+        cursor: pointer;
+        FONT-WEIGHT: 500;
+    }
+  }

@@ -36,32 +36,24 @@ class ExtendedForecast extends React.Component {
             ...this.state, isScrolling: true,
             clientX: e.clientX
         });
-        console.log(`onMouseDown`)
     };
 
     onMouseUp = () => {
         this.setState({ ...this.state, isScrolling: false });
-        console.log(`onMouseUp`)
 
     };
 
     onMouseMove = e => {
         const { clientX, scrollX } = this.state;
         if (this.state.isScrolling) {
-        console.log(`scrollX is ${scrollX} - event.clientX is ${e.clientX} + client ${clientX} `)
             this.parentRef.current.scrollLeft = scrollX - e.clientX + clientX;
-            console.log(`= this.ref.current.scrollLeft ${this.parentRef.current.scrollLeft}`)
             this.state.scrollX = scrollX - e.clientX + clientX;
             this.state.clientX = e.clientX;
         }
-        // console.log(`onMouseMove, clientX is ${clientX}, scrollX is ${scrollX}, this.ref.current.scrollLeft = ${this.ref.current.scrollLeft}`);
-
     };
 
     onMouseLeave = e => {
         this.setState({ ...this.state, isScrolling: false });
-        console.log(`onMouseLeave`)
-
     }
 
     styles = (probability) => {
