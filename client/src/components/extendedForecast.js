@@ -192,7 +192,7 @@ class ExtendedForecast extends React.Component {
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
                                     <div className="forecastDayHourly">
-                                        <h5 className="pClassNewFont">{each.dayOfWeek}, {each.time}</h5>
+                                        <h5 className="pClassNewFont">{this.state.windowWidth < 361 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
                                         <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
                                         <p className="pNewFontSize">{each.condition}</p>
@@ -207,7 +207,7 @@ class ExtendedForecast extends React.Component {
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
                                         <div className="col l3 forecastDayExtended" key={index}>
-                                            <h5 className="pClassNewFont">{each.dayOfWeek}</h5>
+                                            <h5 className="pClassNewFont">{this.state.windowWidth < 361 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
                                             <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
                                             <p className="pNewFontSize">{each.condition}</p>

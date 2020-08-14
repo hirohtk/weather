@@ -12,3 +12,13 @@
     font-size: 30px;
     color:white;
 }
+
+@media only screen and (max-width: 360px) {
+    .timeNow {
+        text-align: right;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color:white;
+    }
+}
