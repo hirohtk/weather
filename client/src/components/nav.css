@@ -67,7 +67,7 @@ nav, .brand-logo {
     animation: fade 4s
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
     #loginTooltip {
         display: none;
     }

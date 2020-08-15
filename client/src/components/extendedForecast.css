@@ -199,7 +199,7 @@ line {
 }
 
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
     #forecastResults {
         /* overflow-x: scroll; */
         width: 2300px;
