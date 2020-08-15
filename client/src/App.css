@@ -56,3 +56,13 @@ html {
   opacity: 0.15;
   width: 100%;
 }
+
+@media only screen and (max-width: 360px) {
+  #backgroundImage {
+    position: fixed;
+    z-index: -1;
+    left: 0;
+    top: -100px;
+    opacity: 0.15;
+  }
+}

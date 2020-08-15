@@ -149,6 +149,7 @@ class ExtendedForecast extends React.Component {
                     <div className="weather-gradient"></div>
                     <div className="row">
                         <div id="forecastOptions" className="whiteText">
+                            <div className= "row">
                             <div className="col l6">
                                 <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
@@ -162,6 +163,7 @@ class ExtendedForecast extends React.Component {
                                     onMouseLeave={props.handleHover}>
                                     4 Day
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </div>
