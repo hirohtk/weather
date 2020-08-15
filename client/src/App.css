@@ -57,12 +57,13 @@ html {
   width: 100%;
 }
 
-@media only screen and (max-width: 360px) {
+@media only screen and (max-width: 400px) {
   #backgroundImage {
     position: fixed;
     z-index: -1;
     left: 0;
     top: -100px;
     opacity: 0.15;
+    height: 100%;
   }
 }
