@@ -26,7 +26,9 @@ class ExtendedForecast extends React.Component {
             forecastChosen: "extended",
             lineData: [],
             forecastButtonHovered: undefined,
+            windowWidth: "",
         }
+        this.handleResize = this.handleResize.bind(this);
     }
 
     onMouseDown = e => {
@@ -38,12 +40,13 @@ class ExtendedForecast extends React.Component {
 
     onMouseUp = () => {
         this.setState({ ...this.state, isScrolling: false });
+
     };
 
     onMouseMove = e => {
         const { clientX, scrollX } = this.state;
         if (this.state.isScrolling) {
-            this.ref.current.scrollLeft = scrollX - e.clientX + clientX;
+            this.parentRef.current.scrollLeft = scrollX - e.clientX + clientX;
             this.state.scrollX = scrollX - e.clientX + clientX;
             this.state.clientX = e.clientX;
         }
@@ -88,24 +91,24 @@ class ExtendedForecast extends React.Component {
         // Q? What is the ref param in the function actually representing?  
         // 2.. next step use the ref to identify each element so I can do this https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element-relative-to-the-browser-window
         // 3.  last, with the coordinates of each element, map some lines using this https://stackoverflow.com/questions/19382872/how-to-connect-html-divs-with-lines
-        console.log(`this.locationrefs is ${references}`)
-        console.log(references.length);
-        console.log(`this should be a loop giving me a bunch of coordinates`)
+        // console.log(`this.locationrefs is ${references}`)
+        // console.log(references.length);
+        // console.log(`this should be a loop giving me a bunch of coordinates`)
         let parentRefCoords = this.parentRef.current.getBoundingClientRect();
         // let test = document.getElementById("test");
         // let a = test.getBoundingClientRect();
         // console.log(`****, ${a.top, a.right, a.bottom, a.left}`);
-        console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
+        // console.log(`parentRefCoords are ${parentRefCoords.top} ${parentRefCoords.left}`);
         let coordinateArray = [];
         for (let i = 0; i < references.length; i++) {
-            console.log(`i is ${i}`);
+            // console.log(`i is ${i}`);
             let rect = references[i].getBoundingClientRect();
             // WHAT THIS RETURNS IS (see diagram): https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect  
-            console.log(rect.top, rect.right, rect.bottom, rect.left);
+            // console.log(rect.top, rect.right, rect.bottom, rect.left);
             let obj = { top: rect.top - parentRefCoords.top + 2, left: rect.left - parentRefCoords.left + 2 };
             coordinateArray.push(obj);
         }
-        console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
+        // console.log(`THIS IS YOUR COORDINATE ARRAY ${JSON.stringify(coordinateArray)}, its length is ${coordinateArray.length}`)
         this.setState({ lineData: coordinateArray });
     }
 
@@ -122,14 +125,22 @@ class ExtendedForecast extends React.Component {
         return;
     }
 
-    componentDidMount() {
+    handleResize = () => {
+        console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+        this.setState({windowWidth: window.innerWidth});
+        this.getPointCoords(this.state.forecastChosen);
+    }
+
+    componentDidMount = () => {
         setTimeout(() => {
             this.getPointCoords("extended");
         }, 3000);
+        window.addEventListener("resize", this.handleResize);
     }
-
+        
     render() {
         const props = this.props;
+        // const ref = this.ref
         return (
             <>
                 <div className="outerForecastBox">
@@ -138,6 +149,7 @@ class ExtendedForecast extends React.Component {
                     <div className="weather-gradient"></div>
                     <div className="row">
                         <div id="forecastOptions" className="whiteText">
+                            <div className= "row">
                             <div className="col l6">
                                 <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
@@ -152,15 +164,16 @@ class ExtendedForecast extends React.Component {
                                     4 Day
                                 </div>
                             </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="row" ref={this.parentRef} id="test">
-                        <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
-                            ref={this.ref}
+                    <div className="row" ref={this.parentRef} id="test" 
                             onMouseDown={this.onMouseDown}
                             onMouseUp={this.onMouseUp}
                             onMouseMove={this.onMouseMove}
-                            onMouseLeave={this.onMouseLeave}
+                            onMouseLeave={this.onMouseLeave}>
+                        <div id={this.state.forecastChosen === "hourly" ? "forecastResults" : "forecastResultsExtended"} className="whiteText"
+                            
                         >
                             {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
                             <svg id="svg" viewbox="0 0 2000 1000">
@@ -181,7 +194,7 @@ class ExtendedForecast extends React.Component {
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
                                     <div className="forecastDayHourly">
-                                        <h5 className="pClassNewFont">{each.dayOfWeek}, {each.time}</h5>
+                                        <h5 className="pClassNewFont">{this.state.windowWidth < 361 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
                                         <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
                                         <p className="pNewFontSize">{each.condition}</p>
@@ -196,7 +209,7 @@ class ExtendedForecast extends React.Component {
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
                                         <div className="col l3 forecastDayExtended" key={index}>
-                                            <h5 className="pClassNewFont">{each.dayOfWeek}</h5>
+                                            <h5 className="pClassNewFont">{this.state.windowWidth < 361 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
                                             <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
                                             <p className="pNewFontSize">{each.condition}</p>

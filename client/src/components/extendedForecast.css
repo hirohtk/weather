@@ -128,16 +128,22 @@ line {
 
 #forecastResults {
     overflow-x: scroll;
-    /* width: 8000px; */
     width: 7200px;
-    /* position: absolute; */
     overflow-y: hidden;
-    /* right: 500px; */
     height: 45rem;
     white-space: nowrap;
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* #forecastResults {
+    width: 100%;
+    overflow-y: hidden;
+    height: 45rem;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+} */
 
 #forecastResultsExtended {
     width: 100%;
@@ -192,3 +198,83 @@ line {
     z-index: -1;
 }
 
+
+@media only screen and (max-width: 400px) {
+    #forecastResults {
+        /* overflow-x: scroll; */
+        width: 2300px;
+        overflow-y: hidden;
+        height: 45rem;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .forecastDayHourly {
+        border-right: 1px solid white;
+        /* border-radius: 2px; */
+        height: 38rem;
+        position: relative;
+        width: 8rem;
+        display: block;
+        /* right: 6500px; */
+        /* transform: translate(-6500px, 0px); */
+        bottom: 600px;
+        float: left;
+        margin-bottom: 20px;
+    }
+
+    .forecastDayExtended {
+        border-right: 1px solid white;
+        /* border-radius: 2px; */
+        height: 38rem;
+        position: relative;
+        width: 10rem;
+        display: block;
+        /* right: 6500px; */
+        /* transform: translate(-6500px, 0px); */
+        bottom: 600px;
+        float: left;
+        margin-bottom: 20px;
+    }
+
+    #forecastResultsExtended {
+        width: 220%;
+    overflow-y: hidden;
+    height: 45rem;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+    z-index: -2;
+    }
+
+    .pClassNewFont {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: white;
+        font-size: 12px;
+    }
+
+    .pNewFontSize {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+        font-size: 8px;
+    }
+
+    .forecastButton {
+        padding-right: 2rem;
+    border: 1px solid rgb(195, 195, 195);
+    border-radius: 2px;
+    width: 100%;
+    position: relative;
+    margin-left: 1.3rem;
+    margin-right: auto;
+    padding-left: 2rem;
+    margin-top: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    /* font-weight: 300; */
+    font-size: 15px;
+    cursor: pointer;
+    FONT-WEIGHT: 500;
+    }
+  }

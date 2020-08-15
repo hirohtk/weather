@@ -3,7 +3,6 @@ import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
-import Clock from "./components/clock"
 import FriendsModule from "./components/friendsModule"
 import FriendWeather from "./components/friendWeather"
 import './App.css';
@@ -261,9 +260,9 @@ class App extends React.Component {
                 </FriendWeather>
                 : <></>}
                 </div>
-                <div className="col l2">
-                <Clock></Clock>
-                </div>
+                {/* <div className="col l2">
+                
+                </div> */}
               </div>
               <div className="row">
                 <ExtendedForecast

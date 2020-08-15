@@ -42,7 +42,9 @@ nav, .brand-logo {
     border-radius: 2px;
     border: 1px solid white;
     position:fixed;
-    left: 0px;
+    top: 2px;
+    left: 2px;
+    z-index: 1
 }
 
 .menuOptions {
@@ -54,15 +56,6 @@ nav, .brand-logo {
     cursor: pointer;
 }
 
-.welcome {
-    position: relative;
-    float: right;
-    color:white;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
-    font-size: 20px;
-}
-
 @keyframes fade {
     0% {opacity: 1};
     75% {opacity: 1}
@@ -72,4 +65,29 @@ nav, .brand-logo {
 .confirmation {
     opacity: 0;
     animation: fade 4s
+}
+
+@media only screen and (max-width: 400px) {
+    #loginTooltip {
+        display: none;
+    }
+    
+    #loginArrow {
+        display: none;
+    }
+}
+
+#loginTooltip {
+    color: white;
+    position: fixed;
+    left: 100px;
+    top: 0px;
+    width: 10%;
+}
+
+#loginArrow {
+    color:white;
+    position: fixed;
+    left: 75px;
+
 }
