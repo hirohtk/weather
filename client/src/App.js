@@ -34,6 +34,7 @@ class App extends React.Component {
       friendLocation: [],
       friendImage: [],
       friendCurrentWeather: [],
+      windowWidth: ""
     }
     // console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
@@ -44,7 +45,13 @@ class App extends React.Component {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
     // console.log(`app.js loaded`)
+    window.addEventListener("resize", this.handleResize);
   }
+
+  handleResize = () => {
+    console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+    this.setState({windowWidth: window.innerWidth});
+}
 
   getWeatherData = (forWho) => {
 
@@ -233,11 +240,11 @@ class App extends React.Component {
           socket={this.socket}
         ></FriendsModule>
         <div className="container">
-          <img src={this.state.locationImage} id="backgroundImage"></img>
+          {this.state.windowWidth < 451 ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
           <div className="row">
-            <Animation
+            {/* <Animation
               weather={this.state.currentWeather}>
-            </Animation>
+            </Animation> */}
             <div className="boxForEverything">
               <div className="row">
                 <div className="col l6">
@@ -247,6 +254,7 @@ class App extends React.Component {
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
+                  windowWidth={this.state.windowWidth}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
                 </div>
@@ -270,6 +278,7 @@ class App extends React.Component {
                   forecastResults={this.state.fiveDayForecast}
                   hourlyResults={this.state.hourlyForecast}
                   forecastChosen={this.state.forecastChosen}
+                  windowWidth={this.state.windowWidth}
                 >
                 </ExtendedForecast>
               </div>

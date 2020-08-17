@@ -165,4 +165,43 @@
         font-size: 10px;
         line-height: 200%;
     }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-image: var(--gradient);
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        top: -5px;
+        left: -105%;
+      
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+      }
+      
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
+      
+      #smallLocationImage {
+        opacity: 0.2;
+        border-style: none;
+        width: 100%;
+        height: 50%;
+        position: absolute;
+        left: 0px;
+        top: 50%;
+      }
+
+      #bumpIcon {
+          top: -25px
+      }
   }
