@@ -126,3 +126,13 @@
     font-weight: 400;
     font-size: 20px;
 }
+
+@media only screen and (max-width: 450px) {
+    .friendsOverlord {
+        position: relative;
+        right: 0px;
+        height: 26rem;
+        width: 100%;
+        bottom: 0px;
+    }
+}
