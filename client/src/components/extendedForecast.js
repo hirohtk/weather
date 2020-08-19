@@ -215,7 +215,7 @@ class ExtendedForecast extends React.Component {
                                         <div className="col l3 forecastDayExtended" key={index}>
                                             <h5 className="pClassNewFont">{this.props.windowWidth < 450 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
-                                            <p className="pNewFontSize">Average Temperature: {each.avgTempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{this.props.windowWidth < 450 ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
                                             <p className="pNewFontSize">{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
 

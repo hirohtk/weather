@@ -20,6 +20,7 @@ function CurrentWeather(props) {
                     <p className="whiteTextInfo">{props.weather[0]} &#xb0;F</p>
                     <p className="whiteTextInfo">{props.weather[1]}</p>
                 </div>
+                {props.windowWidth < 451 && props.showFriendWeather === true ? <></> :
                 <div className="weatherInfo">
                 <div className="weather-gradient"></div>
                 {/* <a class="btn tooltipped" data-position="bottom" data-tooltip="I am a tooltip">Hover me!</a> */}
@@ -48,6 +49,8 @@ function CurrentWeather(props) {
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">UV Index: </span> {props.weather[6]}/10</p>
                     </div>
                 </div>
+                }
+                
             </div>
         </>
     )

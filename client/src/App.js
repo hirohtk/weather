@@ -248,15 +248,27 @@ class App extends React.Component {
               <div className="row">
                 {
                   this.state.windowWidth < 451 && this.state.showFriendWeather ? 
+                  <>
                     <FriendWeather
                     friendUsername={this.state.friendUsername}
                     friendLocation={this.state.friendLocation}
                     friendCurrentWeather={this.state.friendCurrentWeather} 
                     >
                     </FriendWeather>
+                    <CurrentWeather
+                    // Splitting moment's result at the comma (.split gives an array)
+                    today={this.state.today.split(",")[0]}
+                    location={this.state.location}
+                    weather={this.state.currentWeather}
+                    image={this.state.locationImage}
+                    windowWidth={this.state.windowWidth}
+                    showFriendWeather={this.state.showFriendWeather}
+                  ><p>{this.state.CurrentWeather}</p>
+                  </CurrentWeather>
+                  </>
                     : 
                     <>
-                    <div className="col l6">
+                    {<div className={this.state.windowWidth < 451 && this.state.showFriendWeather ? "" : "col l6"}>
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
@@ -266,7 +278,7 @@ class App extends React.Component {
                   windowWidth={this.state.windowWidth}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
-                </div>
+                </div>}
                 <div className="col l4">
                 {this.state.showFriendWeather ? 
                 <FriendWeather
