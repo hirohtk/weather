@@ -242,12 +242,21 @@ class App extends React.Component {
         <div className="container">
           {this.state.windowWidth < 451 ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
           <div className="row">
-            {/* <Animation
-              weather={this.state.currentWeather}>
-            </Animation> */}
             <div className="boxForEverything">
+              {/* Note: doing screen width render ternary, if mobile, don't show current weather when 
+              chatting with a friend, only show friend weather.  When desktop, use original rendering rules */}
               <div className="row">
-                <div className="col l6">
+                {
+                  this.state.windowWidth < 451 && this.state.showFriendWeather ? 
+                    <FriendWeather
+                    friendUsername={this.state.friendUsername}
+                    friendLocation={this.state.friendLocation}
+                    friendCurrentWeather={this.state.friendCurrentWeather} 
+                    >
+                    </FriendWeather>
+                    : 
+                    <>
+                    <div className="col l6">
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
@@ -268,9 +277,8 @@ class App extends React.Component {
                 </FriendWeather>
                 : <></>}
                 </div>
-                {/* <div className="col l2">
-                
-                </div> */}
+                </>
+                }
               </div>
               <div className="row">
                 <ExtendedForecast

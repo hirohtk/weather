@@ -314,9 +314,6 @@ class Friends extends React.Component {
                 {props.loggedIn === true ?
                     <>
                         <div className="friendsOverlord">
-                            {props.currentUser.length === 0 ? <></> :
-                                <span className="welcome">Welcome, {props.currentUser[0]}!</span>
-                            }
                             {this.state.chat && this.state.chatReady ?
                                 <ChatModule
                                     chattingWith={this.state.chattingWith}
@@ -332,6 +329,12 @@ class Friends extends React.Component {
                                 :
                                 <></>}
                             <div className="containerForFriends">
+                            {props.currentUser.length === 0 ? <></> :
+                            <>
+                                <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+                                <hr></hr>
+                                </>
+                            }
                                 <div className="friends-gradient"></div>
                                 {/* Will become a .map to list friends here */}
                                 <div className="theActualList">

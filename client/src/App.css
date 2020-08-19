@@ -67,4 +67,10 @@ html {
     opacity: 0.15;
     height: 100%;
   }
+
+  .boxForEverything {
+    position: relative;
+    top: 100px;
+    height: 100%;
+  }
 }
