@@ -35,7 +35,9 @@ class ChatModule extends React.Component {
     }
 
     componentDidUpdate() {
-        this.reference.current.scrollIntoView({ behavior: 'smooth' })
+        if (this.props.windowWith > 451) {
+            this.reference.current.scrollIntoView({ behavior: 'smooth' })
+        }
     }
 
     textInputHandler = (event) => {
