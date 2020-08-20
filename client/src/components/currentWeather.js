@@ -9,16 +9,16 @@ function CurrentWeather(props) {
         <>
             <div className="outerCurrentWeatherBox">
                 <div className="weather-side">
-                    {props.windowWidth < 451 ? <img src={props.image} id="smallLocationImage"></img> : <></>}
+                    {props.mobile? <img src={props.image} id="smallLocationImage"></img> : <></>}
                     <div className="weather-gradient"></div>
                     <h5 className="testText">{props.location}</h5>
                     {
-                        props.weather[1] === undefined ? <></> : <span id={props.windowWidth < 451 ? "bumpIcon" : ""}>{iconLogic(props.weather[1])}</span>
+                        props.weather[1] === undefined ? <></> : <span id={props.mobile ? "bumpIcon" : ""}>{iconLogic(props.weather[1])}</span>
                     }
                     <p className="whiteTextInfo">{props.weather[0]} &#xb0;F</p>
                     <p className="whiteTextInfo">{props.weather[1]}</p>
                 </div>
-                {props.windowWidth > 451 ? <div className="weatherInfo">
+                {!props.mobile ? <div className="weatherInfo">
                     <div className="weather-gradient"></div>
                     <div className="tooltip">
                         <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Humidity</span> is the concentration of water vapour present in the air!</span></span>
@@ -48,7 +48,7 @@ function CurrentWeather(props) {
                 }
 
             </div>
-            {props.windowWidth < 451 ? <div id="forMobileHorizontal">
+            {props.mobile ? <div id="forMobileHorizontal">
                 <div className="weatherInfo">
                     <div className="weather-gradient"></div>
                     <table>

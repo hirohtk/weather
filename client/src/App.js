@@ -40,7 +40,13 @@ class App extends React.Component {
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
   }
 
+  // fires before component modules have mounted
+  componentWillMount() {
+        // initial function call so that mobile can be true or false to begin
+    this.handleResize();
+  }
 
+  // fires only after component modules have mounted
   componentDidMount() {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
@@ -50,7 +56,14 @@ class App extends React.Component {
 
   handleResize = () => {
     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
-    this.setState({windowWidth: window.innerWidth});
+    this.setState({windowWidth: window.innerWidth}, () => {
+      if (this.state.windowWidth < 451) {
+        this.setState({mobile: true});
+      }
+      else {
+        this.setState({mobile: false})
+      }
+    });
 }
 
   getWeatherData = (forWho) => {
@@ -238,17 +251,17 @@ class App extends React.Component {
           provideFriendInfo={this.getFriendInfo}
           closeFriend={this.closeFriend}
           socket={this.socket}
-          windowWidth={this.state.windowWidth}
+          mobile={this.state.mobile}
         ></FriendsModule>
         <div className="container">
-          {this.state.windowWidth < 451 ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
+          {this.state.mobile ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
           <div className="row">
             <div className="boxForEverything">
               {/* Note: doing screen width render ternary, if mobile, don't show current weather when 
               chatting with a friend, only show friend weather.  When desktop, use original rendering rules */}
               <div className="row">
                 {
-                  this.state.windowWidth < 451 && this.state.showFriendWeather ? 
+                  this.state.mobile && this.state.showFriendWeather ? 
                   <>
                     <FriendWeather
                     friendUsername={this.state.friendUsername}
@@ -262,21 +275,21 @@ class App extends React.Component {
                     location={this.state.location}
                     weather={this.state.currentWeather}
                     image={this.state.locationImage}
-                    windowWidth={this.state.windowWidth}
+                    mobile={this.state.mobile}
                     showFriendWeather={this.state.showFriendWeather}
                   ><p>{this.state.CurrentWeather}</p>
                   </CurrentWeather>
                   </>
                     : 
                     <>
-                    {<div className={this.state.windowWidth < 451 && this.state.showFriendWeather ? "" : "col l6"}>
+                    {<div className={this.state.mobile && this.state.showFriendWeather ? "" : "col l6"}>
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
-                  windowWidth={this.state.windowWidth}
+                  mobile={this.state.mobile}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
                 </div>}
@@ -299,7 +312,7 @@ class App extends React.Component {
                   forecastResults={this.state.fiveDayForecast}
                   hourlyResults={this.state.hourlyForecast}
                   forecastChosen={this.state.forecastChosen}
-                  windowWidth={this.state.windowWidth}
+                  mobile={this.state.mobile}
                 >
                 </ExtendedForecast>
               </div>

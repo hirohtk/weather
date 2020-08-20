@@ -324,13 +324,13 @@ class Friends extends React.Component {
                                     socket={this.props.socket}
                                     messages={this.state.messages}
                                     loggedInRooms={this.state.loggedInRooms}
-                                    windowWidth={this.props.windowWidth}
+                                    mobile={this.props.mobile}
 
                                 >
                                 </ChatModule>
                                 :
                                 <></>}
-                            <div className="containerForFriends" style={this.state.chat && this.props.windowWidth < 451 ? {width: "40%"} : {width: "90%"}}>
+                            <div className="containerForFriends" style={this.state.chat && this.props.mobile ? {width: "40%"} : {width: "90%"}}>
                             {props.currentUser.length === 0 ? <></> :
                             <>
                                 <span className="welcome">Welcome, {props.currentUser[0]}!</span>

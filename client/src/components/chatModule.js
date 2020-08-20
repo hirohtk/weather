@@ -35,7 +35,7 @@ class ChatModule extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.windowWith > 451) {
+        if (!this.props.mobile) {
             this.reference.current.scrollIntoView({ behavior: 'smooth' })
         }
     }
