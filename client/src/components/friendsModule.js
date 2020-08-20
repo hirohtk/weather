@@ -330,7 +330,7 @@ class Friends extends React.Component {
                                 </ChatModule>
                                 :
                                 <></>}
-                            <div className="containerForFriends" style={this.state.chat ? {width: "40%"} : {width: "90%"}}>
+                            <div className="containerForFriends" style={this.state.chat && this.props.windowWidth < 451 ? {width: "40%"} : {width: "90%"}}>
                             {props.currentUser.length === 0 ? <></> :
                             <>
                                 <span className="welcome">Welcome, {props.currentUser[0]}!</span>

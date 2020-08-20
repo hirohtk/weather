@@ -34,7 +34,7 @@ class App extends React.Component {
       friendLocation: [],
       friendImage: [],
       friendCurrentWeather: [],
-      windowWidth: ""
+      windowWidth: window.innerWidth
     }
     // console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
