@@ -45,7 +45,8 @@
     right: -13px;
     opacity: 1;
     animation: appear 1s;
-    background-color: white;
+    background-color: rgba(54, 54, 54, 0.842);
+    color: white;
 }
 
 .searchForFriends {
@@ -110,12 +111,13 @@
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    color:white;
 }
 
 #messageArea {
     height: 60%;
     width: 90%;
-    border: 1px dashed black;
+    border: 1px ridge white;
     margin: 0 auto
 }
 
@@ -144,7 +146,8 @@
     right: 13px;
     opacity: 1;
     animation: appear 1s;
-    background-color: white;
+    background-color: rgba(54, 54, 54, 0.842);
+    color: white;
     float: right;
     top: 40px;
     }
