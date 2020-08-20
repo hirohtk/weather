@@ -197,7 +197,7 @@ html {
   .icon {
     position: relative;
     display: inline-table;
-    width: 12em;
+    width: 60%;
     height: 10em;
     font-size: 1em; /* control icon size here */
   }

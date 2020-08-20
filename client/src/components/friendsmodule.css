@@ -45,7 +45,8 @@
     right: -13px;
     opacity: 1;
     animation: appear 1s;
-    background-color: white;
+    background-color: rgba(54, 54, 54, 0.842);
+    color: white;
 }
 
 .searchForFriends {
@@ -110,12 +111,13 @@
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    color:white;
 }
 
 #messageArea {
     height: 60%;
     width: 90%;
-    border: 1px dashed black;
+    border: 1px ridge white;
     margin: 0 auto
 }
 
@@ -125,4 +127,52 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     font-size: 20px;
+}
+
+@media only screen and (max-width: 450px) {
+    .friendsOverlord {
+        position: relative;
+        right: 0px;
+        height: 26rem;
+        width: 100%;
+        bottom: 0px;
+    }
+
+    .chatBox {
+        position: relative;
+    width: 50%;
+    border-radius: 2px;
+    height: 110%;
+    right: 13px;
+    opacity: 1;
+    animation: appear 1s;
+    background-color: rgba(54, 54, 54, 0.842);
+    color: white;
+    float: right;
+    top: 40px;
+    }
+
+    .containerForFriends {
+        position: relative;
+        width: 40%;
+        /* border: 1px solid white; */
+        border-radius: 2px;
+        height: 110%;
+        right: -13px;
+        opacity: 1;
+        animation: appear 1s;
+        top: 40px;
+    }
+
+    .welcome {
+        position: relative;
+        color:white;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    #chattingWithHeader {
+        font-size: 1.2rem
+    }
 }

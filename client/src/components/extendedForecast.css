@@ -202,7 +202,7 @@ line {
 @media only screen and (max-width: 450px) {
     #forecastResults {
         /* overflow-x: scroll; */
-        width: 2300px;
+        width: 2240px;
         overflow-y: hidden;
         height: 45rem;
         white-space: nowrap;
@@ -239,7 +239,7 @@ line {
     }
 
     #forecastResultsExtended {
-        width: 220%;
+        width: 560px;
     overflow-y: hidden;
     height: 45rem;
     white-space: nowrap;
@@ -258,7 +258,7 @@ line {
     .pNewFontSize {
         font-family: 'Montserrat', sans-serif;
         font-weight: 300;
-        font-size: 8px;
+        font-size: 10px;
     }
 
     .forecastButton {

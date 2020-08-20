@@ -154,7 +154,7 @@
         color: white;
         font-family: 'Montserrat', sans-serif;
         font-weight: 300;
-        font-size: 10px;
+        font-size: 12px;
     }
 
     .whiteTextInfo2 {
@@ -162,7 +162,56 @@
         color: white;
         font-family: 'Montserrat', sans-serif;
         font-weight: 400;
-        font-size: 10px;
+        font-size: 12px;
         line-height: 200%;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-image: var(--gradient);
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        top: -5px;
+        left: -40%;
+      
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+      }
+      
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
+      
+      #smallLocationImage {
+        opacity: 0.2;
+        border-style: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0px;
+        border-radius:25px;
+      }
+
+      #bumpIcon {
+          top: -25px
+      }
+
+      .weatherInfo {
+        position: relative;
+        float: left;
+        /* background-image: linear-gradient( 315deg, #e9bcb7 0%, #29524a 74%);    */
+        width: 100%;
+        border-radius: 25px;
+        height: 100%;
+        margin-top: 10px;
     }
   }

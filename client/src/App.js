@@ -34,6 +34,7 @@ class App extends React.Component {
       friendLocation: [],
       friendImage: [],
       friendCurrentWeather: [],
+      windowWidth: ""
     }
     // console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
@@ -44,7 +45,13 @@ class App extends React.Component {
     this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
     // console.log(`app.js loaded`)
+    window.addEventListener("resize", this.handleResize);
   }
+
+  handleResize = () => {
+    console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+    this.setState({windowWidth: window.innerWidth});
+}
 
   getWeatherData = (forWho) => {
 
@@ -231,25 +238,48 @@ class App extends React.Component {
           provideFriendInfo={this.getFriendInfo}
           closeFriend={this.closeFriend}
           socket={this.socket}
+          windowWidth={this.state.windowWidth}
         ></FriendsModule>
         <div className="container">
-          <img src={this.state.locationImage} id="backgroundImage"></img>
+          {this.state.windowWidth < 451 ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
           <div className="row">
-            <Animation
-              weather={this.state.currentWeather}>
-            </Animation>
             <div className="boxForEverything">
+              {/* Note: doing screen width render ternary, if mobile, don't show current weather when 
+              chatting with a friend, only show friend weather.  When desktop, use original rendering rules */}
               <div className="row">
-                <div className="col l6">
+                {
+                  this.state.windowWidth < 451 && this.state.showFriendWeather ? 
+                  <>
+                    <FriendWeather
+                    friendUsername={this.state.friendUsername}
+                    friendLocation={this.state.friendLocation}
+                    friendCurrentWeather={this.state.friendCurrentWeather} 
+                    >
+                    </FriendWeather>
+                    <CurrentWeather
+                    // Splitting moment's result at the comma (.split gives an array)
+                    today={this.state.today.split(",")[0]}
+                    location={this.state.location}
+                    weather={this.state.currentWeather}
+                    image={this.state.locationImage}
+                    windowWidth={this.state.windowWidth}
+                    showFriendWeather={this.state.showFriendWeather}
+                  ><p>{this.state.CurrentWeather}</p>
+                  </CurrentWeather>
+                  </>
+                    : 
+                    <>
+                    {<div className={this.state.windowWidth < 451 && this.state.showFriendWeather ? "" : "col l6"}>
                 <CurrentWeather
                   // Splitting moment's result at the comma (.split gives an array)
                   today={this.state.today.split(",")[0]}
                   location={this.state.location}
                   weather={this.state.currentWeather}
                   image={this.state.locationImage}
+                  windowWidth={this.state.windowWidth}
                 ><p>{this.state.CurrentWeather}</p>
                 </CurrentWeather>
-                </div>
+                </div>}
                 <div className="col l4">
                 {this.state.showFriendWeather ? 
                 <FriendWeather
@@ -260,9 +290,8 @@ class App extends React.Component {
                 </FriendWeather>
                 : <></>}
                 </div>
-                {/* <div className="col l2">
-                
-                </div> */}
+                </>
+                }
               </div>
               <div className="row">
                 <ExtendedForecast
@@ -270,6 +299,7 @@ class App extends React.Component {
                   forecastResults={this.state.fiveDayForecast}
                   hourlyResults={this.state.hourlyForecast}
                   forecastChosen={this.state.forecastChosen}
+                  windowWidth={this.state.windowWidth}
                 >
                 </ExtendedForecast>
               </div>
