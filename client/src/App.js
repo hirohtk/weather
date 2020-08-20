@@ -238,6 +238,7 @@ class App extends React.Component {
           provideFriendInfo={this.getFriendInfo}
           closeFriend={this.closeFriend}
           socket={this.socket}
+          windowWidth={this.state.windowWidth}
         ></FriendsModule>
         <div className="container">
           {this.state.windowWidth < 451 ? <></> : <img src={this.state.locationImage} id="backgroundImage"></img>}
