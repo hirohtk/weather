@@ -32,7 +32,7 @@ class App extends React.Component {
       friendUsername: "",
       friendCoordinates: [],
       friendLocation: [],
-      friendImage: [],
+      friendLocationImage: "",
       friendCurrentWeather: [],
       windowWidth: window.innerWidth
     }
@@ -57,7 +57,7 @@ class App extends React.Component {
   handleResize = () => {
     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
     this.setState({windowWidth: window.innerWidth}, () => {
-      if (this.state.windowWidth < 451) {
+      if (this.state.windowWidth < 701) {
         this.setState({mobile: true});
       }
       else {
@@ -266,6 +266,7 @@ class App extends React.Component {
                     <FriendWeather
                     friendUsername={this.state.friendUsername}
                     friendLocation={this.state.friendLocation}
+                    friendLocationImage={this.state.friendLocationImage}
                     friendCurrentWeather={this.state.friendCurrentWeather} 
                     >
                     </FriendWeather>

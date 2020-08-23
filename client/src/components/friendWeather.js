@@ -10,6 +10,7 @@ function FriendWeather(props) {
             <div className="friendWeather">
                 <div className="weather-side">
                     <div className="weather-gradient-friend">
+                    <img src={props.friendLocationImage} id="smallLocationImage"></img>
                         <h5 className="viewingFor">Viewing weather for {props.friendUsername}!</h5>
                         <h5 className="testText">{props.friendLocation}</h5>
                         {
