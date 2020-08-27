@@ -150,14 +150,14 @@ class ExtendedForecast extends React.Component {
                     <div className="row">
                         <div id="forecastOptions" className="whiteText">
                             <div className= "row">
-                            <div className="col l6">
+                            <div className={"col l6"}>
                                 <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
                                     Hourly
                                 </div>
                             </div>
-                            <div className="col l6">
+                            <div className={"col l6"}>
                                 <div className={this.state.forecastButtonHovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
@@ -194,7 +194,7 @@ class ExtendedForecast extends React.Component {
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
                                     <div className="forecastDayHourly">
-                                        <h5 className="pClassNewFont">{this.props.windowWidth < 450 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
+                                        <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
                                         <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
                                         <p className="pNewFontSize">{each.condition}</p>
@@ -209,9 +209,9 @@ class ExtendedForecast extends React.Component {
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
                                         <div className="col l3 forecastDayExtended" key={index}>
-                                            <h5 className="pClassNewFont">{this.props.windowWidth < 450 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
+                                            <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
-                                            <p className="pNewFontSize">{this.props.windowWidth < 450 ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
                                             <p className="pNewFontSize">{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
 

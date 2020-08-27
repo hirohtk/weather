@@ -148,7 +148,7 @@
     visibility: visible;
   }
 
-  @media only screen and (max-width: 450px) {
+  @media only screen and (max-width: 990px) {
     .whiteTextInfo {
         text-align: center;
         color: white;
