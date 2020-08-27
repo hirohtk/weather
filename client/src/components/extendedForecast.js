@@ -27,7 +27,6 @@ class ExtendedForecast extends React.Component {
             lineData: [],
             forecastButtonHovered: undefined,
         }
-        this.handleResize = this.handleResize.bind(this);
     }
 
     onMouseDown = e => {
@@ -124,13 +123,10 @@ class ExtendedForecast extends React.Component {
         return;
     }
 
-    handleResize = () => {
-        // this.setState({windowWidth: window.innerWidth});
-        this.getPointCoords(this.state.forecastChosen);
-    }
-
     componentDidUpdate = (prevProps) => {
+        // console.log(`extended forecast ComponentDidUpdate updated, prevProps ${JSON.stringify(prevProps)} and this.props ${this.props.windowWidth}`)
         if (prevProps.windowWidth != this.props.windowWidth) {
+            // console.log(`window width change, should re-rendering the point coordinates`)
             this.getPointCoords(this.state.forecastChosen);
         }
     }
@@ -190,7 +186,7 @@ class ExtendedForecast extends React.Component {
                                         : <></>
                                 )) : props.forecastResults.map((each, index) => (
                                     index < props.forecastResults.length - 1 ?
-                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" key={index} />
                                         : <></>
 
                                 ))}

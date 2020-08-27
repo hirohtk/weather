@@ -314,6 +314,7 @@ class App extends React.Component {
                   hourlyResults={this.state.hourlyForecast}
                   forecastChosen={this.state.forecastChosen}
                   mobile={this.state.mobile}
+                  windowWidth={this.state.windowWidth}
                 >
                 </ExtendedForecast>
               </div>

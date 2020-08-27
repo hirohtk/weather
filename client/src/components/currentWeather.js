@@ -32,16 +32,16 @@ function CurrentWeather(props) {
                     </div>
 
                     <div className="tooltip">
-                        <span class="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind direction</span> is reported by the direction from which it originates.</span></span>
+                        <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind direction</span> is reported by the direction from which it originates.</span></span>
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">Wind Direction: </span> {props.weather[4]}</p>
                     </div>
 
                     <div className="tooltip">
-                        <span class="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind degree</span> describes the direction from which the wind emanates.</span></span>
+                        <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">Wind degree</span> describes the direction from which the wind emanates.</span></span>
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">Wind Degree: </span> {props.weather[5]}</p>
                     </div>
                     <div className="tooltip">
-                        <span class="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">UV Index</span> provides a daily forecast of the expected intensity of ultraviolet (UV) radiation from the sun.</span></span>
+                        <span className="tooltiptext"><span className="whiteTextToolTip"><span className="whiteTextToolBold">UV Index</span> provides a daily forecast of the expected intensity of ultraviolet (UV) radiation from the sun.</span></span>
                         <p className="whiteTextInfo"><span className="whiteTextInfo2">UV Index: </span> {props.weather[6]}/10</p>
                     </div>
                 </div> : <></>
