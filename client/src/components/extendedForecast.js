@@ -17,6 +17,7 @@ class ExtendedForecast extends React.Component {
         super(props);
         this.ref = React.createRef();
         this.parentRef = React.createRef();
+        this.scrollRef = React.createRef();
         this.locationRefsHourly = [];
         this.locationRefsExtended = [];
         this.state = {
@@ -62,6 +63,7 @@ class ExtendedForecast extends React.Component {
 
     changeForecast = (event) => {
         // set state so that the JSX can render, then fill in point coordinates.  
+
         if (event.target.dataset.name === "hourly") {
             this.setState({ forecastChosen: "hourly", lineData: [] }, () => {
                 // console.log(`changing forecast to hourly, I should see some refs here because that's what pointcoords is using ${this.locationRefsHourly}`);
@@ -79,6 +81,9 @@ class ExtendedForecast extends React.Component {
 
     getPointCoords = (which) => {
         let references;
+
+        this.scrollRef.current.scrollIntoView(false, {behavior: "smooth"})
+
         if (which === "hourly") {
             references = this.locationRefsHourly;
         }
@@ -191,6 +196,7 @@ class ExtendedForecast extends React.Component {
 
                                 ))}
                             </svg>
+                            <div id="refocusView" ref={this.scrollRef}></div>
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
                                     <div className="forecastDayHourly">
