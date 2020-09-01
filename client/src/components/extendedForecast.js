@@ -82,7 +82,7 @@ class ExtendedForecast extends React.Component {
     getPointCoords = (which) => {
         let references;
 
-        this.scrollRef.current.scrollIntoView(false, {behavior: "smooth"})
+        this.scrollRef.current.scrollIntoView(false)
 
         if (which === "hourly") {
             references = this.locationRefsHourly;
@@ -196,10 +196,10 @@ class ExtendedForecast extends React.Component {
 
                                 ))}
                             </svg>
-                            <div id="refocusView" ref={this.scrollRef}></div>
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
-                                    <div className="forecastDayHourly">
+                                    <div className="forecastDayHourly" key={index} ref={index === 0 ? this.scrollRef : ""}>
+                                        {/* {index === 0 ? <div id="refocusView" ref={this.scrollRef}></div> : <></>} */}
                                         <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
                                         <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
@@ -214,7 +214,7 @@ class ExtendedForecast extends React.Component {
                                 ))
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
-                                        <div className="col l3 forecastDayExtended" key={index}>
+                                        <div className="col l3 forecastDayExtended" key={index} ref={index === 0 ? this.scrollRef : ""}>
                                             <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
                                             <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
