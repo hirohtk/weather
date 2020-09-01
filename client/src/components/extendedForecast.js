@@ -134,13 +134,15 @@ class ExtendedForecast extends React.Component {
             // console.log(`window width change, should re-rendering the point coordinates`)
             this.getPointCoords(this.state.forecastChosen);
         }
+
+        // this should be a way that we can wait for props to come in and then render the point coordinates
+        if (prevProps.hourlyResults != this.props.hourlyResults || prevProps.forecastResults != this.props.forecastResults) {
+            this.getPointCoords("extended");
+        }
     }
 
     componentDidMount = () => {
-        setTimeout(() => {
-            this.getPointCoords("extended");
-        }, 3000);
-        // window.addEventListener("resize", this.handleResize);
+    
     }
         
     render() {
