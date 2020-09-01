@@ -218,7 +218,7 @@ class App extends React.Component {
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
       this.socket.close();
       this.socket.open();
-      this.setState({ currentUser: [], loggedIn: false });
+      this.setState({ currentUser: [], loggedIn: false, showFriendWeather: false });
     }
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER

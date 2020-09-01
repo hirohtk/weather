@@ -63,16 +63,17 @@ class ExtendedForecast extends React.Component {
 
     changeForecast = (event) => {
         // set state so that the JSX can render, then fill in point coordinates.  
-
         if (event.target.dataset.name === "hourly") {
             this.setState({ forecastChosen: "hourly", lineData: [] }, () => {
                 // console.log(`changing forecast to hourly, I should see some refs here because that's what pointcoords is using ${this.locationRefsHourly}`);
+                this.scrollRef.current.scrollIntoView(false)
                 this.getPointCoords("hourly");
             });
 
         }
         else if (event.target.dataset.name === "fiveDay") {
             this.setState({ forecastChosen: "extended", lineData: [] }, () => {
+                this.scrollRef.current.scrollIntoView(false)
                 this.getPointCoords("extended");
                 // console.log(`changing forecast to extended, I should see some refs here because that's what pointcoords is using ${this.locationRefsExtended}`)
             });
@@ -81,8 +82,6 @@ class ExtendedForecast extends React.Component {
 
     getPointCoords = (which) => {
         let references;
-
-        this.scrollRef.current.scrollIntoView(false)
 
         if (which === "hourly") {
             references = this.locationRefsHourly;
@@ -139,10 +138,6 @@ class ExtendedForecast extends React.Component {
         if (prevProps.hourlyResults != this.props.hourlyResults || prevProps.forecastResults != this.props.forecastResults) {
             this.getPointCoords("extended");
         }
-    }
-
-    componentDidMount = () => {
-    
     }
         
     render() {

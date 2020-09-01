@@ -77,7 +77,7 @@ class ChatModule extends React.Component {
         const props = this.props
         return (
             <div className="chatBox">
-                <h5 id="chattingWithHeader">{props.currentUser[0]} chatting with {props.chattingWith}</h5>
+                <h5 id="chattingWithHeader">Chatting with {props.chattingWith}</h5>
                 <div id="messageArea" >{this.props.messages != undefined ? this.props.messages.map((each, index) => (
                     <p>{each.author.username}: {each.message}</p>
                 ))
