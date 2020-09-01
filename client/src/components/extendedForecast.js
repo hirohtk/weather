@@ -17,6 +17,7 @@ class ExtendedForecast extends React.Component {
         super(props);
         this.ref = React.createRef();
         this.parentRef = React.createRef();
+        this.scrollRef = React.createRef();
         this.locationRefsHourly = [];
         this.locationRefsExtended = [];
         this.state = {
@@ -27,7 +28,6 @@ class ExtendedForecast extends React.Component {
             lineData: [],
             forecastButtonHovered: undefined,
         }
-        this.handleResize = this.handleResize.bind(this);
     }
 
     onMouseDown = e => {
@@ -66,12 +66,14 @@ class ExtendedForecast extends React.Component {
         if (event.target.dataset.name === "hourly") {
             this.setState({ forecastChosen: "hourly", lineData: [] }, () => {
                 // console.log(`changing forecast to hourly, I should see some refs here because that's what pointcoords is using ${this.locationRefsHourly}`);
+                this.scrollRef.current.scrollIntoView(false)
                 this.getPointCoords("hourly");
             });
 
         }
         else if (event.target.dataset.name === "fiveDay") {
             this.setState({ forecastChosen: "extended", lineData: [] }, () => {
+                this.scrollRef.current.scrollIntoView(false)
                 this.getPointCoords("extended");
                 // console.log(`changing forecast to extended, I should see some refs here because that's what pointcoords is using ${this.locationRefsExtended}`)
             });
@@ -80,6 +82,7 @@ class ExtendedForecast extends React.Component {
 
     getPointCoords = (which) => {
         let references;
+
         if (which === "hourly") {
             references = this.locationRefsHourly;
         }
@@ -124,22 +127,17 @@ class ExtendedForecast extends React.Component {
         return;
     }
 
-    handleResize = () => {
-        // this.setState({windowWidth: window.innerWidth});
-        this.getPointCoords(this.state.forecastChosen);
-    }
-
     componentDidUpdate = (prevProps) => {
+        // console.log(`extended forecast ComponentDidUpdate updated, prevProps ${JSON.stringify(prevProps)} and this.props ${this.props.windowWidth}`)
         if (prevProps.windowWidth != this.props.windowWidth) {
+            // console.log(`window width change, should re-rendering the point coordinates`)
             this.getPointCoords(this.state.forecastChosen);
         }
-    }
 
-    componentDidMount = () => {
-        setTimeout(() => {
+        // this should be a way that we can wait for props to come in and then render the point coordinates
+        if (prevProps.hourlyResults != this.props.hourlyResults || prevProps.forecastResults != this.props.forecastResults) {
             this.getPointCoords("extended");
-        }, 3000);
-        // window.addEventListener("resize", this.handleResize);
+        }
     }
         
     render() {
@@ -154,14 +152,14 @@ class ExtendedForecast extends React.Component {
                     <div className="row">
                         <div id="forecastOptions" className="whiteText">
                             <div className= "row">
-                            <div className="col l6">
+                            <div className={"col l6"}>
                                 <div className={this.state.forecastButtonHovered === "hourly" ? "hover forecastButton" : "forecastButton"} data-name="hourly" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
                                     Hourly
                                 </div>
                             </div>
-                            <div className="col l6">
+                            <div className={"col l6"}>
                                 <div className={this.state.forecastButtonHovered === "fiveDay" ? "hover forecastButton" : "forecastButton"} data-name="fiveDay" onClick={this.changeForecast}
                                     onMouseEnter={props.handleHover}
                                     onMouseLeave={props.handleHover}>
@@ -190,15 +188,16 @@ class ExtendedForecast extends React.Component {
                                         : <></>
                                 )) : props.forecastResults.map((each, index) => (
                                     index < props.forecastResults.length - 1 ?
-                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" key={index} />
                                         : <></>
 
                                 ))}
                             </svg>
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
-                                    <div className="forecastDayHourly">
-                                        <h5 className="pClassNewFont">{this.props.windowWidth < 450 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
+                                    <div className="forecastDayHourly" key={index} ref={index === 0 ? this.scrollRef : ""}>
+                                        {/* {index === 0 ? <div id="refocusView" ref={this.scrollRef}></div> : <></>} */}
+                                        <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
                                         <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
                                         <p className="pNewFontSize">{each.condition}</p>
@@ -212,10 +211,10 @@ class ExtendedForecast extends React.Component {
                                 ))
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
-                                        <div className="col l3 forecastDayExtended" key={index}>
-                                            <h5 className="pClassNewFont">{this.props.windowWidth < 450 ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
+                                        <div className="col l3 forecastDayExtended" key={index} ref={index === 0 ? this.scrollRef : ""}>
+                                            <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
-                                            <p className="pNewFontSize">{this.props.windowWidth < 450 ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
                                             <p className="pNewFontSize">{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
 

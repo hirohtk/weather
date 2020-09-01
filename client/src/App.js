@@ -57,7 +57,7 @@ class App extends React.Component {
   handleResize = () => {
     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
     this.setState({windowWidth: window.innerWidth}, () => {
-      if (this.state.windowWidth < 701) {
+      if (this.state.windowWidth < 991) {
         this.setState({mobile: true});
       }
       else {
@@ -218,7 +218,7 @@ class App extends React.Component {
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
       this.socket.close();
       this.socket.open();
-      this.setState({ currentUser: [], loggedIn: false });
+      this.setState({ currentUser: [], loggedIn: false, showFriendWeather: false });
     }
   }
 // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
@@ -314,6 +314,7 @@ class App extends React.Component {
                   hourlyResults={this.state.hourlyForecast}
                   forecastChosen={this.state.forecastChosen}
                   mobile={this.state.mobile}
+                  windowWidth={this.state.windowWidth}
                 >
                 </ExtendedForecast>
               </div>

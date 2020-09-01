@@ -199,7 +199,7 @@ line {
 }
 
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 990px) {
     #forecastResults {
         /* overflow-x: scroll; */
         width: 2240px;
@@ -277,4 +277,12 @@ line {
     cursor: pointer;
     FONT-WEIGHT: 500;
     }
+
+    .mobileChangeButton {
+float:right;
+position: relative;
+margin: 0 auto;
+    }
   }
+
+

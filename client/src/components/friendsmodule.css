@@ -129,7 +129,7 @@
     font-size: 20px;
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 990px) {
     .friendsOverlord {
         position: relative;
         right: 0px;
@@ -141,7 +141,7 @@
     .chatBox {
         position: relative;
     width: 50%;
-    border-radius: 2px;
+    border-radius: 10px;
     height: 110%;
     right: 13px;
     opacity: 1;
@@ -173,6 +173,15 @@
     }
 
     #chattingWithHeader {
-        font-size: 1.2rem
+        font-size: 1.2rem;
+        width: 90%;
+        text-align: end;
     }
+
+    .searchForFriends {
+        position: relative;
+        width: 90%;
+        margin: 0 auto;
+    }
+
 }
