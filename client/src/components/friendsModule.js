@@ -307,6 +307,12 @@ class Friends extends React.Component {
         }
     }
 
+    removeFriend = (id) => {
+        axios.put(`/api/deletefriend/${id}`, {user: this.props.currentUser[1]}).then(response => {
+            console.log(`friend with id ${id} removed`)
+        })
+    }
+
     render() {
         const props = this.props
         return (
@@ -355,7 +361,8 @@ class Friends extends React.Component {
                                                     {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
                                                     {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
-                                                    <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
+                                                    <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img>
+                                                    <i class="removeFriend" onClick={() => this.removeFriend(each._id)}>indeterminate_check_box</i></p>
                                             ))}
                                         </>}
                                 </div>

@@ -99,6 +99,14 @@ router.put("/api/addusers/:id", function (req, res) {
   })
 });
 
+router.put("/api/deleteusers/:id", function (req, res) {
+  console.log(`adding to friendslist this person ${req.params.id}`);
+  db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$pull: {friends: req.params.id}}).then(response => {
+    console.log(`response from deleting friend query is as follows (if NULL, broken) ${response}`)
+    res.json(response);
+  })
+});
+
 router.put("/api/updatecoords/:id", function (req, res) {
   // console.log(`pushing your coords, which are ${req.body.coordinates}`);
   db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coordinates}}).then((response) => {

@@ -74,6 +74,16 @@
     right: 10px;
 }
 
+.removeFriend {
+    height: 20px;
+    width: 20px;
+    position: relative;
+    float:right;
+    right:10px;
+    z-index: 1;
+    color:red
+}
+
 .whiteText {
     color: white;
 }
