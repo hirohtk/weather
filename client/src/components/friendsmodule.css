@@ -81,7 +81,7 @@
     float:right;
     right:10px;
     z-index: 1;
-    color:red
+    color: rgba(219, 49, 49, 0.842)
 }
 
 .whiteText {
@@ -185,7 +185,7 @@
     #chattingWithHeader {
         font-size: 1.2rem;
         width: 90%;
-        text-align: end;
+        text-align: center;
     }
 
     .searchForFriends {

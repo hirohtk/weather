@@ -307,12 +307,6 @@ class Friends extends React.Component {
         }
     }
 
-    removeFriend = (id) => {
-        axios.put(`/api/deletefriend/${id}`, {user: this.props.currentUser[1]}).then(response => {
-            console.log(`friend with id ${id} removed`)
-        })
-    }
-
     render() {
         const props = this.props
         return (
@@ -323,6 +317,7 @@ class Friends extends React.Component {
                             {this.state.chat && this.state.chatReady ?
                                 <ChatModule
                                     chattingWith={this.state.chattingWith}
+                                    chattingWithID={this.state.chattingWithID}
                                     closeBox={this.openFriend}
                                     currentUser={this.props.currentUser}
                                     chatroomID={this.state.chatroomID}
@@ -354,6 +349,7 @@ class Friends extends React.Component {
                                         <>
 
                                             {this.state.friendsList.map((each, index) => (
+                                                <>
                                                 <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
                                                     <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
                                                     {/* unread is an array, filter it down to an array where author names are present.
@@ -362,7 +358,7 @@ class Friends extends React.Component {
                                                     {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
                                                     <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img>
-                                                    <i class="removeFriend" onClick={() => this.removeFriend(each._id)}>indeterminate_check_box</i></p>
+                                                    </p></>
                                             ))}
                                         </>}
                                 </div>
