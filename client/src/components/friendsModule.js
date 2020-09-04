@@ -326,7 +326,7 @@ class Friends extends React.Component {
                                     messages={this.state.messages}
                                     loggedInRooms={this.state.loggedInRooms}
                                     mobile={this.props.mobile}
-
+                                    loadFriends={this.loadFriends}
                                 >
                                 </ChatModule>
                                 :
@@ -376,8 +376,11 @@ class Friends extends React.Component {
                                             <> <h5 className="whiteText">Search Results</h5>
                                                 {this.state.friendResults.map((each, index) =>
                                                     // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                                    <p className="whiteText">{each.username}{each.id != null ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
-                                                <button onClick={this.clearResults}>Clear</button>
+                                                    <>
+                                                    <p className="whiteText">{each.username}</p>
+                                                    <p>{each.id != null ? <button class="addButtons" onClick={() => this.addFriend(each.id)}>Add</button> : <></>}
+                                                    <button class="addButtons"  onClick={this.clearResults}>Clear</button></p>
+                                                    </>)}
                                             </>}
                                         </> : <></>}
                                 </div>

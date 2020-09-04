@@ -48,7 +48,9 @@ class ChatModule extends React.Component {
 
     removeFriend = (id) => {
         axios.put(`/api/deleteusers/${id}`, {user: this.props.currentUser[1]}).then(response => {
-            console.log(`friend with id ${id} removed`)
+            console.log(`friend with id ${id} removed`);
+            this.props.loadFriends();
+            this.props.closeBox("close")
         })
     }
 
