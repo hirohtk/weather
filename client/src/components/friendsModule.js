@@ -385,7 +385,6 @@ class Friends extends React.Component {
                                         </> : <></>}
                                 </div>
                             </div>
-
                         </div></> : <></>}
             </>
         )
