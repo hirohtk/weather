@@ -91,3 +91,12 @@ nav, .brand-logo {
     left: 75px;
 
 }
+
+#checkBoxUnits {
+    position: relative;
+    top: 1rem;
+}
+
+#metric {
+    color:white
+}

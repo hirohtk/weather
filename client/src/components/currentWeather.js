@@ -14,7 +14,7 @@ function CurrentWeather(props) {
                     {
                         props.weather.condition === undefined ? <></> : <span id={props.mobile ? "bumpIcon" : ""}>{iconLogic(props.weather.condition)}</span>
                     }
-                    <p className="whiteTextInfo">{props.weather.tempInF} &#xb0;F</p>
+                    <p className="whiteTextInfo">{props.metric === true ? props.weather.tempInC : props.weather.tempInF}{props.metric === true ? "C" : "F"}</p>
                     <p className="whiteTextInfo">{props.weather.condition}</p>
                 </div>
                 {!props.mobile ? <div className="weatherInfo">

@@ -34,7 +34,8 @@ class App extends React.Component {
       friendLocation: [],
       friendLocationImage: "",
       friendCurrentWeather: [],
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      metric: false,
     }
     // console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
@@ -256,6 +257,16 @@ class App extends React.Component {
 
   closeFriend = () => this.setState({ showFriendWeather: false });
 
+  changeUnits = () => {
+    console.log(`changing units`)
+    if (this.state.metric === false) {
+      this.setState({metric: true}, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
+    }
+    else {
+      this.setState({metric: false}, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -263,6 +274,7 @@ class App extends React.Component {
           loggedIn={this.state.loggedIn}
           handleLogin={this.handleLogin}
           currentUser={this.state.currentUser}
+          changeUnits={this.changeUnits}
         ></Nav>
         <FriendsModule
           loggedIn={this.state.loggedIn}
@@ -290,6 +302,7 @@ class App extends React.Component {
                         friendLocation={this.state.friendLocation}
                         friendLocationImage={this.state.friendLocationImage}
                         friendCurrentWeather={this.state.friendCurrentWeather}
+                        metric={this.state.metric}
                       >
                       </FriendWeather>
                       <CurrentWeather
@@ -300,6 +313,7 @@ class App extends React.Component {
                         image={this.state.locationImage}
                         mobile={this.state.mobile}
                         showFriendWeather={this.state.showFriendWeather}
+                        metric={this.state.metric}
                       ><p>{this.state.CurrentWeather}</p>
                       </CurrentWeather>
                     </>
@@ -337,6 +351,7 @@ class App extends React.Component {
                   forecastChosen={this.state.forecastChosen}
                   mobile={this.state.mobile}
                   windowWidth={this.state.windowWidth}
+                  metric={this.state.metric}
                 >
                 </ExtendedForecast>
               </div>

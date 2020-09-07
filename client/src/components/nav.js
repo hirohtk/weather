@@ -91,12 +91,14 @@ class Nav extends React.Component {
     }
   }
 
+
   render() {
     const props = this.props
     return (
       <>
         <Sidebar
-          sidebar={<><b>FriendForecast App - Settings</b>
+          sidebar={<>
+            <b>FriendForecast App - Settings</b>
             <hr></hr>
             <div className="menuOptions" style={this.state.loggingIn ? { color: "white" } : {}}
               onClick={() => {
@@ -112,7 +114,14 @@ class Nav extends React.Component {
                 <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.loginRegisterGate}></input>
                 <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
-
+            <div class="switch" id="checkBoxUnits">
+              <label id="metric">
+                US
+                <input type="checkbox" onChange={this.props.changeUnits}/>
+                <span class="lever"></span>
+                Metric
+            </label>
+            </div>
           </>}
           open={this.state.sidebarOpen}
           onSetOpen={this.onSetSidebarOpen}

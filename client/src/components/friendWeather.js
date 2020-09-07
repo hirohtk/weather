@@ -15,7 +15,7 @@ function FriendWeather(props) {
                         {
                             props.friendCurrentWeather.condition === undefined ? <></> : <span>{iconLogic(props.friendCurrentWeather.condition)}</span>
                         }
-                        <p className="whiteTextInfo">{props.friendCurrentWeather.tempInF}F</p>
+                        <p className="whiteTextInfo">{props.metric === true ? props.friendCurrentWeather.tempInC : props.friendCurrentWeather.tempInF}{props.metric === true? "C" : "F"}</p>
                         <p className="whiteTextInfo">{props.friendCurrentWeather.condition}</p>
                     </div>
                 </div>
