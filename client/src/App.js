@@ -327,6 +327,7 @@ class App extends React.Component {
                           weather={this.state.currentWeather}
                           image={this.state.locationImage}
                           mobile={this.state.mobile}
+                          metric={this.state.metric}
                         ><p>{this.state.CurrentWeather}</p>
                         </CurrentWeather>
                       </div>}

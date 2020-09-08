@@ -4,6 +4,8 @@ import { iconLogic } from "./logic/iconLogic";
 
 function CurrentWeather(props) {
 
+    console.log(`metric in currentWeather props is ${props.metric}`)
+
     return (
         <>
             <div className="outerCurrentWeatherBox">

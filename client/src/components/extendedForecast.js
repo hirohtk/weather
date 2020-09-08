@@ -199,7 +199,7 @@ class ExtendedForecast extends React.Component {
                                         {/* {index === 0 ? <div id="refocusView" ref={this.scrollRef}></div> : <></>} */}
                                         <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
-                                        <p className="pNewFontSize">Temperature: {each.tempF}&#xb0;F</p>
+                                        <p className="pNewFontSize">Temperature: {props.metric === true ? each.tempC : each.tempF}{props.metric === true ? "C" : "F"}</p>
                                         <p className="pNewFontSize">{each.condition}</p>
                                         <span>{iconLogic(each.condition)}</span>
                                         <div className="tempGraphBox">
@@ -214,7 +214,7 @@ class ExtendedForecast extends React.Component {
                                         <div className="col l3 forecastDayExtended" key={index} ref={index === 0 ? this.scrollRef : ""}>
                                             <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
-                                            <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {each.avgTempF}&#xb0;F</p>
+                                            <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {props.metric === true ? each.avgTempC : each.avgTempF}{props.metric === true ? "C" : "F"}</p>
                                             <p className="pNewFontSize">{each.condition}</p>
                                             <span>{iconLogic(each.condition)}</span>
 
