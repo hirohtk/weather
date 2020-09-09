@@ -17,6 +17,9 @@ const UserSchema = new Schema({
     type: Array,
     required: true,
   },
+  userImage: {
+    type: String,
+  }
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

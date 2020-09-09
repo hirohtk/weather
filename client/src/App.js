@@ -231,7 +231,7 @@ class App extends React.Component {
   handleLogin = (credentials, doWhich) => {
     // login
     if (doWhich === "login") {
-      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }, () => {
+      this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
         this.setLastKnownCoords();
       })
     }

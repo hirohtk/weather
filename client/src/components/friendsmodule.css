@@ -74,6 +74,13 @@
     right: 10px;
 }
 
+.tinyFriendPic {
+    height: 20px;
+    width: 20px;
+    position: relative;
+    margin-left: 10px
+}
+
 .removeFriend {
     height: 20px;
     width: 20px;

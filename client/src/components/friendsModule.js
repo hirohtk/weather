@@ -334,7 +334,7 @@ class Friends extends React.Component {
                             <div className="containerForFriends" style={this.state.chat && this.props.mobile ? {width: "40%"} : {width: "90%"}}>
                             {props.currentUser.length === 0 ? <></> :
                             <>
-                                <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+                                <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2]}></img>
                                 <hr></hr>
                                 </>
                             }
