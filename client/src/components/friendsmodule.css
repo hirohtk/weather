@@ -74,6 +74,23 @@
     right: 10px;
 }
 
+.tinyMePic {
+    height: 20px;
+    width: 20px;
+    position: relative;
+    margin-left: 10px
+}
+
+.removeFriend {
+    height: 20px;
+    width: 20px;
+    position: relative;
+    float:right;
+    right:10px;
+    z-index: 1;
+    color: rgba(219, 49, 49, 0.842)
+}
+
 .whiteText {
     color: white;
 }
@@ -129,6 +146,11 @@
     font-size: 20px;
 }
 
+.addButtons {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
 @media only screen and (max-width: 990px) {
     .friendsOverlord {
         position: relative;
@@ -175,7 +197,7 @@
     #chattingWithHeader {
         font-size: 1.2rem;
         width: 90%;
-        text-align: end;
+        text-align: center;
     }
 
     .searchForFriends {

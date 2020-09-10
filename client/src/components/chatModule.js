@@ -3,6 +3,7 @@ import "./friendsmodule.css";
 // import axios from "axios";
 // import io from "socket.io-client";
 import "./chatModule.css";
+import axios from "axios";
 
 class ChatModule extends React.Component {
 
@@ -44,6 +45,14 @@ class ChatModule extends React.Component {
         event.preventDefault();
         this.setState({ myMessage: event.target.value })
     };
+
+    removeFriend = (id) => {
+        axios.put(`/api/deleteusers/${id}`, {user: this.props.currentUser[1]}).then(response => {
+            console.log(`friend with id ${id} removed`);
+            this.props.loadFriends();
+            this.props.closeBox("close")
+        })
+    }
 
     sendMessage = (event) => {
         // SOCKET IS HANDLING MONGOOSE AND DB INTERACTION IN sockets.js, DON'T USE AXIOS 
@@ -88,6 +97,7 @@ class ChatModule extends React.Component {
                     <span>
                         <button onClick={this.sendMessage} type="submit">Send</button>
                         <button onClick={() => props.closeBox("close")}>Close</button>
+                        <i class="material-icons removeFriend" onClick={() => this.removeFriend(props.chattingWithID)}>delete_forever</i>
                     </span>
                 </form>
             </div>

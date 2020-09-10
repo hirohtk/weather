@@ -28,13 +28,14 @@ class App extends React.Component {
       currentUser: [],
       coordinates: [],
       showFriendWeather: false,
-  
+
       friendUsername: "",
       friendCoordinates: [],
       friendLocation: [],
       friendLocationImage: "",
       friendCurrentWeather: [],
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      metric: false,
     }
     // console.log(`console logging inside the constructor of App.js`);
     this.socket = io('https://immense-cove-75264.herokuapp.com/');
@@ -42,7 +43,7 @@ class App extends React.Component {
 
   // fires before component modules have mounted
   componentWillMount() {
-        // initial function call so that mobile can be true or false to begin
+    // initial function call so that mobile can be true or false to begin
     this.handleResize();
   }
 
@@ -56,15 +57,15 @@ class App extends React.Component {
 
   handleResize = () => {
     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
-    this.setState({windowWidth: window.innerWidth}, () => {
+    this.setState({ windowWidth: window.innerWidth }, () => {
       if (this.state.windowWidth < 991) {
-        this.setState({mobile: true});
+        this.setState({ mobile: true });
       }
       else {
-        this.setState({mobile: false})
+        this.setState({ mobile: false })
       }
     });
-}
+  }
 
   getWeatherData = (forWho) => {
 
@@ -79,7 +80,7 @@ class App extends React.Component {
         if (forWho === "self") {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
-          this.setState({coordinates: [latitude, longitude]}, () => googleAPI(latitude, longitude));
+          this.setState({ coordinates: [latitude, longitude] }, () => googleAPI(latitude, longitude));
         }
         else {
           // console.log(`your friend's coordinates are ${this.state.friendCoordinates[0]} and ${this.state.friendCoordinates[1]}`)
@@ -129,6 +130,7 @@ class App extends React.Component {
       .then(response => {
         console.log(response);
         let tempInF = response.data.current.temp_f;
+        let tempInC = response.data.current.temp_c;
         let condition = response.data.current.condition.text;
         let windDirection = response.data.current.wind_dir;
         let windSpeed = response.data.current.wind_mph;
@@ -143,13 +145,14 @@ class App extends React.Component {
             obj.date = moment(response.data.forecast.forecastday[i].date).format('ll');
             obj.dayOfWeek = moment(obj.date).format('dddd');
             obj.avgTempF = response.data.forecast.forecastday[i].day.avgtemp_f;
+            obj.avgTempC = response.data.forecast.forecastday[i].day.avgtemp_c;
             obj.rainProbability = response.data.forecast.forecastday[i].day.daily_chance_of_rain;
             obj.condition = response.data.forecast.forecastday[i].day.condition.text;
             fiveDayForecastArray.push(obj);
           }
           return fiveDayForecastArray.slice(1);
         }
-        
+
         // console.log(`five day forecast array is ${fiveDayForecastArray}`);
         let getHourly = () => {
           let hourlyForecastArray = [];
@@ -162,6 +165,7 @@ class App extends React.Component {
               obj.time = moment(response.data.forecast.forecastday[k].hour[j].time).format('h:mm a');
               obj.dayOfWeek = moment(response.data.forecast.forecastday[k].date).format('dddd');
               obj.tempF = response.data.forecast.forecastday[k].hour[j].temp_f;
+              obj.tempC = response.data.forecast.forecastday[k].hour[j].temp_c;
               obj.rainProbability = response.data.forecast.forecastday[k].hour[j].chance_of_rain;
               obj.condition = response.data.forecast.forecastday[k].hour[j].condition.text;
               hourlyForecastArray.push(obj);
@@ -169,7 +173,7 @@ class App extends React.Component {
           }
           return hourlyForecastArray;
         }
-        
+
         // FOR ONE DAY HOURLY DATA
         // for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
         //   console.log(j)
@@ -186,12 +190,31 @@ class App extends React.Component {
           this.setState({
             fiveDayForecast: getFiveDay(),
             hourlyForecast: getHourly(),
-            currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
+            // currentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex],
+            currentWeather: {
+              tempInF: tempInF,
+              tempInC: tempInC,
+              condition: condition,
+              humid: humid,
+              windSpeed: windSpeed,
+              windDirection: windDirection,
+              windDegree: windDegree,
+              uvIndex: uvIndex
+            },
             howManyForecastedDays: response.data.forecast.forecastday.length,
           });
         }
         else {
-          this.setState({friendCurrentWeather: [tempInF, condition, humid, windSpeed, windDirection, windDegree, uvIndex]})
+          this.setState({ friendCurrentWeather: {
+            tempInF: tempInF,
+            tempInC: tempInC,
+            condition: condition,
+            humid: humid,
+            windSpeed: windSpeed,
+            windDirection: windDirection,
+            windDegree: windDegree,
+            uvIndex: uvIndex
+          } })
         }
       });
   }
@@ -199,7 +222,7 @@ class App extends React.Component {
   setLastKnownCoords = () => {
     // 6/22/20:  IF USER LOGS IN BEFORE THE COMPONENT MOUNTS (i.e. handleLogin fires before component mounts and runs, currentUser[1] will be null)
     // console.log(`just to make sure, these are my coordinates ${this.state.coordinates}`);
-    Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, {coordinates: this.state.coordinates}).then(response => {
+    Axios.put(`/api/updatecoords/${this.state.currentUser[1]}`, { coordinates: this.state.coordinates }).then(response => {
       // console.log(`your last known coordinates were updated in the db`);
       // console.log(response)
     })
@@ -208,7 +231,7 @@ class App extends React.Component {
   handleLogin = (credentials, doWhich) => {
     // login
     if (doWhich === "login") {
-      this.setState({ currentUser: [credentials.username, credentials.id], loggedIn: true }, () => {
+      this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
         this.setLastKnownCoords();
       })
     }
@@ -221,18 +244,28 @@ class App extends React.Component {
       this.setState({ currentUser: [], loggedIn: false, showFriendWeather: false });
     }
   }
-// THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
+  // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
   getFriendInfo = (username, friendID) => {
     // console.log(`should be resetting friendCoordinates`)
-    this.setState({showFriendWeather: true, friendUsername: username, friendCoordinates: []}, () => {
+    this.setState({ showFriendWeather: true, friendUsername: username, friendCoordinates: [] }, () => {
       Axios.get(`/api/getfriendcoords/${friendID}`).then(response => {
         // console.log(`your friend, ${username} has coordinates of ${JSON.stringify(response)}`);
-        this.setState({friendCoordinates: response.data.coordinates}, () => this.getWeatherData("friend"));
+        this.setState({ friendCoordinates: response.data.coordinates }, () => this.getWeatherData("friend"));
       })
     })
   }
 
-  closeFriend = () => this.setState({showFriendWeather: false});
+  closeFriend = () => this.setState({ showFriendWeather: false });
+
+  changeUnits = () => {
+    console.log(`changing units`)
+    if (this.state.metric === false) {
+      this.setState({metric: true}, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
+    }
+    else {
+      this.setState({metric: false}, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
+    }
+  }
 
   render() {
     return (
@@ -241,6 +274,7 @@ class App extends React.Component {
           loggedIn={this.state.loggedIn}
           handleLogin={this.handleLogin}
           currentUser={this.state.currentUser}
+          changeUnits={this.changeUnits}
         ></Nav>
         <FriendsModule
           loggedIn={this.state.loggedIn}
@@ -261,50 +295,53 @@ class App extends React.Component {
               chatting with a friend, only show friend weather.  When desktop, use original rendering rules */}
               <div className="row">
                 {
-                  this.state.mobile && this.state.showFriendWeather ? 
-                  <>
-                    <FriendWeather
-                    friendUsername={this.state.friendUsername}
-                    friendLocation={this.state.friendLocation}
-                    friendLocationImage={this.state.friendLocationImage}
-                    friendCurrentWeather={this.state.friendCurrentWeather} 
-                    >
-                    </FriendWeather>
-                    <CurrentWeather
-                    // Splitting moment's result at the comma (.split gives an array)
-                    today={this.state.today.split(",")[0]}
-                    location={this.state.location}
-                    weather={this.state.currentWeather}
-                    image={this.state.locationImage}
-                    mobile={this.state.mobile}
-                    showFriendWeather={this.state.showFriendWeather}
-                  ><p>{this.state.CurrentWeather}</p>
-                  </CurrentWeather>
-                  </>
-                    : 
+                  this.state.mobile && this.state.showFriendWeather ?
                     <>
-                    {<div className={this.state.mobile && this.state.showFriendWeather ? "" : "col l6"}>
-                <CurrentWeather
-                  // Splitting moment's result at the comma (.split gives an array)
-                  today={this.state.today.split(",")[0]}
-                  location={this.state.location}
-                  weather={this.state.currentWeather}
-                  image={this.state.locationImage}
-                  mobile={this.state.mobile}
-                ><p>{this.state.CurrentWeather}</p>
-                </CurrentWeather>
-                </div>}
-                <div className="col l4">
-                {this.state.showFriendWeather ? 
-                <FriendWeather
-                friendUsername={this.state.friendUsername}
-                friendLocation={this.state.friendLocation}
-                friendCurrentWeather={this.state.friendCurrentWeather} 
-                >
-                </FriendWeather>
-                : <></>}
-                </div>
-                </>
+                      <FriendWeather
+                        friendUsername={this.state.friendUsername}
+                        friendLocation={this.state.friendLocation}
+                        friendLocationImage={this.state.friendLocationImage}
+                        friendCurrentWeather={this.state.friendCurrentWeather}
+                        metric={this.state.metric}
+                      >
+                      </FriendWeather>
+                      <CurrentWeather
+                        // Splitting moment's result at the comma (.split gives an array)
+                        today={this.state.today.split(",")[0]}
+                        location={this.state.location}
+                        weather={this.state.currentWeather}
+                        image={this.state.locationImage}
+                        mobile={this.state.mobile}
+                        showFriendWeather={this.state.showFriendWeather}
+                        metric={this.state.metric}
+                      ><p>{this.state.CurrentWeather}</p>
+                      </CurrentWeather>
+                    </>
+                    :
+                    <>
+                      {<div className={this.state.mobile && this.state.showFriendWeather ? "" : "col l6"}>
+                        <CurrentWeather
+                          // Splitting moment's result at the comma (.split gives an array)
+                          today={this.state.today.split(",")[0]}
+                          location={this.state.location}
+                          weather={this.state.currentWeather}
+                          image={this.state.locationImage}
+                          mobile={this.state.mobile}
+                          metric={this.state.metric}
+                        ><p>{this.state.CurrentWeather}</p>
+                        </CurrentWeather>
+                      </div>}
+                      <div className="col l4">
+                        {this.state.showFriendWeather ?
+                          <FriendWeather
+                            friendUsername={this.state.friendUsername}
+                            friendLocation={this.state.friendLocation}
+                            friendCurrentWeather={this.state.friendCurrentWeather}
+                          >
+                          </FriendWeather>
+                          : <></>}
+                      </div>
+                    </>
                 }
               </div>
               <div className="row">
@@ -315,6 +352,7 @@ class App extends React.Component {
                   forecastChosen={this.state.forecastChosen}
                   mobile={this.state.mobile}
                   windowWidth={this.state.windowWidth}
+                  metric={this.state.metric}
                 >
                 </ExtendedForecast>
               </div>

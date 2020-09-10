@@ -34,7 +34,7 @@ router.post("/api/login", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.json({username: user.username, id: user._id})
+      return res.json({username: user.username, id: user._id, userImage: user.userImage});
       // return res.redirect('/');
     });
 
@@ -44,7 +44,7 @@ router.post("/api/login", (req, res, next) => {
 router.post("/api/register", function (req, res) {
   console.log(req.body);
   console.log(req.body.username)
-  db.Users.register({ username: req.body.username}, req.body.password, (err, response) => {
+  db.Users.register({ username: req.body.username, userImage: req.body.userImage}, req.body.password, (err, response) => {
     if (err) {
       console.log("error", err);
       res.json(err);
@@ -53,7 +53,7 @@ router.post("/api/register", function (req, res) {
       // console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
       // this res.json(response._id is from the earlier registration query, not the friendlist create query.    
       // this route is used in
-      db.FriendsList.create({userID: response._id}).then(() => res.json({name: req.body.username, id: response._id}));
+      db.FriendsList.create({userID: response._id}).then(() => res.json({name: req.body.username, id: response._id, userImage: req.body.userImage}));
     }
   });
 });
@@ -95,6 +95,15 @@ router.put("/api/addusers/:id", function (req, res) {
   console.log(`adding to friendslist this person ${req.params.id}`);
   db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
     console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
+    res.json(response);
+  })
+});
+
+router.put("/api/deleteusers/:id", function (req, res) {
+  console.log(`removing from friendslist this person ${req.params.id}`);
+  console.log(`I am ${req.body.user}`)
+  db.FriendsList.findOneAndUpdate({userID: req.body.user}, {$pull: {friends: req.params.id}}).then(response => {
+    console.log(`response from deleting friend query is as follows (if NULL, broken) ${response}`)
     res.json(response);
   })
 });

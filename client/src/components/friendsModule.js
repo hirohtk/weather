@@ -317,6 +317,7 @@ class Friends extends React.Component {
                             {this.state.chat && this.state.chatReady ?
                                 <ChatModule
                                     chattingWith={this.state.chattingWith}
+                                    chattingWithID={this.state.chattingWithID}
                                     closeBox={this.openFriend}
                                     currentUser={this.props.currentUser}
                                     chatroomID={this.state.chatroomID}
@@ -325,7 +326,7 @@ class Friends extends React.Component {
                                     messages={this.state.messages}
                                     loggedInRooms={this.state.loggedInRooms}
                                     mobile={this.props.mobile}
-
+                                    loadFriends={this.loadFriends}
                                 >
                                 </ChatModule>
                                 :
@@ -333,7 +334,7 @@ class Friends extends React.Component {
                             <div className="containerForFriends" style={this.state.chat && this.props.mobile ? {width: "40%"} : {width: "90%"}}>
                             {props.currentUser.length === 0 ? <></> :
                             <>
-                                <span className="welcome">Welcome, {props.currentUser[0]}!</span>
+                                <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2]}></img>
                                 <hr></hr>
                                 </>
                             }
@@ -348,6 +349,7 @@ class Friends extends React.Component {
                                         <>
 
                                             {this.state.friendsList.map((each, index) => (
+                                                <>
                                                 <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
                                                     <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
                                                     {/* unread is an array, filter it down to an array where author names are present.
@@ -355,7 +357,8 @@ class Friends extends React.Component {
                                                     {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
                                                     {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
-                                                    <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
+                                                    <img className="tinyFriendPic" src={each.userImage}></img>
+                                                    </p></>
                                             ))}
                                         </>}
                                 </div>
@@ -373,13 +376,15 @@ class Friends extends React.Component {
                                             <> <h5 className="whiteText">Search Results</h5>
                                                 {this.state.friendResults.map((each, index) =>
                                                     // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                                    <p className="whiteText">{each.username}{each.id != null ? <button onClick={() => this.addFriend(each.id)}>Add</button> : <></>}</p>)}
-                                                <button onClick={this.clearResults}>Clear</button>
+                                                    <>
+                                                    <p className="whiteText">{each.username}</p>
+                                                    <p>{each.id != null ? <button class="addButtons" onClick={() => this.addFriend(each.id)}>Add</button> : <></>}
+                                                    <button class="addButtons"  onClick={this.clearResults}>Clear</button></p>
+                                                    </>)}
                                             </>}
                                         </> : <></>}
                                 </div>
                             </div>
-
                         </div></> : <></>}
             </>
         )
