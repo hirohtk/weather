@@ -89,7 +89,7 @@ class Nav extends React.Component {
             toast.info(`${credentials.username} is now registered!`);
             setTimeout(() => {
               toast.success(`Logged you in...!`);
-              this.props.handleLogin({ username: credentials.username, id: response.data.id }, "login", () => this.setState({ registering: false, username: "", password: "", userImage: "", enteringCredentials: false }));
+              this.props.handleLogin({ username: credentials.username, id: response.data.id, userImage: credentials.userImage }, "login", () => this.setState({ registering: false, username: "", password: "", userImage: "", enteringCredentials: false }));
             }, 1000);
             // GRAB USER DETAILS -- response.data is the username
           }
@@ -120,7 +120,7 @@ class Nav extends React.Component {
               <>
                 <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.inputGate}></input>
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.inputGate}></input>
-                <input placeholder="User Image URL!" name="userImage" value={this.state.userImage}  onChange={this.inputGate}></input>
+                {this.state.registering ? <input placeholder="User Image URL!" name="userImage" value={this.state.userImage}  onChange={this.inputGate}></input> : <></>}
                 <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
             <div class="switch" id="checkBoxUnits">
               <label id="metric">

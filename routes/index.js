@@ -34,7 +34,7 @@ router.post("/api/login", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.json({username: user.username, id: user._id})
+      return res.json({username: user.username, id: user._id, userImage: user.userImage});
       // return res.redirect('/');
     });
 
