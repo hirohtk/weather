@@ -13,6 +13,31 @@ passport.use(db.Users.createStrategy());
 passport.serializeUser(db.Users.serializeUser());
 passport.deserializeUser(db.Users.deserializeUser());
 
+// var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "/auth/google/redirect"
+},
+  accessToken => {
+    console.log("access token: ", accessToken);
+  },
+  // function (accessToken, refreshToken, profile, done) {
+  //   User.findOrCreate({ googleId: profile.id }, function (err, user) {
+  //     return done(err, user);
+  //   });
+  // }
+));
+
+// when hits this route, use passport to authenticate using google, using scope to return the user's profile and email
+router.get("/auth/google", passport.authenticate("google", {
+  scope: ["profile", "email"]
+}));
+
+
+
 // The connect-ensure-login package is middleware that ensures a user is logged in.
 const connectEnsureLogin = require("connect-ensure-login");
 
@@ -34,7 +59,7 @@ router.post("/api/login", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.json({username: user.username, id: user._id, userImage: user.userImage});
+      return res.json({ username: user.username, id: user._id, userImage: user.userImage });
       // return res.redirect('/');
     });
 
@@ -44,7 +69,7 @@ router.post("/api/login", (req, res, next) => {
 router.post("/api/register", function (req, res) {
   console.log(req.body);
   console.log(req.body.username)
-  db.Users.register({ username: req.body.username, userImage: req.body.userImage}, req.body.password, (err, response) => {
+  db.Users.register({ username: req.body.username, userImage: req.body.userImage }, req.body.password, (err, response) => {
     if (err) {
       console.log("error", err);
       res.json(err);
@@ -53,7 +78,7 @@ router.post("/api/register", function (req, res) {
       // console.log(`creating a new user, name is ${req.body.username}, password is ${req.body.password}`)
       // this res.json(response._id is from the earlier registration query, not the friendlist create query.    
       // this route is used in
-      db.FriendsList.create({userID: response._id}).then(() => res.json({name: req.body.username, id: response._id, userImage: req.body.userImage}));
+      db.FriendsList.create({ userID: response._id }).then(() => res.json({ name: req.body.username, id: response._id, userImage: req.body.userImage }));
     }
   });
 });
@@ -73,16 +98,16 @@ router.get("/api/googleplaces/:place", function (req, res) {
 
 router.get("/api/loadfriends/:id", function (req, res) {
   // console.log(`req.params.id is ${req.params.id} which should be me`)
-  db.FriendsList.find({userID: req.params.id}).populate("friends").then(response => {
-  // console.log(`friends for this person are ${response}`);
-  // response.friends is an array
+  db.FriendsList.find({ userID: req.params.id }).populate("friends").then(response => {
+    // console.log(`friends for this person are ${response}`);
+    // response.friends is an array
     res.json(response);
   })
 })
 
 router.get("/api/allusers/:user", function (req, res) {
   // console.log(`finding user by username ${req.params.user}`);
-  db.Users.find({username: req.params.user}).then(response => {
+  db.Users.find({ username: req.params.user }).then(response => {
     console.log(response)
     res.json(response);
   })
@@ -93,7 +118,7 @@ router.put("/api/addusers/:id", function (req, res) {
   // console.log(`you are ${req.body.userID}`);
   console.log(`finding chatroom by ${req.body.userID}`);
   console.log(`adding to friendslist this person ${req.params.id}`);
-  db.FriendsList.findOneAndUpdate({userID: req.body.userID}, {$push: {friends: req.params.id}}).then(response => {
+  db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
     console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
     res.json(response);
   })
@@ -102,7 +127,7 @@ router.put("/api/addusers/:id", function (req, res) {
 router.put("/api/deleteusers/:id", function (req, res) {
   console.log(`removing from friendslist this person ${req.params.id}`);
   console.log(`I am ${req.body.user}`)
-  db.FriendsList.findOneAndUpdate({userID: req.body.user}, {$pull: {friends: req.params.id}}).then(response => {
+  db.FriendsList.findOneAndUpdate({ userID: req.body.user }, { $pull: { friends: req.params.id } }).then(response => {
     console.log(`response from deleting friend query is as follows (if NULL, broken) ${response}`)
     res.json(response);
   })
@@ -110,7 +135,7 @@ router.put("/api/deleteusers/:id", function (req, res) {
 
 router.put("/api/updatecoords/:id", function (req, res) {
   // console.log(`pushing your coords, which are ${req.body.coordinates}`);
-  db.Users.findByIdAndUpdate(req.params.id, {$set: {coordinates: req.body.coordinates}}).then((response) => {
+  db.Users.findByIdAndUpdate(req.params.id, { $set: { coordinates: req.body.coordinates } }).then((response) => {
     console.log(response);
     // response not necessary to send, 
     res.json(response);
@@ -135,7 +160,7 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
 
 // 6/30/2020:  IF CHATROOM DOES NOT EXIST, MAKE ONE IN THE DB.  OTHERWISE IF SO, JUST RETURN THE DB DOCUMENT
 router.put(`/api/getroom/:friendID`, function (req, res) {
-  
+
   // NEED SOME KIND OF ALGO TO COMBINE BOTH USER ID'S INTO ONE BIG STRING THAT'S ALPHABETICALLY SORTED.  THIS WAY NO MATTER WHO
   // JOINS FIRST, THEY ALWAYS GET THE SAME ROOM.  CAN'T JUST CONCATENATE OR WILL HAVE A "WHO INITIATES FIRST"? ISSUE
   let arr = []
@@ -157,7 +182,7 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
   // have an array with all characters in it sorted by alphabetical, then join back into a string
   let sorted = arr.sort().join("");
   // find a chatroom, if it doesn't exist, then make one.  (https://stackoverflow.com/questions/33305623/mongoose-create-document-if-not-exists-otherwise-update-return-document-in/33401897#33401897)
-  db.Chatroom.findOneAndUpdate({name: sorted, people: [a, b]}, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
+  db.Chatroom.findOneAndUpdate({ name: sorted, people: [a, b] }, { expire: new Date() }, { upsert: true, new: true, setDefaultsOnInsert: true }).then((response, err) => {
     if (err) return
     // console.log(`RESPONSE FROM CREATING NEW CHATROOM OR FINDING OLD ONE IS ${response}`);
     res.json(response);
@@ -166,9 +191,10 @@ router.put(`/api/getroom/:friendID`, function (req, res) {
 
 router.get(`/api/chathistory/:id`, function (req, res) {
   // console.log(`FINDING CHATROOM BY ID ${req.params.id}`)
-  db.Chatroom.findById(req.params.id).populate({path: "messages", model: "Messages", populate: {path: "author", model: "Users"}}).then(response => {
-  //  console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
-    res.json(response)});
+  db.Chatroom.findById(req.params.id).populate({ path: "messages", model: "Messages", populate: { path: "author", model: "Users" } }).then(response => {
+    //  console.log(`*** HERE IS YOUR CHAT HISTORY ${response}`)
+    res.json(response)
+  });
 })
 
 router.get(`/api/peopleinroom/:id`, function (req, res) {
@@ -180,7 +206,7 @@ router.get(`/api/peopleinroom/:id`, function (req, res) {
 })
 
 router.put(`/api/clearofflineunread/:id`, function (req, res) {
-  db.Chatroom.findByIdAndUpdate(req.params.id, {$set: {offlineUnread : ""}}).then(response => {
+  db.Chatroom.findByIdAndUpdate(req.params.id, { $set: { offlineUnread: "" } }).then(response => {
     res.json(response)
   })
 });
