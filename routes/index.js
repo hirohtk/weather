@@ -2,6 +2,7 @@ const path = require("path");
 const router = require("express").Router();
 const db = require("../model/index");
 const axios = require("axios");
+const cors = require("cors");
 require('dotenv').config()
 
 let apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
@@ -52,7 +53,7 @@ passport.deserializeUser((id, done) => {
 });
 
 // when hits this route, use passport to authenticate using google, using scope to return the user's profile and email
-router.get("/auth/google", passport.authenticate("google", {
+router.get("/api/auth/google", cors(), passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 

@@ -1,5 +1,4 @@
 import React from 'react';
-// import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
@@ -8,7 +7,6 @@ import FriendWeather from "./components/friendWeather"
 import './App.css';
 import "./components/unsorted.css"
 import Axios from 'axios';
-// import _ from 'underscore'
 import moment from "moment";
 import io from "socket.io-client";
 

@@ -51,11 +51,12 @@ app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(require("./socket/sockets.js")(io))
+
 app.use(routes);
 
-// Start the server
-
 chat(io);
+
+// Start the server
 
 server.listen(PORT, function () {
   console.log(`🌎  ==> Server now listening on PORT ${PORT}!`);
