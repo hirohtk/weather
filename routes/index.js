@@ -14,29 +14,53 @@ passport.serializeUser(db.Users.serializeUser());
 passport.deserializeUser(db.Users.deserializeUser());
 
 // var passport = require('passport');
+
+// ** OAUTH 2.0
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
+// callbackURL is actually a route here
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "/auth/google/redirect"
 },
-  accessToken => {
-    console.log("access token: ", accessToken);
-  },
-  // function (accessToken, refreshToken, profile, done) {
-  //   User.findOrCreate({ googleId: profile.id }, function (err, user) {
-  //     return done(err, user);
-  //   });
-  // }
+  (accessToken, refreshToken, profile, done) => {
+    // passport callback function
+    //check if user already exists in our db with the given profile ID
+    db.User.findOne({ googleId: profile.id }).then((currentUser) => {
+      if (currentUser) {
+        //if we already have a record with the given profile ID
+        done(null, currentUser);
+      } else {
+        //if not, create a new user 
+        db.User.create({
+          googleId: profile.id,
+        }).then((newUser) => {
+          done(null, newUser);
+        });
+      }
+    })
+  }
 ));
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+passport.deserializeUser((id, done) => {
+  db.Users.findById(id).then(user => {
+    done(null, user);
+  });
+});
 
 // when hits this route, use passport to authenticate using google, using scope to return the user's profile and email
 router.get("/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-
+router.get("auth/google/redirect",passport.authenticate("google"),(req,res)=>{
+  res.send(req.user);
+  res.send("you reached the redirect URI");
+});
+// ** OAUTH 2.0
 
 // The connect-ensure-login package is middleware that ensures a user is logged in.
 const connectEnsureLogin = require("connect-ensure-login");
@@ -210,6 +234,11 @@ router.put(`/api/clearofflineunread/:id`, function (req, res) {
     res.json(response)
   })
 });
+
+router.get(`/api/test`, function (req, res) { 
+  console.log(`test route`);
+  res.json("TEST ROUTE");
+})
 
 // router.put(`/api/hasunread/:id`, function (req, res) {
 //   db.Users.findByIdAndUpdate(req.params.id, {hasUnread: req.body.action}).then(response => res.json(response));

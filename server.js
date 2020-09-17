@@ -7,6 +7,7 @@ const passport = require('passport');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const chat = require('./socket/sockets');
+const cookieSession = require("cookie-session");
 
 // AUTH stuff
 // DIRECTLY BELOW NOT NEEDED (this is from tutorial.  express.urlencoded works with Express v4.16+)
@@ -34,6 +35,16 @@ if (process.env.NODE_ENV === "production") {
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// ** OAUTH 2.0
+// Cookie setup
+app.use(cookieSession({
+  // milliseconds of a day
+  maxAge: 24*60*60*1000,
+  keys:[process.env.COOKIE_KEY]
+}));
+// ** OAUTH 2.0
+
 app.use(expressSession);
 /*  PASSPORT SETUP  */
 

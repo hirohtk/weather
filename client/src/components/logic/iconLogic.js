@@ -33,6 +33,9 @@ export function iconLogic(condition) {
         else if (condition.match(/^(Partly cloudy)$/)) {
             return "Partly cloudy"
         }
+        else if (condition.match(/^(Thundery outbreaks possible|Thunder|Thunderstorms|Moderate or heavy rain with thunder)$/)) {
+            return "Thunderstorm"
+        }
         else {
             return "";
         }
