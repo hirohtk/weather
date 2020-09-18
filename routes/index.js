@@ -65,11 +65,15 @@ router.get("/api/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-router.get("/auth/google/redirect",passport.authenticate("google"),(req,res)=>{
-  res.send(req.user);
-  res.send("you reached the redirect URI");
+router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
+  res.redirect("http://localhost:3000");
 });
+
+
 // ** OAUTH 2.0
+
+// Start route on the front end simultaneously, listening for the response of the route above.  
+// Maybe have route above do .next with data?  That way, the response comes and the front end route closes
 
 // The connect-ensure-login package is middleware that ensures a user is logged in.
 const connectEnsureLogin = require("connect-ensure-login");
