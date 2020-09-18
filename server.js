@@ -6,8 +6,14 @@ const PORT = process.env.PORT || 3001;
 const passport = require('passport');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+// const cors = require("cors");
 const chat = require('./socket/sockets');
 const cookieSession = require("cookie-session");
+
+// var corsOptions = {
+//   origin: 'http://localhost:3000',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
 // AUTH stuff
 // DIRECTLY BELOW NOT NEEDED (this is from tutorial.  express.urlencoded works with Express v4.16+)
@@ -31,6 +37,8 @@ mongoose.connect(
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
+
+// app.use(cors());
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));

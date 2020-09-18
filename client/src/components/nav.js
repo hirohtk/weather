@@ -36,11 +36,11 @@ class Nav extends React.Component {
     this.setState({ sidebarOpen: open });
   }
 
-  googleAuth = () => {
-    axios.get(`/api/auth/google`).then(response => {
-      console.log(`did the google route`);
-    })
-  }
+  // googleAuth = () => {
+  //   axios.get(`/api/auth/google`).then(response => {
+  //     console.log(`did the google route`);
+  //   })
+  // }
 
   inputGate = (event) => {
     switch (event.target.name) {
@@ -128,7 +128,7 @@ class Nav extends React.Component {
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.inputGate}></input>
                 {this.state.registering ? <input placeholder="User Image URL!" name="userImage" value={this.state.userImage}  onChange={this.inputGate}></input> : <></>}
                 <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button>
-                <button id="googleAuth" onClick={this.googleAuth}>Sign in with Google</button>
+                <a href="http://localhost:3001/api/auth/google"><button id="googleAuth">Sign in with Google</button></a>
                 </> : <></>}
             <div className="switch" id="checkBoxUnits">
               <label id="metric">

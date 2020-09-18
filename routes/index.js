@@ -2,7 +2,7 @@ const path = require("path");
 const router = require("express").Router();
 const db = require("../model/index");
 const axios = require("axios");
-const cors = require("cors");
+// const cors = require("cors");
 require('dotenv').config()
 
 let apiKey = process.env.REACT_APP_GOOGLE_API_KEY;
@@ -26,16 +26,19 @@ passport.use(new GoogleStrategy({
   callbackURL: "/auth/google/redirect"
 },
   (accessToken, refreshToken, profile, done) => {
+
+    console.log(`what do I have here in profile ${JSON.stringify(profile)}`)
     // passport callback function
     //check if user already exists in our db with the given profile ID
-    db.User.findOne({ googleId: profile.id }).then((currentUser) => {
+    db.Users.findOne({ googleId: profile.id }).then((currentUser) => {
       if (currentUser) {
         //if we already have a record with the given profile ID
         done(null, currentUser);
       } else {
         //if not, create a new user 
-        db.User.create({
+        db.Users.create({
           googleId: profile.id,
+          username: profile.displayName
         }).then((newUser) => {
           done(null, newUser);
         });
@@ -52,12 +55,17 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+// router.all('/*', function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   next();
+// });
+
 // when hits this route, use passport to authenticate using google, using scope to return the user's profile and email
-router.get("/api/auth/google", cors(), passport.authenticate("google", {
+router.get("/api/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-router.get("auth/google/redirect",passport.authenticate("google"),(req,res)=>{
+router.get("/auth/google/redirect",passport.authenticate("google"),(req,res)=>{
   res.send(req.user);
   res.send("you reached the redirect URI");
 });
