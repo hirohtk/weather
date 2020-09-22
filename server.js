@@ -9,6 +9,8 @@ const io = require('socket.io')(server);
 // const cors = require("cors");
 const chat = require('./socket/sockets');
 const cookieSession = require("cookie-session");
+const cors = require("cors");
+
 
 // var corsOptions = {
 //   origin: 'http://localhost:3000',
@@ -59,6 +61,14 @@ app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 // app.use(require("./socket/sockets.js")(io))
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // allow to server to accept request from different origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true // allow session cookie from browser to pass through
+  })
+);
 
 app.use(routes);
 

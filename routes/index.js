@@ -66,7 +66,13 @@ router.get("/api/auth/google", passport.authenticate("google", {
 }));
 
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
+  // 9/21/2020 once this route gets called, call the route directly below, which will send data back to the front end?  
+  // need to make sure that there is data here, though.  
   res.redirect("http://localhost:3000");
+});
+
+router.get("/api/auth/afterRedirect", (req , res)=>{ 
+
 });
 
 
