@@ -37,9 +37,10 @@ class Nav extends React.Component {
   }
 
   googleAuth = () => {
-    axios.get(`/api/auth/afterRedirect`).then(response => {
-      console.log(`did the google route`);
-    })
+    // axios.get(`/api/auth/afterRedirect`).then(response => {
+    //   console.log(`did the google route`);
+    // })
+    localStorage.setItem("oauth", "true");
   }
 
   inputGate = (event) => {

@@ -46,8 +46,9 @@ passport.use(new GoogleStrategy({
     })
   }
 ));
+// after the above goes, if you're logging in, the below is what gets sent as the request for the callback route
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 passport.deserializeUser((id, done) => {
   db.Users.findById(id).then(user => {
@@ -68,11 +69,10 @@ router.get("/api/auth/google", passport.authenticate("google", {
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
   // 9/21/2020 once this route gets called, call the route directly below, which will send data back to the front end?  
   // need to make sure that there is data here, though.  
-  res.redirect("http://localhost:3000");
-});
 
-router.get("/api/auth/afterRedirect", (req , res)=>{ 
-
+  console.log(`**** ${JSON.stringify(req.user)}`)
+  console.log(`**** this should have some user data`)
+  res.redirect("http://localhost:3000?user=" + req.user);
 });
 
 

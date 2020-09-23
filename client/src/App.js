@@ -9,6 +9,7 @@ import "./components/unsorted.css"
 import Axios from 'axios';
 import moment from "moment";
 import io from "socket.io-client";
+import queryString from "query-string";
 
 class App extends React.Component {
 
@@ -52,6 +53,18 @@ class App extends React.Component {
     this.getWeatherData("self");
     // console.log(`app.js loaded`)
     window.addEventListener("resize", this.handleResize);
+    let oauth = localStorage.getItem("oauth")
+    if (oauth === "true") {
+      console.log("app.JS rerendered and knows that oauth is happening.")
+      var query = queryString.parse(window.location.search);
+      if (query.user) {
+        console.log(query);
+        console.log(query.user);
+        // window.localStorage.setItem("jwt", query.token);
+        // this.props.history.push("/");
+        localStorage.removeItem("oauth");
+    }
+   }
   }
 
   handleResize = () => {
