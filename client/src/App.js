@@ -53,18 +53,22 @@ class App extends React.Component {
     this.getWeatherData("self");
     // console.log(`app.js loaded`)
     window.addEventListener("resize", this.handleResize);
-    let oauth = localStorage.getItem("oauth")
-    if (oauth === "true") {
-      console.log("app.JS rerendered and knows that oauth is happening.")
-      var query = queryString.parse(window.location.search);
-      if (query.user) {
-        console.log(query);
-        console.log(query.user);
-        // window.localStorage.setItem("jwt", query.token);
-        // this.props.history.push("/");
-        localStorage.removeItem("oauth");
+
+    var query = queryString.parse(window.location.search);
+    if (query.user) {
+      console.log(query);
+      console.log(query.user);
+      console.log(typeof(query.user));
+      console.log(queryString.parse(query.user));
+      console.log(query.user.username);
+      console.log(query.user._id);
+      // let object = query.user;
+      // object.username = query.user.username;
+      // object.id = query.user._id;
+      this.handleLogin({username: query.user.username, id: query.user._id}, "login")
+      // window.localStorage.setItem("jwt", query.token);
+      // this.props.history.push("/");
     }
-   }
   }
 
   handleResize = () => {
@@ -217,16 +221,18 @@ class App extends React.Component {
           });
         }
         else {
-          this.setState({ friendCurrentWeather: {
-            tempInF: tempInF,
-            tempInC: tempInC,
-            condition: condition,
-            humid: humid,
-            windSpeed: windSpeed,
-            windDirection: windDirection,
-            windDegree: windDegree,
-            uvIndex: uvIndex
-          } })
+          this.setState({
+            friendCurrentWeather: {
+              tempInF: tempInF,
+              tempInC: tempInC,
+              condition: condition,
+              humid: humid,
+              windSpeed: windSpeed,
+              windDirection: windDirection,
+              windDegree: windDegree,
+              uvIndex: uvIndex
+            }
+          })
         }
       });
   }
@@ -242,6 +248,7 @@ class App extends React.Component {
 
   handleLogin = (credentials, doWhich) => {
     // login
+    console.log(`credentials for logging in are ${JSON.stringify(credentials)}`)
     if (doWhich === "login") {
       this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
         this.setLastKnownCoords();
@@ -272,10 +279,10 @@ class App extends React.Component {
   changeUnits = () => {
     console.log(`changing units`)
     if (this.state.metric === false) {
-      this.setState({metric: true}, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
+      this.setState({ metric: true }, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
     }
     else {
-      this.setState({metric: false}, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
+      this.setState({ metric: false }, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
     }
   }
 
