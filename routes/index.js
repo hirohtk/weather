@@ -27,12 +27,13 @@ passport.use(new GoogleStrategy({
 },
   (accessToken, refreshToken, profile, done) => {
 
-    console.log(`what do I have here in profile ${JSON.stringify(profile)}`)
+console.log(`accessToken is ${accessToken}`);
     // passport callback function
     //check if user already exists in our db with the given profile ID
     db.Users.findOne({ googleId: profile.id }).then((currentUser) => {
       if (currentUser) {
         //if we already have a record with the given profile ID
+        currentUser.token = accessToken;
         done(null, currentUser);
       } else {
         //if not, create a new user 
@@ -40,6 +41,7 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           username: profile.displayName
         }).then((newUser) => {
+          newUser.token = accessToken;
           done(null, newUser);
         });
       }
@@ -67,8 +69,6 @@ router.get("/api/auth/google", passport.authenticate("google", {
 }));
 
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
-  // 9/21/2020 once this route gets called, call the route directly below, which will send data back to the front end?  
-  // need to make sure that there is data here, though.  
 
   console.log(`**** ${JSON.stringify(req.user)}`)
   console.log(`**** this should have some user data`)
