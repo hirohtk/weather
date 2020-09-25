@@ -22,6 +22,10 @@ const UserSchema = new Schema({
   },
   googleID: {
     type: String
+  },
+  token: {
+    type: String,
+    required: false
   }
 });
 

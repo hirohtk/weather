@@ -54,21 +54,13 @@ class App extends React.Component {
     // console.log(`app.js loaded`)
     window.addEventListener("resize", this.handleResize);
 
-    var query = queryString.parse(window.location.search);
-    if (query.user) {
-      console.log(query);
-      console.log(query.user);
-      console.log(typeof(query.user));
-      console.log(queryString.parse(query.user));
-      console.log(query.user.username);
-      console.log(query.user._id);
-      // let object = query.user;
-      // object.username = query.user.username;
-      // object.id = query.user._id;
-      this.handleLogin({username: query.user.username, id: query.user._id}, "login")
-      // window.localStorage.setItem("jwt", query.token);
-      // this.props.history.push("/");
-    }
+    console.log(window.location.search);
+    console.log(`this is the JWT`);
+    let jwt = window.location.search.substring(4);
+
+      // this.handleLogin({username: query.user.username, id: query.user._id}, "login")
+
+    
   }
 
   handleResize = () => {

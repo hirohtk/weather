@@ -26,22 +26,28 @@ passport.use(new GoogleStrategy({
   callbackURL: "/auth/google/redirect"
 },
   (accessToken, refreshToken, profile, done) => {
-
-console.log(`accessToken is ${accessToken}`);
     // passport callback function
     //check if user already exists in our db with the given profile ID
-    db.Users.findOne({ googleId: profile.id }).then((currentUser) => {
+    db.Users.findOne({ googleId: profile.id }).lean().then((currentUser) => {
       if (currentUser) {
         //if we already have a record with the given profile ID
-        currentUser.token = accessToken;
-        done(null, currentUser);
+        done(null, obj);
       } else {
         //if not, create a new user 
         db.Users.create({
           googleId: profile.id,
-          username: profile.displayName
+          username: profile.displayName,
+          token: accessToken
         }).then((newUser) => {
-          newUser.token = accessToken;
+          console.log(newUser);
+          // let obj = {};
+          // obj.username = newUser.username;
+          // obj.id = newUser._id;
+          // obj.token = accessToken;
+          // newUser.toObject();
+          // console.log(newUser);
+          // newUser.token = accessToken;
+          // console.log(newUser);
           done(null, newUser);
         });
       }
@@ -50,7 +56,8 @@ console.log(`accessToken is ${accessToken}`);
 ));
 // after the above goes, if you're logging in, the below is what gets sent as the request for the callback route
 passport.serializeUser((user, done) => {
-  done(null, user);
+  console.log(`serializing, user is ${user}`);
+  done(null, user); 
 });
 passport.deserializeUser((id, done) => {
   db.Users.findById(id).then(user => {
@@ -70,9 +77,10 @@ router.get("/api/auth/google", passport.authenticate("google", {
 
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
 
-  console.log(`**** ${JSON.stringify(req.user)}`)
-  console.log(`**** this should have some user data`)
-  res.redirect("http://localhost:3000?user=" + req.user);
+  // console.log(`**** ${JSON.stringify(req.user)}`)
+  // console.log(`**** this should have some user data`)
+  // send JWT that is stored in the DB to front end
+  res.redirect("http://localhost:3000?user=" + req.user.token);
 });
 
 
