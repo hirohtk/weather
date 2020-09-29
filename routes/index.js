@@ -37,7 +37,6 @@ passport.use(new GoogleStrategy({
         db.Users.create({
           googleId: profile.id,
           username: profile.displayName,
-          token: accessToken
         }).then((newUser) => {
           console.log(newUser);
           // let obj = {};
@@ -56,7 +55,6 @@ passport.use(new GoogleStrategy({
 ));
 // after the above goes, if you're logging in, the below is what gets sent as the request for the callback route
 passport.serializeUser((user, done) => {
-  console.log(`serializing, user is ${user}`);
   done(null, user); 
 });
 passport.deserializeUser((id, done) => {
@@ -77,10 +75,11 @@ router.get("/api/auth/google", passport.authenticate("google", {
 
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
 
-  // console.log(`**** ${JSON.stringify(req.user)}`)
-  // console.log(`**** this should have some user data`)
-  // send JWT that is stored in the DB to front end
-  res.redirect("http://localhost:3000?user=" + req.user.token);
+  console.log(`**** ${JSON.stringify(req.user)}`)
+  console.log(`**** this should have some user data`)
+  // send cookie to front end
+  res.cookie("oauth", JSON.stringify(req.user));
+  res.redirect("http://localhost:3000");
 });
 
 

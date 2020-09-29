@@ -9,7 +9,7 @@ import "./components/unsorted.css"
 import Axios from 'axios';
 import moment from "moment";
 import io from "socket.io-client";
-import queryString from "query-string";
+import jwt_decode from "jwt-decode";
 
 class App extends React.Component {
 
@@ -49,18 +49,29 @@ class App extends React.Component {
 
   // fires only after component modules have mounted
   componentDidMount() {
-    this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
-    this.getWeatherData("self");
-    // console.log(`app.js loaded`)
-    window.addEventListener("resize", this.handleResize);
+    if (this.checkForCookies) {
+      // login route 
+    }
+    else {
+      this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
+      this.getWeatherData("self");
+      // console.log(`app.js loaded`)
+      window.addEventListener("resize", this.handleResize);
+    }
+  }
 
-    console.log(window.location.search);
-    console.log(`this is the JWT`);
-    let jwt = window.location.search.substring(4);
-
-      // this.handleLogin({username: query.user.username, id: query.user._id}, "login")
-
-    
+  checkForCookies = () => {
+    // checks whether or not there is data in cookie
+    let cookies = decodeURIComponent(document.cookie);
+    console.log(cookies);
+    let cookieArray = cookies.split(";");
+    let theCookie = cookieArray.find(one => one.includes("oauth"));
+    if (theCookie != undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   handleResize = () => {

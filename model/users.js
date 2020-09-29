@@ -23,10 +23,6 @@ const UserSchema = new Schema({
   googleID: {
     type: String
   },
-  token: {
-    type: String,
-    required: false
-  }
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 
