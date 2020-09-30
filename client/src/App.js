@@ -49,7 +49,10 @@ class App extends React.Component {
 
   // fires only after component modules have mounted
   componentDidMount() {
-    if (this.checkForCookies) {
+    if (this.checkForCookies === true) {
+      console.log(`found oauth cookie`)
+      let cookies = decodeURIComponent(document.cookie);
+      let cookieArray = cookies.split(";");
       let cookie = cookieArray.find(one => one.includes("oauth"));
       //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
       let creds = {};
@@ -60,10 +63,11 @@ class App extends React.Component {
       let subSplitUsername = splitCookie[2].split(":");
       // slice the extra "" from the ends of the index containing username or id
       creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
-      creds.username = subSplitUsername[1].slice(1, SplitUsernam[1].length - 1);
+      creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
       this.handleLogin(creds, "login");
     }
     else {
+      console.log(`did not find oauth cookie`)
       this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
       this.getWeatherData("self");
       // console.log(`app.js loaded`)
@@ -74,13 +78,14 @@ class App extends React.Component {
   checkForCookies = () => {
     // checks whether or not there is data in cookie
     let cookies = decodeURIComponent(document.cookie);
-    console.log(cookies);
     let cookieArray = cookies.split(";");
     let theCookie = cookieArray.find(one => one.includes("oauth"));
     if (theCookie != undefined) {
+      console.log(`cookie was there`)
       return true;
     }
     else {
+      console.log(`cookie was undefined and not there`)
       return false;
     }
   }
