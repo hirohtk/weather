@@ -19,7 +19,10 @@ const UserSchema = new Schema({
   },
   userImage: {
     type: String,
-  }
+  },
+  googleID: {
+    type: String
+  },
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

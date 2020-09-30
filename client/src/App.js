@@ -1,15 +1,15 @@
 import React from 'react';
-import Animation from "./components/animation"
 import Nav from "./components/nav"
 import CurrentWeather from "./components/currentWeather"
 import ExtendedForecast from "./components/extendedForecast"
 import FriendsModule from "./components/friendsModule"
 import FriendWeather from "./components/friendWeather"
 import './App.css';
+import "./components/unsorted.css"
 import Axios from 'axios';
-// import _ from 'underscore'
 import moment from "moment";
 import io from "socket.io-client";
+import jwt_decode from "jwt-decode";
 
 class App extends React.Component {
 
@@ -49,10 +49,33 @@ class App extends React.Component {
 
   // fires only after component modules have mounted
   componentDidMount() {
-    this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
     this.getWeatherData("self");
-    // console.log(`app.js loaded`)
-    window.addEventListener("resize", this.handleResize);
+      this.checkForCookies(() => {
+        this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
+        // console.log(`app.js loaded`)
+        window.addEventListener("resize", this.handleResize);
+      })
+  }
+
+  checkForCookies = () => {
+    // checks whether or not there is data in cookie
+    let cookies = decodeURIComponent(document.cookie);
+    let cookieArray = cookies.split(";");
+    let theCookie = cookieArray.find(one => one.includes("oauth"));
+    if (theCookie != undefined) {
+      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
+      let creds = {};
+      // split string by commas above
+      let splitCookie = theCookie.split(",");
+      // split the product by the colon (product are arrays)
+      let subSplitId = splitCookie[1].split(":");
+      let subSplitUsername = splitCookie[2].split(":");
+      // slice the extra "" from the ends of the index containing username or id
+      creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
+      creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
+      // will run async while time and getWeatherData fire
+      this.handleLogin(creds, "login");    
+    }
   }
 
   handleResize = () => {
@@ -75,8 +98,8 @@ class App extends React.Component {
     let geolocationFunction = () => {
 
       let geoSuccess = (position) => {
-        // console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
-        // console.log("Geoposition gives " + position.coords.longitude + " for longitude");
+        console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
+        console.log("Geoposition gives " + position.coords.longitude + " for longitude");
         if (forWho === "self") {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
@@ -205,16 +228,18 @@ class App extends React.Component {
           });
         }
         else {
-          this.setState({ friendCurrentWeather: {
-            tempInF: tempInF,
-            tempInC: tempInC,
-            condition: condition,
-            humid: humid,
-            windSpeed: windSpeed,
-            windDirection: windDirection,
-            windDegree: windDegree,
-            uvIndex: uvIndex
-          } })
+          this.setState({
+            friendCurrentWeather: {
+              tempInF: tempInF,
+              tempInC: tempInC,
+              condition: condition,
+              humid: humid,
+              windSpeed: windSpeed,
+              windDirection: windDirection,
+              windDegree: windDegree,
+              uvIndex: uvIndex
+            }
+          })
         }
       });
   }
@@ -230,6 +255,7 @@ class App extends React.Component {
 
   handleLogin = (credentials, doWhich) => {
     // login
+    console.log(`credentials for logging in are ${JSON.stringify(credentials)}`)
     if (doWhich === "login") {
       this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
         this.setLastKnownCoords();
@@ -260,10 +286,10 @@ class App extends React.Component {
   changeUnits = () => {
     console.log(`changing units`)
     if (this.state.metric === false) {
-      this.setState({metric: true}, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
+      this.setState({ metric: true }, () => console.log(`set units to metric, state is now ${this.state.metric} which should be true`));
     }
     else {
-      this.setState({metric: false}, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
+      this.setState({ metric: false }, () => console.log(`set units to SI, state is now ${this.state.metric} which should be false`));
     }
   }
 

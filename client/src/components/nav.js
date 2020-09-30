@@ -36,6 +36,12 @@ class Nav extends React.Component {
     this.setState({ sidebarOpen: open });
   }
 
+  googleAuth = () => {
+    // axios.get(`/api/auth/afterRedirect`).then(response => {
+    //   console.log(`did the google route`);
+    // })
+  }
+
   inputGate = (event) => {
     switch (event.target.name) {
       case "username":
@@ -72,7 +78,7 @@ class Nav extends React.Component {
           else {
             // WILL NEED TO CREATE A PROPS FUNCTION TO PASS THIS INFO TO APP RATHER THAN KEEP IT HERE 
             this.setState({ loggingIn: false, username: "", password: "", enteringCredentials: false }, () => this.props.handleLogin({ username: response.data.username, id: response.data.id, userImage: response.data.userImage }, "login"));
-            // this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "", loggedIn: true });
+            this.setState({ currentUser: [response.data.username, response.data.id], loggingIn: false, username: "", password: "", loggedIn: true });
             toast.success(`${response.data.username} is now logged in!`);
           }
         });
@@ -121,8 +127,10 @@ class Nav extends React.Component {
                 <input placeholder="Username" name="username" value={this.state.username} maxLength="16" onChange={this.inputGate}></input>
                 <input placeholder="Password" name="password" type="password" value={this.state.password} maxLength="16" onChange={this.inputGate}></input>
                 {this.state.registering ? <input placeholder="User Image URL!" name="userImage" value={this.state.userImage}  onChange={this.inputGate}></input> : <></>}
-                <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button></> : <></>}
-            <div class="switch" id="checkBoxUnits">
+                <button id="loginSubmit" onClick={this.doLogOrReg}>Submit</button>
+                <a href="http://localhost:3001/api/auth/google" onClick={this.googleAuth}><button id="googleAuth">Sign in with Google</button></a>
+                </> : <></>}
+            <div className="switch" id="checkBoxUnits">
               <label id="metric">
                 US
                 <input type="checkbox" onChange={this.props.changeUnits}/>
