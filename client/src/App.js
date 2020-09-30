@@ -50,7 +50,18 @@ class App extends React.Component {
   // fires only after component modules have mounted
   componentDidMount() {
     if (this.checkForCookies) {
-      // login route 
+      let cookie = cookieArray.find(one => one.includes("oauth"));
+      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
+      let creds = {};
+      // split string by commas above
+      let splitCookie = cookie.split(",");
+      // split the product by the colon (product are arrays)
+      let subSplitId = splitCookie[1].split(":");
+      let subSplitUsername = splitCookie[2].split(":");
+      // slice the extra "" from the ends of the index containing username or id
+      creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
+      creds.username = subSplitUsername[1].slice(1, SplitUsernam[1].length - 1);
+      this.handleLogin(creds, "login");
     }
     else {
       this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
