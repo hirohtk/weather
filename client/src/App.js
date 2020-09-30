@@ -49,30 +49,12 @@ class App extends React.Component {
 
   // fires only after component modules have mounted
   componentDidMount() {
-    if (this.checkForCookies === true) {
-      console.log(`found oauth cookie`)
-      let cookies = decodeURIComponent(document.cookie);
-      let cookieArray = cookies.split(";");
-      let cookie = cookieArray.find(one => one.includes("oauth"));
-      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
-      let creds = {};
-      // split string by commas above
-      let splitCookie = cookie.split(",");
-      // split the product by the colon (product are arrays)
-      let subSplitId = splitCookie[1].split(":");
-      let subSplitUsername = splitCookie[2].split(":");
-      // slice the extra "" from the ends of the index containing username or id
-      creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
-      creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
-      this.handleLogin(creds, "login");
-    }
-    else {
-      console.log(`did not find oauth cookie`)
-      this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
-      this.getWeatherData("self");
-      // console.log(`app.js loaded`)
-      window.addEventListener("resize", this.handleResize);
-    }
+    this.getWeatherData("self");
+      this.checkForCookies(() => {
+        this.setState({ today: moment().format('MMMM Do YYYY, h:mm:ss a') });
+        // console.log(`app.js loaded`)
+        window.addEventListener("resize", this.handleResize);
+      })
   }
 
   checkForCookies = () => {
@@ -81,12 +63,18 @@ class App extends React.Component {
     let cookieArray = cookies.split(";");
     let theCookie = cookieArray.find(one => one.includes("oauth"));
     if (theCookie != undefined) {
-      console.log(`cookie was there`)
-      return true;
-    }
-    else {
-      console.log(`cookie was undefined and not there`)
-      return false;
+      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
+      let creds = {};
+      // split string by commas above
+      let splitCookie = theCookie.split(",");
+      // split the product by the colon (product are arrays)
+      let subSplitId = splitCookie[1].split(":");
+      let subSplitUsername = splitCookie[2].split(":");
+      // slice the extra "" from the ends of the index containing username or id
+      creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
+      creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
+      // will run async while time and getWeatherData fire
+      this.handleLogin(creds, "login");    
     }
   }
 
@@ -110,8 +98,8 @@ class App extends React.Component {
     let geolocationFunction = () => {
 
       let geoSuccess = (position) => {
-        // console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
-        // console.log("Geoposition gives " + position.coords.longitude + " for longitude");
+        console.log("Geoposition gives " + position.coords.latitude + " for latitutde");
+        console.log("Geoposition gives " + position.coords.longitude + " for longitude");
         if (forWho === "self") {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
