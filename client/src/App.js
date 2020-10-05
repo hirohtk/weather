@@ -62,6 +62,7 @@ class App extends React.Component {
     let cookies = decodeURIComponent(document.cookie);
     let cookieArray = cookies.split(";");
     let theCookie = cookieArray.find(one => one.includes("oauth"));
+    console.log(`the Cookie is ${theCookie}`);
     if (theCookie != undefined) {
       //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
       let creds = {};
@@ -70,9 +71,12 @@ class App extends React.Component {
       // split the product by the colon (product are arrays)
       let subSplitId = splitCookie[1].split(":");
       let subSplitUsername = splitCookie[2].split(":");
+      // For userImage, splits into three indexes since there's also a colon in https://
+      let subSplitUserImage = splitCookie[3].split(":");
       // slice the extra "" from the ends of the index containing username or id
       creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
       creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
+      creds.userImage = "https:" + subSplitUserImage[2].slice(0, subSplitUserImage[2].length - 1);
       // will run async while time and getWeatherData fire
       this.handleLogin(creds, "login");    
     }

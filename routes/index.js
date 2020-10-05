@@ -34,19 +34,13 @@ passport.use(new GoogleStrategy({
         done(null, obj);
       } else {
         //if not, create a new user 
+        console.log(`All of the Google User info is in here, storing it into DB \n ${JSON.stringify(profile)}`)
         db.Users.create({
           googleId: profile.id,
           username: profile.displayName,
+          userImage: profile.photos[0].value
         }).then((newUser) => {
           console.log(newUser);
-          // let obj = {};
-          // obj.username = newUser.username;
-          // obj.id = newUser._id;
-          // obj.token = accessToken;
-          // newUser.toObject();
-          // console.log(newUser);
-          // newUser.token = accessToken;
-          // console.log(newUser);
           done(null, newUser);
         });
       }
