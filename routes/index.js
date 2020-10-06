@@ -28,15 +28,18 @@ passport.use(new GoogleStrategy({
   (accessToken, refreshToken, profile, done) => {
     // passport callback function
     //check if user already exists in our db with the given profile ID
-    db.Users.findOne({ googleId: profile.id }).lean().then((currentUser) => {
+    db.Users.findOne({ googleID: profile.id }).then((currentUser) => {
+      console.log(`searching for the googleId of ${profile.id} has returned:`)
+      console.log(currentUser)
       if (currentUser) {
         //if we already have a record with the given profile ID
-        done(null, obj);
+        console.log(`we have a current user logging in from oAuth`);
+        done(null, currentUser);
       } else {
         //if not, create a new user 
         console.log(`All of the Google User info is in here, storing it into DB \n ${JSON.stringify(profile)}`)
         db.Users.create({
-          googleId: profile.id,
+          googleID: profile.id,
           username: profile.displayName,
           userImage: profile.photos[0].value
         }).then((newUser) => {

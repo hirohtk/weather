@@ -64,15 +64,15 @@ class App extends React.Component {
     let theCookie = cookieArray.find(one => one.includes("oauth"));
     console.log(`the Cookie is ${theCookie}`);
     if (theCookie != undefined) {
-      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
+      //  oauth={"coordinates":[],"_id":"5f7bedf049a81741f40faa80","googleID":"103106405171762584134","username":"Kensen Hirohata","userImage":"https://lh4.googleusercontent.com/-fDDlCT7NC0Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckZN6Zbi2jE8mGFk1eEm1MdtSrAGg/photo.jpg","__v":0"
       let creds = {};
       // split string by commas above
       let splitCookie = theCookie.split(",");
       // split the product by the colon (product are arrays)
       let subSplitId = splitCookie[1].split(":");
-      let subSplitUsername = splitCookie[2].split(":");
+      let subSplitUsername = splitCookie[3].split(":");
       // For userImage, splits into three indexes since there's also a colon in https://
-      let subSplitUserImage = splitCookie[3].split(":");
+      let subSplitUserImage = splitCookie[4].split(":");
       // slice the extra "" from the ends of the index containing username or id
       creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
       creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
@@ -266,6 +266,11 @@ class App extends React.Component {
       })
     }
     else {
+      // for Oauth Logout
+      if (document.cookie) {
+        // Delete the cookie
+        document.cookie = "oauth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
       // console.log(`logging out, emitting socket for leaveRoom, current userID is ${this.state.currentUser[1]}`);
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
