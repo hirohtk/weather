@@ -37,8 +37,10 @@ class App extends React.Component {
       windowWidth: window.innerWidth,
       metric: false,
     }
-    // console.log(`console logging inside the constructor of App.js`);
-    this.socket = io('https://immense-cove-75264.herokuapp.com/');
+    
+    this.socket = io("localhost:3001");
+
+    // this.checkENV();
   }
 
   // fires before component modules have mounted
@@ -56,6 +58,17 @@ class App extends React.Component {
         window.addEventListener("resize", this.handleResize);
       })
   }
+
+  // checkENV = () => {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     console.log(`production environment`)
+  //     return "https://immense-cove-75264.herokuapp.com/"
+  //   }
+  //   else {
+  //     console.log(`dev envrionment`) 
+  //     return "localhost:3001"
+  //   }
+  // }
 
   checkForCookies = () => {
     // checks whether or not there is data in cookie
@@ -372,6 +385,7 @@ class App extends React.Component {
                             friendUsername={this.state.friendUsername}
                             friendLocation={this.state.friendLocation}
                             friendCurrentWeather={this.state.friendCurrentWeather}
+                            metric={this.state.metric}
                           >
                           </FriendWeather>
                           : <></>}
