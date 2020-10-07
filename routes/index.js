@@ -43,6 +43,8 @@ passport.use(new GoogleStrategy({
           username: profile.displayName,
           userImage: profile.photos[0].value
         }).then((newUser) => {
+          // also have to create a friendslist for this person
+          db.FriendsList.create({ userID: newUser._id });
           console.log(newUser);
           done(null, newUser);
         });
@@ -72,8 +74,6 @@ router.get("/api/auth/google", passport.authenticate("google", {
 
 router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
 
-  console.log(`**** ${JSON.stringify(req.user)}`)
-  console.log(`**** this should have some user data`)
   // send cookie to front end
   res.cookie("oauth", JSON.stringify(req.user));
   res.redirect("http://localhost:3000");
