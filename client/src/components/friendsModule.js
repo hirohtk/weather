@@ -347,16 +347,16 @@ class Friends extends React.Component {
                                         <>
 
                                             {this.state.friendsList.map((each, index) => (
-                                                <>
-                                                <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
-                                                    <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
+                                                <div key={each._id}>
+                                                <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)} >
+                                                    <i className={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
                                                     {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
-                                                    {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
-                                                    {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
+                                                    {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i className="material-icons" style={{ color: "white" }}>message</i> : <></>}
+                                                    {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i className="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
                                                     <img className="tinyFriendPic" src={each.userImage}></img>
-                                                    </p></>
+                                                    </p></div>
                                             ))}
                                         </>}
                                 </div>
@@ -374,11 +374,11 @@ class Friends extends React.Component {
                                             <> <h5 className="whiteText">Search Results</h5>
                                                 {this.state.friendResults.map((each, index) =>
                                                     // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                                    <>
-                                                    <p className="whiteText">{each.username}</p>
-                                                    <p>{each.id != null ? <button class="addButtons" onClick={() => this.addFriend(each.id)}>Add</button> : <></>}
-                                                    <button class="addButtons"  onClick={this.clearResults}>Clear</button></p>
-                                                    </>)}
+                                                    <div key={index}>
+                                                    <p className="whiteText" >{each.username}</p>
+                                                    <p>{each.id != null ? <button className="addButtons" onClick={() => this.addFriend(each.id)}>Add</button> : <></>}
+                                                    <button className="addButtons"  onClick={this.clearResults}>Clear</button></p>
+                                                    </div>)}
                                             </>}
                                         </> : <></>}
                                 </div>

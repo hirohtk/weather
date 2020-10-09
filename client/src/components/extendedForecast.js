@@ -178,24 +178,24 @@ class ExtendedForecast extends React.Component {
                             
                         >
                             {/* SVG HAS MULTIPLE LINES DRAWN IN IT, MAPPING OUT THESE LINES RATHER THAN MAPPING INDIVIDUAL SVGS WITH LINES */}
-                            <svg id="svg" viewbox="0 0 2000 1000">
+                            <svg id="svg">
 
                                 {/* SETUP TERNARY WITHIN SVG FOR Lines.  If either linedata is not there yet (getPointCoords hasn't had a chance
                                     to run), then don't render the lines.*/}
                                 {this.state.lineData.length === 0 ? <></> : this.state.forecastChosen === "hourly" ? props.hourlyResults.map((each, index) => (
                                     index < props.hourlyResults.length - 1 ?
-                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" />
-                                        : <></>
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" strokeDasharray="10, 5" key={index}/>
+                                        : <React.Fragment key={index}></React.Fragment>
                                 )) : props.forecastResults.map((each, index) => (
                                     index < props.forecastResults.length - 1 ?
-                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" stroke-dasharray="10, 5" key={index} />
-                                        : <></>
+                                        <line x1={this.state.lineData[index].left} y1={this.state.lineData[index].top} x2={this.state.lineData[index + 1].left} y2={this.state.lineData[index + 1].top} stroke="skyblue" strokeDasharray="10, 5" key={index} />
+                                        : <React.Fragment key={index}></React.Fragment>
 
                                 ))}
                             </svg>
                             {this.state.forecastChosen === "hourly" ?
                                 props.hourlyResults.map((each, index) => (
-                                    <div className="forecastDayHourly" key={index} ref={index === 0 ? this.scrollRef : ""}>
+                                    <div className="forecastDayHourly" key={index} ref={index === 0 ? this.scrollRef : undefined}>
                                         {/* {index === 0 ? <div id="refocusView" ref={this.scrollRef}></div> : <></>} */}
                                         <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}, {each.time}</h5>
                                         <p className="pNewFontSize">{each.date}</p>
@@ -211,7 +211,7 @@ class ExtendedForecast extends React.Component {
                                 ))
                                 : this.state.forecastChosen === "extended" ?
                                     props.forecastResults.map((each, index) => (
-                                        <div className="col l3 forecastDayExtended" key={index} ref={index === 0 ? this.scrollRef : ""}>
+                                        <div className="col l3 forecastDayExtended" key={index} ref={index === 0 ? this.scrollRef : undefined}>
                                             <h5 className="pClassNewFont">{this.props.mobile ? each.dayOfWeek.substring(0,3) : each.dayOfWeek}</h5>
                                             <h5 className="pClassNewFont">{each.date}</h5>
                                             <p className="pNewFontSize">{this.props.mobile ? "Avg. Temperature" : "Average Temperature"}: {props.metric === true ? each.avgTempC : each.avgTempF}{props.metric === true ? "C" : "F"}</p>
