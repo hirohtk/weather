@@ -37,7 +37,7 @@ class Friends extends React.Component {
 
         props.socket.on('roomJoined', function (data) {
             console.log(`******`)
-            console.log(upperThis.props.currentUser[1])
+            console.log(localStorage.getItem("user"));
             let room = data.room;
             // console.log(`${data.who} joined room which is: ${data.room}`);
             // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
@@ -47,8 +47,8 @@ class Friends extends React.Component {
             // if there is more than one person connected to this room
             if (numConnected > 1) {
                 console.log(`more than one person is logged in for a chatroom that you share`)
-                if (data.who != upperThis.props.currentUser[1]) {
-                    console.log(`defineProps is ${upperThis.props.currentUser[1]}`);
+                if (data.who != localStorage.getItem("user")) {
+                    console.log(`defineProps is ${localStorage.getItem("user")}`);
                     console.log(`data.who is ${data.who}`);
                     console.log(`the above should not be the same person at a ll`)
                     // If someone connected while you're online, make sure the user who connected to this room isn't you
@@ -61,7 +61,7 @@ class Friends extends React.Component {
                     axios.get(`/api/peopleinroom/${data.room}`).then(response => {
                         let index;
                         for (let i = 0; i < response.data.people.length; i++) {
-                            if (response.data.people[i]._id === upperThis.props.currentUser[1]) {
+                            if (response.data.people[i]._id === localStorage.getItem("user")) {
                                 if (i == 0) {
                                     index = 1;
                                 }

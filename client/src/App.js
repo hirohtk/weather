@@ -274,6 +274,7 @@ class App extends React.Component {
     console.log(`credentials for logging in are ${JSON.stringify(credentials)}`)
     if (doWhich === "login") {
       this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
+        localStorage.setItem("user", credentials.id)
         this.setLastKnownCoords();
       })
     }
@@ -289,6 +290,7 @@ class App extends React.Component {
       this.socket.close();
       this.socket.open();
       this.setState({ currentUser: [], loggedIn: false, showFriendWeather: false });
+      localStorage.setItem("user", "")
     }
   }
   // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
