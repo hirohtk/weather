@@ -25,6 +25,8 @@ class Friends extends React.Component {
             offlineSenders: []
         }
 
+        const upperThis = this;
+
         // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
         props.socket.on('newMessage', function (data) {
@@ -34,6 +36,8 @@ class Friends extends React.Component {
         });
 
         props.socket.on('roomJoined', function (data) {
+            console.log(`******`)
+            console.log(upperThis.props.currentUser[1])
             let room = data.room;
             // console.log(`${data.who} joined room which is: ${data.room}`);
             // console.log(`these are the people who are in this room:  ${JSON.stringify(data.connected)}`);
@@ -42,7 +46,11 @@ class Friends extends React.Component {
             // console.log(`the number of people in this room are ${numConnected}`)
             // if there is more than one person connected to this room
             if (numConnected > 1) {
-                if (data.who != defineProps()) {
+                console.log(`more than one person is logged in for a chatroom that you share`)
+                if (data.who != upperThis.props.currentUser[1]) {
+                    console.log(`defineProps is ${upperThis.props.currentUser[1]}`);
+                    console.log(`data.who is ${data.who}`);
+                    console.log(`the above should not be the same person at a ll`)
                     // If someone connected while you're online, make sure the user who connected to this room isn't you
                     // then add this person's ID to those who are loggedIn
                     friendLoginManager(data.who, true, room)
@@ -53,7 +61,7 @@ class Friends extends React.Component {
                     axios.get(`/api/peopleinroom/${data.room}`).then(response => {
                         let index;
                         for (let i = 0; i < response.data.people.length; i++) {
-                            if (response.data.people[i]._id === defineProps()) {
+                            if (response.data.people[i]._id === upperThis.props.currentUser[1]) {
                                 if (i == 0) {
                                     index = 1;
                                 }
@@ -75,7 +83,9 @@ class Friends extends React.Component {
         })
 
         const defineProps = () => {
-            return this.props.currentUser[1]
+            console.log(`defining props`)
+            console.log(`this.props.currentuser is ${props.currentUser[1]}`);
+            return props.currentUser[1]
         }
 
         const friendLoginManager = (who, login, room) => {

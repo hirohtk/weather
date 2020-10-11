@@ -137,7 +137,6 @@ class App extends React.Component {
       console.log(latitude, longitude)
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
-          // console.log(response);
           let ind;
           for (let i = 0; i < response.data.results[0].address_components.length; i++) {
             if (response.data.results[0].address_components[i].types[0] === "locality") {
