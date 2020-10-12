@@ -168,7 +168,16 @@ router.put("/api/addusers/:id", function (req, res) {
   db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
     console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
     res.json(response);
-  })
+  });
+  // if the friend request is being made, add this to friend's model so friend can be notified to accept the request
+  if (req.body.acceptingOrAdding = "adding") {
+    db.Users.findOneAndUpdate({ userID: req.params.id }, { $push: { pendingFriends: req.body.userID } })
+  }
+  // if the friend request is being accepted, remove it from this user's model
+  else {
+    db.Users.findOneAndUpdate({ userID: req.body.userID }, { $pull: { friends: req.params.id } });
+  }
+
 });
 
 router.put("/api/deleteusers/:id", function (req, res) {
