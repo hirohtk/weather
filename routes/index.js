@@ -54,7 +54,7 @@ passport.use(new GoogleStrategy({
 ));
 // after the above goes, if you're logging in, the below is what gets sent as the request for the callback route
 passport.serializeUser((user, done) => {
-  done(null, user); 
+  done(null, user);
 });
 passport.deserializeUser((id, done) => {
   db.Users.findById(id).then(user => {
@@ -72,7 +72,7 @@ router.get("/api/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
+router.get("/auth/google/redirect", passport.authenticate("google"), (req, res, next) => {
 
   // send cookie to front end
   res.cookie("oauth", JSON.stringify(req.user));
@@ -148,7 +148,15 @@ router.get("/api/loadfriends/:id", function (req, res) {
   db.FriendsList.find({ userID: req.params.id }).populate("friends").then(response => {
     // console.log(`friends for this person are ${response}`);
     // response.friends is an array
-    res.json(response);
+    const friendslist = response;
+    db.Users.find({ userID: req.params.id }, "pendingFriends").then(response => {
+      console.log(`response checking how many need to accept is ${response}`);
+      const combined = {
+        friendslist: friendslist,
+        toAccept: response.pendingFriends
+      }
+      res.json(combined);
+    })
   })
 })
 
@@ -165,19 +173,20 @@ router.put("/api/addusers/:id", function (req, res) {
   // console.log(`you are ${req.body.userID}`);
   console.log(`finding chatroom by ${req.body.userID}`);
   console.log(`adding to friendslist this person ${req.params.id}`);
-  db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
+  db.FriendsList.findOneAndUpdate({userID: req.body.userID}, { $push: { friends: req.params.id } }).then(response => {
     console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
+    // if the friend request is being made, add this to friend's model so friend can be notified to accept the request
+    if (req.body.acceptingOrAdding = "adding") {
+      db.Users.findByIdAndUpdate(req.params.id, { $push: { pendingFriends: req.body.userID } }).then(response => {
+        console.log(`response from adding friend request is ${response}`);
+      })
+    }
+    // if the friend request is being accepted, remove it from this user's model
+    else {
+      db.Users.findByIdAndUpdate(req.body.userID, { $pull: { friends: req.params.id } });
+    }
     res.json(response);
   });
-  // if the friend request is being made, add this to friend's model so friend can be notified to accept the request
-  if (req.body.acceptingOrAdding = "adding") {
-    db.Users.findOneAndUpdate({ userID: req.params.id }, { $push: { pendingFriends: req.body.userID } })
-  }
-  // if the friend request is being accepted, remove it from this user's model
-  else {
-    db.Users.findOneAndUpdate({ userID: req.body.userID }, { $pull: { friends: req.params.id } });
-  }
-
 });
 
 router.put("/api/deleteusers/:id", function (req, res) {
@@ -267,7 +276,7 @@ router.put(`/api/clearofflineunread/:id`, function (req, res) {
   })
 });
 
-router.get(`/api/test`, function (req, res) { 
+router.get(`/api/test`, function (req, res) {
   console.log(`test route`);
   res.json("TEST ROUTE");
 })
