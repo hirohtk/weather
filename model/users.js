@@ -24,7 +24,8 @@ const UserSchema = new Schema({
     type: String
   },
   pendingFriends: {
-    type: Array
+    type: Array,
+    ref: "Users"
   }
 });
 

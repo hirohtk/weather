@@ -149,7 +149,7 @@ router.get("/api/loadfriends/:id", function (req, res) {
     // console.log(`friends for this person are ${response}`);
     // response.friends is an array
     const friendslist = response;
-    db.Users.find({ userID: req.params.id }, "pendingFriends").then(response => {
+    db.Users.findById(req.params.id).populate("pendingFriends").then(response => {
       console.log(`response checking how many need to accept is ${response}`);
       const combined = {
         friendslist: friendslist,
