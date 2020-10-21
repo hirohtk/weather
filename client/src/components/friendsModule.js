@@ -211,7 +211,7 @@ class Friends extends React.Component {
         // console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
             // if a new user, the response.data array will have zero length, preventing access of data.  conditional below handles that
-            console.log(`*** RESPONSE : \n ${JSON.stringify(response.data)}`);
+            // console.log(`*** RESPONSE : \n ${JSON.stringify(response.data)}`);
 
             // console.log(`querying for friends returns ${response.data[0].friends}`);
             this.setState({ friendsList: response.data.friendslist[0].friends, toAccept: response.data.toAccept, friendsLoaded: true }, () => {
@@ -224,9 +224,10 @@ class Friends extends React.Component {
         })
     }
 
-    addFriend = (id, addOrAccept) => {
-
-        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1], acceptingOrAdding: addOrAccept }).then(response => {
+    addFriend = (id, addOrAcceptOrDecline) => {
+        console.log(`friend management route, doing ${addOrAcceptOrDecline}`);
+        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1], doingWhat: addOrAcceptOrDecline }).then(response => {
+            
             this.loadFriends();
         });
     };
@@ -385,11 +386,12 @@ class Friends extends React.Component {
                                         <div className="pendingFriends">
                                             {
                                                 this.state.toAccept.map(each => (
-                                                    <p className="theFriends" key={each} >
+                                                    <p className="theFriends" key={each.id} >
                                                         {each.username}
+                                                        <span></span>
                                                         <img className="tinyFriendPic" src={each.userImage}></img>
-                                                        <i className="material-icons">check_box</i>
-                                                        <i className="material-icons">close</i>
+                                                        <i className="material-icons" onClick={() => this.addFriend(each.id, "accepting")}>check_box</i>
+                                                        <i className="material-icons" onClick={() => this.addFriend(each.id, "declining")}>close</i>
                                                     </p>
                                                 ))
                                             }
