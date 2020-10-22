@@ -390,8 +390,8 @@ class Friends extends React.Component {
                                                         {each.username}
                                                         <span></span>
                                                         <img className="tinyFriendPic" src={each.userImage}></img>
-                                                        <i className="material-icons" onClick={() => this.addFriend(each.id, "accepting")}>check_box</i>
-                                                        <i className="material-icons" onClick={() => this.addFriend(each.id, "declining")}>close</i>
+                                                        <i className="material-icons" onClick={() => this.addFriend(each._id, "accepting")}>check_box</i>
+                                                        <i className="material-icons" onClick={() => this.addFriend(each._id, "declining")}>close</i>
                                                     </p>
                                                 ))
                                             }

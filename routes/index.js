@@ -171,9 +171,13 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   // console.log(`adding user by userid ${req.params.id}`);
   // console.log(`you are ${req.body.userID}`);
-  if (req.body.doingWhat = "declining") {
-    console.log(`declining friend invite`)
-    db.Users.findByIdAndUpdate(req.body.userID, { $pull: { friends: req.params.id } }).then(response => res.json(response));
+  if (req.body.doingWhat === "declining") {
+    console.log(`declining friend invite.  I am ${req.body.userID} and am declining ${req.params.id}`)
+    db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } }).then(response => 
+      {
+        console.log(`response from declining friend is ${response}`)
+        res.json(response);
+      })
   }
   else {
     console.log(`finding chatroom by ${req.body.userID}`);
@@ -181,14 +185,14 @@ router.put("/api/addusers/:id", function (req, res) {
     db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
       console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
       // if the friend request is being made, add this to friend's model so friend can be notified to accept the request
-      if (req.body.doingWhat = "adding") {
+      if (req.body.doingWhat === "adding") {
         db.Users.findByIdAndUpdate(req.params.id, { $push: { pendingFriends: req.body.userID } }).then(response => {
           console.log(`response from adding friend request is ${response}`);
         })
       }
       // if the friend request is being accepted, remove it from this user's model
       else {
-        db.Users.findByIdAndUpdate(req.body.userID, { $pull: { friends: req.params.id } });
+        db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } });
       }
       res.json(response);
     });
