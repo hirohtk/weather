@@ -192,7 +192,10 @@ router.put("/api/addusers/:id", function (req, res) {
       }
       // if the friend request is being accepted, remove it from this user's model
       else {
-        db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } });
+        console.log(`friend request is being accepted. `)
+        db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } }).then(response => {
+          console.log(`accepting friend response is ${response}`)
+        });
       }
       res.json(response);
     });

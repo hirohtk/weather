@@ -333,7 +333,7 @@ class Friends extends React.Component {
                             <div className="containerForFriends" style={this.state.chat && this.props.mobile ? { width: "40%" } : { width: "90%" }}>
                                 {props.currentUser.length === 0 ? <></> :
                                     <>
-                                        <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2]}></img>
+                                        <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2] || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
                                         <hr></hr>
                                     </>
                                 }
@@ -356,7 +356,7 @@ class Friends extends React.Component {
                                                         {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i className="material-icons" style={{ color: "white" }}>message</i> : <></>}
                                                         {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i className="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
-                                                        <img className="tinyFriendPic" src={each.userImage}></img>
+                                                        <img className="tinyFriendPic" src={each.userImage || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
                                                     </p></div>
                                             ))}
                                         </>}
@@ -389,7 +389,7 @@ class Friends extends React.Component {
                                                     <p className="theFriends" key={each.id} >
                                                         {each.username}
                                                         <span></span>
-                                                        <img className="tinyFriendPic" src={each.userImage}></img>
+                                                        <img className="tinyFriendPic" src={each.userImage || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
                                                         <i className="material-icons" onClick={() => this.addFriend(each._id, "accepting")}>check_box</i>
                                                         <i className="material-icons" onClick={() => this.addFriend(each._id, "declining")}>close</i>
                                                     </p>
