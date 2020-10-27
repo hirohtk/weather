@@ -34,6 +34,11 @@ class Friends extends React.Component {
             notifyOrAdd(data)
         });
 
+        props.socket.on("addingFriend", data => {
+            console.log(`**** SOMEONE ADDED FRIEND ****`)
+            checkWhosAdding(data);
+        })
+
         props.socket.on('roomJoined', function (data) {
             let room = data.room;
             // console.log(`${data.who} joined room which is: ${data.room}`);
@@ -74,6 +79,15 @@ class Friends extends React.Component {
             // console.log(`someone disconnected, and their id is ${data}`);
             friendLoginManager(data, false)
         })
+
+        const checkWhosAdding = (who) => {
+            // if socket route returns and confirms that the person being added is you, then 
+            if (who.adding === this.props.currentUser[1]) {
+                console.log(`**** YOU GOT ADDED ****`)
+                // do loadFriends() so that you can reload the people who have added you
+                this.loadFriends();
+            }
+        }
 
         const defineProps = () => {
             return this.props.currentUser[1]
@@ -227,7 +241,12 @@ class Friends extends React.Component {
     addFriend = (id, addOrAcceptOrDecline) => {
         console.log(`friend management route, doing ${addOrAcceptOrDecline}`);
         axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1], doingWhat: addOrAcceptOrDecline }).then(response => {
-            
+            console.log(`well, addOrAcceptOrDecline  is ${addOrAcceptOrDecline} here`);
+            if (addOrAcceptOrDecline === "adding") {
+                // (action, adder, adding)
+                console.log(`**** FIRING SOCKET FOR ADD FRIEND `)
+                this.props.socket.emit("addFriend", this.props.currentUser[1], id);
+            }
             this.loadFriends();
         });
     };
