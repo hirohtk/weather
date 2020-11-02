@@ -134,7 +134,7 @@ class Nav extends React.Component {
               <label id="metric">
                 US
                 <input type="checkbox" onChange={this.props.changeUnits}/>
-                <span class="lever"></span>
+                <span className="lever"></span>
                 Metric
             </label>
             </div>

@@ -17,6 +17,16 @@ module.exports = function (io) {
             io.emit("roomJoined", obj);
         });
 
+        socket.on("addFriend", async (adder, adding) => {
+            console.log(`someone is adding friend`)
+            let obj = {
+                adder: adder,
+                adding: adding
+            }
+
+            io.emit("addingFriend", obj)
+        })
+
         socket.on("message", async data => {
             // console.log(`IS THIS PERSON SENDING A MESSAGE TO AN OFFLINE PERSON? ====> ${data.sendingOffline}`);
             const { chatroomName, author, message } = data;

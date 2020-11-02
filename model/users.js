@@ -23,6 +23,10 @@ const UserSchema = new Schema({
   googleID: {
     type: String
   },
+  pendingFriends: {
+    type: Array,
+    ref: "Users"
+  }
 });
 
 // THIS IS WHAT CREATES LOCAL STRATEGY 

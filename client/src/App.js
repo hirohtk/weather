@@ -37,8 +37,10 @@ class App extends React.Component {
       windowWidth: window.innerWidth,
       metric: false,
     }
-    // console.log(`console logging inside the constructor of App.js`);
-    this.socket = io('https://immense-cove-75264.herokuapp.com/');
+    
+    this.socket = io("localhost:3001");
+
+    // this.checkENV();
   }
 
   // fires before component modules have mounted
@@ -57,22 +59,37 @@ class App extends React.Component {
       })
   }
 
+  // checkENV = () => {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     console.log(`production environment`)
+  //     return "https://immense-cove-75264.herokuapp.com/"
+  //   }
+  //   else {
+  //     console.log(`dev envrionment`) 
+  //     return "localhost:3001"
+  //   }
+  // }
+
   checkForCookies = () => {
     // checks whether or not there is data in cookie
     let cookies = decodeURIComponent(document.cookie);
     let cookieArray = cookies.split(";");
     let theCookie = cookieArray.find(one => one.includes("oauth"));
+    console.log(`the Cookie is ${theCookie}`);
     if (theCookie != undefined) {
-      //  oauth={"coordinates":[],"_id":"5f72b091698e344ac09de28e","username":"Kensen Hirohata","__v":0}"
+      //  oauth={"coordinates":[],"_id":"5f7bedf049a81741f40faa80","googleID":"103106405171762584134","username":"Kensen Hirohata","userImage":"https://lh4.googleusercontent.com/-fDDlCT7NC0Y/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuckZN6Zbi2jE8mGFk1eEm1MdtSrAGg/photo.jpg","__v":0"
       let creds = {};
       // split string by commas above
       let splitCookie = theCookie.split(",");
       // split the product by the colon (product are arrays)
       let subSplitId = splitCookie[1].split(":");
-      let subSplitUsername = splitCookie[2].split(":");
+      let subSplitUsername = splitCookie[3].split(":");
+      // For userImage, splits into three indexes since there's also a colon in https://
+      let subSplitUserImage = splitCookie[4].split(":");
       // slice the extra "" from the ends of the index containing username or id
       creds.id = subSplitId[1].slice(1, subSplitId[1].length - 1);
       creds.username = subSplitUsername[1].slice(1, subSplitUsername[1].length - 1);
+      creds.userImage = "https:" + subSplitUserImage[2].slice(0, subSplitUserImage[2].length - 1);
       // will run async while time and getWeatherData fire
       this.handleLogin(creds, "login");    
     }
@@ -120,7 +137,6 @@ class App extends React.Component {
       console.log(latitude, longitude)
       Axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false&key=${apiKey}`)
         .then(response => {
-          // console.log(response);
           let ind;
           for (let i = 0; i < response.data.results[0].address_components.length; i++) {
             if (response.data.results[0].address_components[i].types[0] === "locality") {
@@ -258,16 +274,23 @@ class App extends React.Component {
     console.log(`credentials for logging in are ${JSON.stringify(credentials)}`)
     if (doWhich === "login") {
       this.setState({ currentUser: [credentials.username, credentials.id, credentials.userImage], loggedIn: true }, () => {
+        localStorage.setItem("user", credentials.id)
         this.setLastKnownCoords();
       })
     }
     else {
+      // for Oauth Logout
+      if (document.cookie) {
+        // Delete the cookie
+        document.cookie = "oauth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
       // console.log(`logging out, emitting socket for leaveRoom, current userID is ${this.state.currentUser[1]}`);
       this.socket.emit("leaveRoom", this.state.currentUser[1]);
       // if this works, should manually also close the socket, preventing the same socket from being used if you use a different account
       this.socket.close();
       this.socket.open();
       this.setState({ currentUser: [], loggedIn: false, showFriendWeather: false });
+      localStorage.setItem("user", "")
     }
   }
   // THIS IS FOR FRIENDS MODULE, WHICH WILL RUN ON CLICKING FRIEND, TRIGGERING STATE CHANGE AND TERNARY BELOW TO SHOW FRIEND WEATHER
@@ -363,6 +386,7 @@ class App extends React.Component {
                             friendUsername={this.state.friendUsername}
                             friendLocation={this.state.friendLocation}
                             friendCurrentWeather={this.state.friendCurrentWeather}
+                            metric={this.state.metric}
                           >
                           </FriendWeather>
                           : <></>}

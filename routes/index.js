@@ -28,25 +28,24 @@ passport.use(new GoogleStrategy({
   (accessToken, refreshToken, profile, done) => {
     // passport callback function
     //check if user already exists in our db with the given profile ID
-    db.Users.findOne({ googleId: profile.id }).lean().then((currentUser) => {
+    db.Users.findOne({ googleID: profile.id }).then((currentUser) => {
+      console.log(`searching for the googleId of ${profile.id} has returned:`)
+      console.log(currentUser)
       if (currentUser) {
         //if we already have a record with the given profile ID
-        done(null, obj);
+        console.log(`we have a current user logging in from oAuth`);
+        done(null, currentUser);
       } else {
         //if not, create a new user 
+        console.log(`All of the Google User info is in here, storing it into DB \n ${JSON.stringify(profile)}`)
         db.Users.create({
-          googleId: profile.id,
+          googleID: profile.id,
           username: profile.displayName,
+          userImage: profile.photos[0].value
         }).then((newUser) => {
+          // also have to create a friendslist for this person
+          db.FriendsList.create({ userID: newUser._id });
           console.log(newUser);
-          // let obj = {};
-          // obj.username = newUser.username;
-          // obj.id = newUser._id;
-          // obj.token = accessToken;
-          // newUser.toObject();
-          // console.log(newUser);
-          // newUser.token = accessToken;
-          // console.log(newUser);
           done(null, newUser);
         });
       }
@@ -55,7 +54,7 @@ passport.use(new GoogleStrategy({
 ));
 // after the above goes, if you're logging in, the below is what gets sent as the request for the callback route
 passport.serializeUser((user, done) => {
-  done(null, user); 
+  done(null, user);
 });
 passport.deserializeUser((id, done) => {
   db.Users.findById(id).then(user => {
@@ -73,10 +72,8 @@ router.get("/api/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-router.get("/auth/google/redirect",passport.authenticate("google"), (req,res, next)=>{ 
+router.get("/auth/google/redirect", passport.authenticate("google"), (req, res, next) => {
 
-  console.log(`**** ${JSON.stringify(req.user)}`)
-  console.log(`**** this should have some user data`)
   // send cookie to front end
   res.cookie("oauth", JSON.stringify(req.user));
   res.redirect("http://localhost:3000");
@@ -151,7 +148,15 @@ router.get("/api/loadfriends/:id", function (req, res) {
   db.FriendsList.find({ userID: req.params.id }).populate("friends").then(response => {
     // console.log(`friends for this person are ${response}`);
     // response.friends is an array
-    res.json(response);
+    const friendslist = response;
+    db.Users.findById(req.params.id).populate("pendingFriends").then(response => {
+      console.log(`response checking how many need to accept is ${response}`);
+      const combined = {
+        friendslist: friendslist,
+        toAccept: response.pendingFriends
+      }
+      res.json(combined);
+    })
   })
 })
 
@@ -166,12 +171,35 @@ router.get("/api/allusers/:user", function (req, res) {
 router.put("/api/addusers/:id", function (req, res) {
   // console.log(`adding user by userid ${req.params.id}`);
   // console.log(`you are ${req.body.userID}`);
-  console.log(`finding chatroom by ${req.body.userID}`);
-  console.log(`adding to friendslist this person ${req.params.id}`);
-  db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
-    console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
-    res.json(response);
-  })
+  if (req.body.doingWhat === "declining") {
+    console.log(`declining friend invite.  I am ${req.body.userID} and am declining ${req.params.id}`)
+    db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } }).then(response => 
+      {
+        console.log(`response from declining friend is ${response}`)
+        res.json(response);
+      })
+  }
+  else {
+    console.log(`finding chatroom by ${req.body.userID}`);
+    console.log(`adding to friendslist this person ${req.params.id}`);
+    db.FriendsList.findOneAndUpdate({ userID: req.body.userID }, { $push: { friends: req.params.id } }).then(response => {
+      console.log(`response from adding friend query is as follows (if NULL, broken) ${response}`)
+      // if the friend request is being made, add this to friend's model so friend can be notified to accept the request
+      if (req.body.doingWhat === "adding") {
+        db.Users.findByIdAndUpdate(req.params.id, { $push: { pendingFriends: req.body.userID } }).then(response => {
+          console.log(`response from adding friend request is ${response}`);
+        })
+      }
+      // if the friend request is being accepted, remove it from this user's model
+      else {
+        console.log(`friend request is being accepted. `)
+        db.Users.findByIdAndUpdate(req.body.userID, { $pull: { pendingFriends: req.params.id } }).then(response => {
+          console.log(`accepting friend response is ${response}`)
+        });
+      }
+      res.json(response);
+    });
+  }
 });
 
 router.put("/api/deleteusers/:id", function (req, res) {
@@ -261,7 +289,7 @@ router.put(`/api/clearofflineunread/:id`, function (req, res) {
   })
 });
 
-router.get(`/api/test`, function (req, res) { 
+router.get(`/api/test`, function (req, res) {
   console.log(`test route`);
   res.json("TEST ROUTE");
 })

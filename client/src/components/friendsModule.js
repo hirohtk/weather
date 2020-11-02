@@ -22,7 +22,8 @@ class Friends extends React.Component {
             loggedInFriends: [],
             loggedInRooms: [],
             searching: false,
-            offlineSenders: []
+            offlineSenders: [],
+            toAccept: []
         }
 
         // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
@@ -32,6 +33,11 @@ class Friends extends React.Component {
             // console.log(`*** NEW MESSAGE - THIS CAME FROM ${data.chatroomID}`);
             notifyOrAdd(data)
         });
+
+        props.socket.on("addingFriend", data => {
+            console.log(`**** SOMEONE ADDED FRIEND ****`)
+            checkWhosAdding(data);
+        })
 
         props.socket.on('roomJoined', function (data) {
             let room = data.room;
@@ -73,6 +79,15 @@ class Friends extends React.Component {
             // console.log(`someone disconnected, and their id is ${data}`);
             friendLoginManager(data, false)
         })
+
+        const checkWhosAdding = (who) => {
+            // if socket route returns and confirms that the person being added is you, then 
+            if (who.adding === this.props.currentUser[1]) {
+                console.log(`**** YOU GOT ADDED ****`)
+                // do loadFriends() so that you can reload the people who have added you
+                this.loadFriends();
+            }
+        }
 
         const defineProps = () => {
             return this.props.currentUser[1]
@@ -210,25 +225,28 @@ class Friends extends React.Component {
         // console.log(`loading friends for: ${this.props.currentUser[1]}`);
         axios.get(`/api/loadfriends/${this.props.currentUser[1]}`).then(response => {
             // if a new user, the response.data array will have zero length, preventing access of data.  conditional below handles that
-            if (response.data.length === 0) {
-                return;
-            }
-            else {
-                // console.log(`querying for friends returns ${response.data[0].friends}`);
-                this.setState({ friendsList: response.data[0].friends, friendsLoaded: true }, () => {
-                    // console.log(`friendslist in state is ${this.state.friendsList}`)
-                    this.clearResults();
-                    this.joinRoomsForSocket();
-                });
-            }
+            // console.log(`*** RESPONSE : \n ${JSON.stringify(response.data)}`);
+
+            // console.log(`querying for friends returns ${response.data[0].friends}`);
+            this.setState({ friendsList: response.data.friendslist[0].friends, toAccept: response.data.toAccept, friendsLoaded: true }, () => {
+                console.log(`toAccept in state is ${this.state.toAccept}`)
+                this.clearResults();
+                this.joinRoomsForSocket();
+
+            });
+
         })
     }
 
-    addFriend = (id) => {
-        console.log(`*** BUG SHOULD BE HERE- ADDING FRIEND with ID of ${id}`);
-        console.log(`*** right here, it seems that this.props.currentUser[1] is my password ${this.props.currentUser[1]}`)
-        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1] }).then(response => {
-            console.log(`*** ROUTE WORKED, ADDED USER, RESPONSE IS ${JSON.stringify(response)}`);
+    addFriend = (id, addOrAcceptOrDecline) => {
+        console.log(`friend management route, doing ${addOrAcceptOrDecline}`);
+        axios.put(`/api/addusers/${id}`, { userID: this.props.currentUser[1], doingWhat: addOrAcceptOrDecline }).then(response => {
+            console.log(`well, addOrAcceptOrDecline  is ${addOrAcceptOrDecline} here`);
+            if (addOrAcceptOrDecline === "adding") {
+                // (action, adder, adding)
+                console.log(`**** FIRING SOCKET FOR ADD FRIEND `)
+                this.props.socket.emit("addFriend", this.props.currentUser[1], id);
+            }
             this.loadFriends();
         });
     };
@@ -331,13 +349,13 @@ class Friends extends React.Component {
                                 </ChatModule>
                                 :
                                 <></>}
-                            <div className="containerForFriends" style={this.state.chat && this.props.mobile ? {width: "40%"} : {width: "90%"}}>
-                            {props.currentUser.length === 0 ? <></> :
-                            <>
-                                <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2]}></img>
-                                <hr></hr>
-                                </>
-                            }
+                            <div className="containerForFriends" style={this.state.chat && this.props.mobile ? { width: "40%" } : { width: "90%" }}>
+                                {props.currentUser.length === 0 ? <></> :
+                                    <>
+                                        <span className="welcome">Welcome, {props.currentUser[0]}!</span><img className="tinyMePic" src={props.currentUser[2] || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
+                                        <hr></hr>
+                                    </>
+                                }
                                 <div className="friends-gradient"></div>
                                 {/* Will become a .map to list friends here */}
                                 <div className="theActualList">
@@ -349,22 +367,20 @@ class Friends extends React.Component {
                                         <>
 
                                             {this.state.friendsList.map((each, index) => (
-                                                <>
-                                                <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)}>
-                                                    <i class={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
-                                                    {/* unread is an array, filter it down to an array where author names are present.
+                                                <div key={each._id}>
+                                                    <p className="theFriends" onClick={() => this.openFriend("open", each.username, each._id)} >
+                                                        <i className={this.state.loggedInFriends.includes(each._id) ? "material-icons online" : "material-icons offline"}>lens</i>{each.username}
+                                                        {/* unread is an array, filter it down to an array where author names are present.
                                             if this array includes username, and if this array includes username, render message icon */}
-                                                    {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i class="material-icons" style={{ color: "white" }}>message</i> : <></>}
-                                                    {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i class="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
+                                                        {this.state.unread.filter((name) => name.author === each.username).some((ehhh) => ehhh.author === each.username) ? <i className="material-icons" style={{ color: "white" }}>message</i> : <></>}
+                                                        {this.state.offlineSenders.filter((who) => who === each._id).some((heh) => heh === each._id) ? <i className="material-icons" style={{ color: "white" }}>markunread</i> : <></>}
 
-                                                    <img className="tinyFriendPic" src={each.userImage}></img>
-                                                    </p></>
+                                                        <img className="tinyFriendPic" src={each.userImage || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
+                                                    </p></div>
                                             ))}
                                         </>}
                                 </div>
-                                {/* <p className="theFriends"><i class="material-icons offline">lens</i>Friend 1 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/sleepingparrot.gif"></img> </p>
-                        <p className="theFriends"><i class="material-icons online">lens</i>Friend 2 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/partyparrot.gif"></img></p>
-                        <p className="theFriends"><i class="material-icons online">lens</i>Friend 3 <img className="tinyFriendPic" src="https://cultofthepartyparrot.com/parrots/hd/shuffleparrot.gif"></img></p> */}
+
                                 <div className="searchForFriends">
                                     <input placeholder="Search for a user!" name="searchTerm" value={this.state.searchTerm} maxLength="16" onChange={this.searchInputHandler} className="whiteText"></input>
                                     <button id="loginSubmit" onClick={this.searchHandler}>Go!</button>
@@ -376,14 +392,31 @@ class Friends extends React.Component {
                                             <> <h5 className="whiteText">Search Results</h5>
                                                 {this.state.friendResults.map((each, index) =>
                                                     // NEED ARROW FUNCTION TO INVOKE this.addFriend()
-                                                    <>
-                                                    <p className="whiteText">{each.username}</p>
-                                                    <p>{each.id != null ? <button class="addButtons" onClick={() => this.addFriend(each.id)}>Add</button> : <></>}
-                                                    <button class="addButtons"  onClick={this.clearResults}>Clear</button></p>
-                                                    </>)}
+                                                    <div key={index}>
+                                                        <p className="whiteText" >{each.username}</p>
+                                                        <p>{each.id != null ? <button className="addButtons" onClick={() => this.addFriend(each.id, "adding")}>Add</button> : <></>}
+                                                            <button className="addButtons" onClick={this.clearResults}>Clear</button></p>
+                                                    </div>)}
                                             </>}
                                         </> : <></>}
                                 </div>
+                                {
+                                    this.state.toAccept.length != 0 ?
+                                        <div className="pendingFriends">
+                                            {
+                                                this.state.toAccept.map(each => (
+                                                    <p className="theFriends" key={each.id} >
+                                                        {each.username}
+                                                        <span></span>
+                                                        <img className="tinyFriendPic" src={each.userImage || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
+                                                        <i className="material-icons accepters" onClick={() => this.addFriend(each._id, "accepting")}>check_box</i>
+                                                        <i className="material-icons accepters" onClick={() => this.addFriend(each._id, "declining")}>close</i>
+                                                    </p>
+                                                ))
+                                            }
+                                        </div>
+                                        : <></>
+                                }
                             </div>
                         </div></> : <></>}
             </>
