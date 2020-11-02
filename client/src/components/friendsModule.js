@@ -409,8 +409,8 @@ class Friends extends React.Component {
                                                         {each.username}
                                                         <span></span>
                                                         <img className="tinyFriendPic" src={each.userImage || "http://probablyprogramming.com/wp-content/uploads/2009/03/handtinytrans.gif"}></img>
-                                                        <i className="material-icons" onClick={() => this.addFriend(each._id, "accepting")}>check_box</i>
-                                                        <i className="material-icons" onClick={() => this.addFriend(each._id, "declining")}>close</i>
+                                                        <i className="material-icons accepters" onClick={() => this.addFriend(each._id, "accepting")}>check_box</i>
+                                                        <i className="material-icons accepters" onClick={() => this.addFriend(each._id, "declining")}>close</i>
                                                     </p>
                                                 ))
                                             }
