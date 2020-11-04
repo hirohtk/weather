@@ -9,7 +9,6 @@ import "./components/unsorted.css"
 import Axios from 'axios';
 import moment from "moment";
 import io from "socket.io-client";
-import jwt_decode from "jwt-decode";
 
 class App extends React.Component {
 
@@ -40,7 +39,6 @@ class App extends React.Component {
     
     this.socket = io("localhost:3001");
 
-    // this.checkENV();
   }
 
   // fires before component modules have mounted
@@ -58,17 +56,6 @@ class App extends React.Component {
         window.addEventListener("resize", this.handleResize);
       })
   }
-
-  // checkENV = () => {
-  //   if (process.env.NODE_ENV === 'production') {
-  //     console.log(`production environment`)
-  //     return "https://immense-cove-75264.herokuapp.com/"
-  //   }
-  //   else {
-  //     console.log(`dev envrionment`) 
-  //     return "localhost:3001"
-  //   }
-  // }
 
   checkForCookies = () => {
     // checks whether or not there is data in cookie
@@ -212,18 +199,6 @@ class App extends React.Component {
           }
           return hourlyForecastArray;
         }
-
-        // FOR ONE DAY HOURLY DATA
-        // for (let j = 0; j < response.data.forecast.forecastday[0].hour.length; j += 6) {
-        //   console.log(j)
-        //     let obj = {};
-        //     obj.date = response.data.forecast.forecastday[0].hour[j].time;
-        //     obj.tempF = response.data.forecast.forecastday[0].hour[j].temp_f;
-        //     obj.rainProbability = response.data.forecast.forecastday[0].hour[j].chance_of_rain;
-        //     obj.condition = response.data.forecast.forecastday[0].hour[j].condition.text;
-        //     hourlyForecastArray.push(obj);
-        // }
-        // console.log(`hourly forecast array is ${hourlyForecastArray}, length is ${hourlyForecastArray.length}`);
 
         if (forWho === "self") {
           this.setState({
@@ -413,10 +388,6 @@ class App extends React.Component {
     )
   }
 }
-// function App() {
-//   return (
 
-//   );
-// }
 
 export default App;

@@ -62,11 +62,6 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// router.all('/*', function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   next();
-// });
-
 // when hits this route, use passport to authenticate using google, using scope to return the user's profile and email
 router.get("/api/auth/google", passport.authenticate("google", {
   scope: ["profile", "email"]
@@ -231,11 +226,6 @@ router.get("/private", connectEnsureLogin.ensureLoggedIn(), function (req, res) 
   res.json("Login Success")
 });
 
-// router.get("/api/testChat/:id", function (req, res) {
-//   console.log(`this route is only accessed for chats, req.params.id is ${req.params.id}`);
-//   res.json("yep")
-// })
-
 // 6/30/2020:  IF CHATROOM DOES NOT EXIST, MAKE ONE IN THE DB.  OTHERWISE IF SO, JUST RETURN THE DB DOCUMENT
 router.put(`/api/getroom/:friendID`, function (req, res) {
 
@@ -293,15 +283,6 @@ router.get(`/api/test`, function (req, res) {
   console.log(`test route`);
   res.json("TEST ROUTE");
 })
-
-// router.put(`/api/hasunread/:id`, function (req, res) {
-//   db.Users.findByIdAndUpdate(req.params.id, {hasUnread: req.body.action}).then(response => res.json(response));
-// })
-
-// TAKEN CARE OF BY SOCKET
-// router.post(`api/sendmessage/:id`, function (req, res) {
-//   db.Message.create({message: req.body.message, author: req.body.author, chatroomID: req.body.chatroomID})
-// })
 
 router.get("*", function (req, res) {
   console.log("* route hit")

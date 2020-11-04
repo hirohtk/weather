@@ -2,7 +2,6 @@ import React from 'react';
 import "./friendsmodule.css";
 import axios from "axios";
 import ChatModule from "./chatModule";
-// import io from "socket.io-client";
 
 class Friends extends React.Component {
 
@@ -25,8 +24,6 @@ class Friends extends React.Component {
             offlineSenders: [],
             toAccept: []
         }
-
-        // props.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
 
         props.socket.on('newMessage', function (data) {
             // FORK HERE - if new message isn't from the person you're chatting with, push to unread.  else, push to current messages

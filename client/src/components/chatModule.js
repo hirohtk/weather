@@ -12,27 +12,7 @@ class ChatModule extends React.Component {
         this.state = {
             myMessage: "",
         }
-        // this.socket = io('https://immense-cove-75264.herokuapp.com/' && 'localhost:3001');
-
-        // props.socket.on('newMessage', function (data) {
-        //     console.log(`got a new message - this is from ChatModule`)
-        //     addMessage(data);
-        // });
-
         this.reference = React.createRef();
-
-        // const addMessage = data => {
-        //     console.log(data);
-        //     this.setState({ messages: [...this.state.messages, data]});
-        // };
-    }
-
-    UNSAFE_componentWillReceiveProps() {
-
-    }
-
-    componentWillUnmount() {
-        // this.setState({ messages: [] });
     }
 
     componentDidUpdate() {
