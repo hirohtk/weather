@@ -15,7 +15,7 @@
     "gsap": "^3.2.6",
     "jwt-decode": "^3.0.0-beta.2",
     "keyframe": "^2.1.0",
-    "moment": "^2.25.3",
+    "moment": "^2.29.2",
     "mongoose": "^5.9.17",
     "nodemon": "^2.0.3",
     "passport": "^0.4.1",
